@@ -83,7 +83,7 @@ export const AVATAR_MENU_ITEMS: AvatarMenuItem[] = [
     id: 'billing',
     labelKey: 'nav.avatarMenu.billing',
     // Resolved at runtime via BILLING_DASHBOARD_URL; placeholder keeps typing clean.
-    target: 'https://tinyhumans.ai/dashboard',
+    target: '',
     kind: 'openUrl',
     cloudOnly: true,
   },

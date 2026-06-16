@@ -271,7 +271,7 @@
   if (fakeVideoTrack) {
     try {
       Object.defineProperty(fakeVideoTrack, 'label', {
-        value: 'OpenHuman Mascot',
+        value: 'Marvi Mascot',
         configurable: true,
       });
     } catch (_) {}
@@ -316,7 +316,7 @@
     const clone = ours.clone();
     try {
       Object.defineProperty(clone, 'label', {
-        value: 'OpenHuman Mascot',
+        value: 'Marvi Mascot',
         configurable: true,
       });
     } catch (_) {}

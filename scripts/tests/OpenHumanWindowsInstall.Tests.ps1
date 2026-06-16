@@ -48,12 +48,12 @@ function Assert-True {
 }
 
 Write-Host "`n== Get-OpenHumanMsiexecInstallArgumentList (#913) ==" -ForegroundColor Cyan
-$p = 'C:\Temp\OpenHuman_0.0.0_x64_en-US.msi'
+$p = 'C:\Temp\Marvi_0.0.0_x64_en-US.msi'
 $args = Get-OpenHumanMsiexecInstallArgumentList -MsiPath $p
 Assert-True ($args.Count -eq 4) 'returns exactly 4 argument tokens'
 Assert-Equal '/i' $args[0] 'first token is /i'
 Assert-Equal $p $args[1] 'second token is MSI path'
-$pSpaces = 'C:\Temp\Test User\OpenHuman_0.0.0_x64_en-US.msi'
+$pSpaces = 'C:\Temp\Test User\Marvi_0.0.0_x64_en-US.msi'
 $argsSpaces = Get-OpenHumanMsiexecInstallArgumentList -MsiPath $pSpaces
 Assert-Equal $pSpaces $argsSpaces[1] 'path with spaces remains one second argv token (no split)'
 Assert-Equal '/qn' $args[2] 'third token is /qn'
@@ -68,21 +68,21 @@ Assert-True ($joined -notmatch 'ALLUSERS') 'joined args omit ALLUSERS'
 Write-Host "`n== Select-OpenHumanWindowsAssetFromRelease ==" -ForegroundColor Cyan
 $release = [pscustomobject]@{
   assets = @(
-    [pscustomobject]@{ name = 'OpenHuman_1.0.0_x64_en-US.msi'; browser_download_url = 'https://example/msi' }
+    [pscustomobject]@{ name = 'Marvi_1.0.0_x64_en-US.msi'; browser_download_url = 'https://example/msi' }
     [pscustomobject]@{ name = 'other.zip'; browser_download_url = 'https://example/z' }
   )
 }
 $sel = Select-OpenHumanWindowsAssetFromRelease -Release $release
-Assert-Equal 'OpenHuman_1.0.0_x64_en-US.msi' $sel.name 'prefers MSI over other assets'
+Assert-Equal 'Marvi_1.0.0_x64_en-US.msi' $sel.name 'prefers MSI over other assets'
 
 $releaseExe = [pscustomobject]@{
   assets = @(
-    [pscustomobject]@{ name = 'OpenHuman_1.0.0_x64-setup.exe'; browser_download_url = 'https://example/exe' }
+    [pscustomobject]@{ name = 'Marvi_1.0.0_x64-setup.exe'; browser_download_url = 'https://example/exe' }
   )
 }
 $sel2 = Select-OpenHumanWindowsAssetFromRelease -Release $releaseExe
 Assert-True ($null -ne $sel2) 'selects exe when no msi'
-Assert-Equal 'OpenHuman_1.0.0_x64-setup.exe' $sel2.name 'exe name matches pattern'
+Assert-Equal 'Marvi_1.0.0_x64-setup.exe' $sel2.name 'exe name matches pattern'
 
 $releaseEmpty = [pscustomobject]@{ assets = @() }
 $sel3 = Select-OpenHumanWindowsAssetFromRelease -Release $releaseEmpty

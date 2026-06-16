@@ -134,7 +134,7 @@ pub const SEARCH_ENGINE_BRAVE: &str = "brave";
 pub const SEARCH_ENGINE_QUERIT: &str = "querit";
 
 fn default_search_engine() -> String {
-    SEARCH_ENGINE_MANAGED.into()
+    SEARCH_ENGINE_DISABLED.into()
 }
 
 fn default_search_max_results() -> usize {
@@ -176,16 +176,17 @@ impl SearchEngineCredentials {
 }
 
 /// Unified search-engine configuration. Exactly one engine drives tool
-/// registration at a time. `disabled` suppresses all search tools; `managed` is
-/// the backend-proxied default and requires no key; `parallel`, `brave`, and
-/// `querit` are BYO and require their own API key in the matching sub-block.
+/// registration at a time. `disabled` suppresses all search tools; `managed`
+/// uses the backend-proxied search path and requires a configured backend;
+/// `parallel`, `brave`, and `querit` are BYO and require their own API key in
+/// the matching sub-block.
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(default)]
 pub struct SearchConfig {
     /// Active search engine. One of [`SEARCH_ENGINE_DISABLED`],
     /// [`SEARCH_ENGINE_MANAGED`], [`SEARCH_ENGINE_PARALLEL`],
     /// [`SEARCH_ENGINE_BRAVE`], or [`SEARCH_ENGINE_QUERIT`]. Unknown values
-    /// fall back to managed at registration time.
+    /// fall back to disabled at registration time.
     #[serde(default = "default_search_engine")]
     pub engine: String,
 
@@ -223,9 +224,9 @@ impl Default for SearchConfig {
     }
 }
 
-/// Normalized search-engine enum used at tool-registration time. Falls
-/// back to [`SearchEngine::Managed`] for unknown strings and for BYO
-/// engines that have no API key configured.
+/// Normalized search-engine enum used at tool-registration time. Falls back to
+/// [`SearchEngine::Disabled`] for unknown strings and for BYO engines that have
+/// no API key configured.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum SearchEngine {
     Disabled,
@@ -237,23 +238,23 @@ pub enum SearchEngine {
 
 impl SearchConfig {
     /// Resolve the *effective* engine after gating on API-key
-    /// availability. A BYO engine without a key silently falls back to
-    /// managed so the agent never ends up with zero search tools — the
-    /// UI surfaces the misconfiguration separately.
+    /// availability. A BYO engine without a key stays disabled rather than
+    /// falling back to a hosted backend.
     pub fn effective_engine(&self) -> SearchEngine {
         match self.engine.trim().to_ascii_lowercase().as_str() {
             SEARCH_ENGINE_DISABLED => SearchEngine::Disabled,
             SEARCH_ENGINE_PARALLEL if self.parallel.has_key() => SearchEngine::Parallel,
             SEARCH_ENGINE_BRAVE if self.brave.has_key() => SearchEngine::Brave,
             SEARCH_ENGINE_QUERIT if self.querit.has_key() => SearchEngine::Querit,
-            _ => SearchEngine::Managed,
+            SEARCH_ENGINE_MANAGED => SearchEngine::Managed,
+            _ => SearchEngine::Disabled,
         }
     }
 
     pub fn requested_engine_str(&self) -> &str {
         let trimmed = self.engine.trim();
         if trimmed.is_empty() {
-            SEARCH_ENGINE_MANAGED
+            SEARCH_ENGINE_DISABLED
         } else {
             trimmed
         }
@@ -266,9 +267,9 @@ mod search_config_tests {
     use crate::openhuman::config::schema::tools::http::HttpRequestConfig;
 
     #[test]
-    fn defaults_to_managed() {
+    fn defaults_to_disabled() {
         let cfg = SearchConfig::default();
-        assert_eq!(cfg.effective_engine(), SearchEngine::Managed);
+        assert_eq!(cfg.effective_engine(), SearchEngine::Disabled);
     }
 
     #[test]
@@ -327,11 +328,11 @@ mod search_config_tests {
     }
 
     #[test]
-    fn unknown_engine_falls_back_to_managed() {
+    fn unknown_engine_falls_back_to_disabled() {
         let cfg = SearchConfig {
             engine: "duckduckgo".into(),
             ..Default::default()
         };
-        assert_eq!(cfg.effective_engine(), SearchEngine::Managed);
+        assert_eq!(cfg.effective_engine(), SearchEngine::Disabled);
     }
 }

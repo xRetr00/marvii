@@ -1,10 +1,10 @@
 [package]
-name = "OpenHuman"
+name = "Marvi"
 version = "0.57.41"
-description = "OpenHuman - AI-powered Super Assistant"
-authors = ["OpenHuman"]
+description = "Marvi - AI-powered Super Assistant"
+authors = ["NeuRetro Labs"]
 edition = "2021"
-default-run = "OpenHuman"
+default-run = "Marvi"
 autobins = false
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -17,7 +17,7 @@ name = "openhuman"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [[bin]]
-name = "OpenHuman"
+name = "Marvi"
 path = "src/main.rs"
 
 [build-dependencies]

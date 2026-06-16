@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "OpenHuman",
+  "productName": "Marvi",
   "version": "0.57.41",
   "identifier": "com.openhuman.app",
   "build": {
@@ -13,7 +13,7 @@
     "windows": [
       {
         "label": "main",
-        "title": "OpenHuman",
+        "title": "Marvi",
         "width": 1000,
         "height": 800,
         "visible": false,
@@ -76,7 +76,7 @@
       "active": true,
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDc0OTREMjkxREFCNUIzRTEKUldUaHM3WGFrZEtVZEJzZWtMTlc5dGxnT0R2Q3hUTWVaclJWSm9JUFpPcVFUV2RBSG5oNFN6UjQK",
       "endpoints": [
-        "https://github.com/tinyhumansai/openhuman/releases/latest/download/latest.json"
+        "https://github.com/xRetr00/marvii/releases/latest/download/latest.json"
       ]
     },
     "deep-link": {

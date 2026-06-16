@@ -192,7 +192,7 @@ impl CoreProcessHandle {
             match identify_listener(self.preferred_port).await {
                 ListenerKind::OpenHuman => {
                     log::warn!(
-                        "[core] found stale OpenHuman listener on port {} — taking over (issue #1130)",
+                        "[core] found stale Marvi listener on port {} — taking over (issue #1130)",
                         self.preferred_port
                     );
                     self.takeover_stale_listener().await?;
@@ -201,7 +201,7 @@ impl CoreProcessHandle {
                 ListenerKind::Unknown { reason } => {
                     if is_expected_port_clash(&reason) {
                         log::warn!(
-                            "[core] preferred RPC port {} is occupied by non-OpenHuman listener ({reason}); attempting fallback bind range",
+                            "[core] preferred RPC port {} is occupied by non-Marvi listener ({reason}); attempting fallback bind range",
                             self.preferred_port
                         );
                     } else {
@@ -481,7 +481,7 @@ impl CoreProcessHandle {
             ));
         }
         log::warn!(
-            "[core] terminating stale OpenHuman process pid={pid} on port {} (issue #1130)",
+            "[core] terminating stale Marvi process pid={pid} on port {} (issue #1130)",
             port
         );
         if let Err(e) = kill_pid_term(pid) {

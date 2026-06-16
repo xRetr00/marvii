@@ -15,8 +15,6 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { useT } from '../../../lib/i18n/I18nContext';
-import { useCoreState } from '../../../providers/CoreStateProvider';
-import { isLocalSessionToken } from '../../../utils/localSession';
 import {
   type ComposioModeStatus,
   openhumanComposioClearApiKey,
@@ -35,26 +33,24 @@ interface ComposioPanelProps {
   /** When true, render without the SettingsHeader chrome (used when embedded
    *  inside the onboarding custom wizard). */
   embedded?: boolean;
-  /** Whether OpenHuman-managed auth should be offered. Defaults to true for
-   *  cloud-authenticated sessions and false otherwise. */
+  /** Hosted backend auth is disabled in this build. Kept for caller
+   * compatibility, but currently ignored. */
   managedAuthEnabled?: boolean;
 }
 
 const ComposioPanel = ({ embedded = false, managedAuthEnabled }: ComposioPanelProps = {}) => {
   const { t } = useT();
   const { navigateBack } = useSettingsNavigation();
-  const { snapshot } = useCoreState();
-  const allowManagedAuth =
-    managedAuthEnabled ??
-    (Boolean(snapshot.sessionToken) && !isLocalSessionToken(snapshot.sessionToken));
+  void managedAuthEnabled;
+  const allowManagedAuth = false;
 
-  const [mode, setMode] = useState<Mode>('backend');
+  const [mode, setMode] = useState<Mode>('direct');
   // Tracks the mode that's actually persisted on disk — distinct from
   // the in-flight `mode` radio selection so we can tell whether a Save
   // click constitutes a Backend → Direct *transition* (which needs a
   // confirmation gate) vs. just persisting a new API key while already
   // in Direct mode.
-  const [persistedMode, setPersistedMode] = useState<Mode>('backend');
+  const [persistedMode, setPersistedMode] = useState<Mode>('direct');
   const [apiKey, setApiKey] = useState('');
   const [apiKeyStored, setApiKeyStored] = useState(false);
   const [loading, setLoading] = useState(true);

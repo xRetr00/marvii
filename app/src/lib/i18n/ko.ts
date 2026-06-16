@@ -255,8 +255,8 @@ const messages: TranslationMap = {
   'clearData.failed': '데이터 삭제 및 로그아웃에 실패했습니다. 다시 시도해 주세요.',
   'clearData.failedLogout': '로그아웃에 실패했습니다. 다시 시도해 주세요.',
   'clearData.failedPersist': '저장된 앱 상태를 삭제하지 못했습니다. 다시 시도해 주세요.',
-  'welcome.logoAlt': 'OpenHuman',
-  'welcome.title': 'OpenHuman에 오신 것을 환영합니다',
+  'welcome.logoAlt': 'Marvi',
+  'welcome.title': 'Marvi에 오신 것을 환영합니다',
   'welcome.subtitle': '개인용 AI 슈퍼 인텔리전스입니다. 비공개이며, 간단하고, 매우 강력합니다.',
   'welcome.connectPrompt': 'RPC URL 구성(고급)',
   'welcome.selectRuntime': '런타임 선택',
@@ -265,7 +265,7 @@ const messages: TranslationMap = {
   'welcome.clearAppDataWarning':
     '이 작업은 이 기기에 로컬로 저장된 비밀 정보와 계정을 초기화합니다. 클라우드 계정은 영향을 받지 않으며 즉시 다시 로그인할 수 있습니다.',
   'welcome.resetErrorFallback':
-    '앱 데이터를 지울 수 없습니다. OpenHuman을 종료하고 다시 열어 재시도하세요.',
+    '앱 데이터를 지울 수 없습니다. Marvi을 종료하고 다시 열어 재시도하세요.',
   'welcome.signingIn': '로그인 중...',
   'welcome.termsIntro': '계속 진행하면',
   'welcome.termsOfUse': '약관',
@@ -285,7 +285,7 @@ const messages: TranslationMap = {
   'home.statusBackendOnly':
     '백엔드에 다시 연결하는 중입니다… 곧 에이전트를 다시 사용할 수 있습니다.',
   'home.statusCoreUnreachable':
-    '로컬 코어 사이드카가 응답하지 않습니다. OpenHuman 백그라운드 프로세스가 중단되었거나 시작하지 못했을 수 있습니다.',
+    '로컬 코어 사이드카가 응답하지 않습니다. Marvi 백그라운드 프로세스가 중단되었거나 시작하지 못했을 수 있습니다.',
   'home.statusInternetOffline':
     '현재 기기가 오프라인 상태입니다. 네트워크를 확인하거나 앱을 다시 시작하여 다시 연결하세요.',
   'home.restartCore': '코어 다시 시작',
@@ -599,13 +599,13 @@ const messages: TranslationMap = {
   'rewards.referrals': '추천',
   'rewards.coupons': '교환',
   'rewards.localUnavailable':
-    '로컬 로그인은 리워드, 쿠폰 또는 추천 크레딧을 적립할 수 없습니다. 리워드를 적립하려면 로그아웃하고 OpenHuman 계정으로 로그인하세요.',
+    '로컬 로그인은 리워드, 쿠폰 또는 추천 크레딧을 적립할 수 없습니다. 리워드를 적립하려면 로그아웃하고 Marvi 계정으로 로그인하세요.',
   'rewards.localUnavailableCta': '계정 설정 열기',
   'rewards.credits': '크레딧',
   'rewards.referralCode': '내 추천 코드',
   'rewards.copyCode': '코드 복사',
   'rewards.share': '공유',
-  'onboarding.welcome': '안녕하세요. 저는 OpenHuman입니다.',
+  'onboarding.welcome': '안녕하세요. 저는 Marvi입니다.',
   'onboarding.welcomeDesc':
     '컴퓨터에서 실행되는 초지능 AI 어시스턴트입니다. 비공개이며, 간단하고, 매우 강력합니다.',
   'onboarding.context': '컨텍스트 수집',
@@ -617,14 +617,14 @@ const messages: TranslationMap = {
   'onboarding.referral': '추천',
   'onboarding.referralDesc': '추천 코드가 있다면 적용하세요.',
   'onboarding.finish': '설정 완료',
-  'onboarding.finishDesc': '모든 준비가 끝났습니다! OpenHuman을 사용해 보세요.',
+  'onboarding.finishDesc': '모든 준비가 끝났습니다! Marvi을 사용해 보세요.',
   'onboarding.skip': '건너뛰기',
   'onboarding.getStarted': '시작하기',
-  'onboarding.runtimeChoice.title': 'OpenHuman을 어떻게 실행하시겠습니까?',
+  'onboarding.runtimeChoice.title': 'Marvi을 어떻게 실행하시겠습니까?',
   'onboarding.runtimeChoice.subtitle':
     '가장 잘 맞는 설정을 선택하세요. 나중에 설정에서 변경할 수 있습니다.',
   'onboarding.runtimeChoice.cloud.title': '간단 모드',
-  'onboarding.runtimeChoice.cloud.tagline': 'OpenHuman이 모든 것을 대신 관리하도록 합니다.',
+  'onboarding.runtimeChoice.cloud.tagline': 'Marvi이 모든 것을 대신 관리하도록 합니다.',
   'onboarding.runtimeChoice.cloud.f1': '내장 보안',
   'onboarding.runtimeChoice.cloud.f2': '사용량을 더 오래 쓰기 위한 토큰 압축',
   'onboarding.runtimeChoice.cloud.f3': '하나의 구독으로 모든 모델 포함',
@@ -677,7 +677,7 @@ const messages: TranslationMap = {
   'onboarding.custom.stepperMemory': '메모리',
   'onboarding.custom.stepCounter': '{total}단계 중 {n}단계',
   'onboarding.custom.defaultTitle': '기본값',
-  'onboarding.custom.defaultSubtitle': 'OpenHuman이 대신 관리하도록 합니다.',
+  'onboarding.custom.defaultSubtitle': 'Marvi이 대신 관리하도록 합니다.',
   'onboarding.custom.configureTitle': '구성',
   'onboarding.custom.configureSubtitle': '사용할 항목을 직접 선택합니다.',
   'onboarding.custom.progressAriaLabel': '온보딩 진행 상황',
@@ -691,41 +691,41 @@ const messages: TranslationMap = {
   'onboarding.custom.inference.subtitle':
     '어떤 언어 모델이 질문에 답하고 에이전트를 실행해야 하나요?',
   'onboarding.custom.inference.defaultDesc':
-    'OpenHuman은 모든 작업을 적절한 기본 모델로 라우팅합니다. 키도 필요 없고 설정도 필요 없습니다.',
+    'Marvi은 모든 작업을 적절한 기본 모델로 라우팅합니다. 키도 필요 없고 설정도 필요 없습니다.',
   'onboarding.custom.inference.configureDesc':
     '직접 OpenAI 또는 Anthropic 키를 가져오세요. 모든 텍스트 기반 작업에 이 키를 사용합니다.',
   'onboarding.custom.voice.title': '음성',
   'onboarding.custom.voice.subtitle':
     '음성 모드를 위한 음성-텍스트 변환 및 텍스트-음성 변환입니다.',
   'onboarding.custom.voice.defaultDesc':
-    'OpenHuman에는 바로 사용할 수 있는 관리형 STT/TTS가 포함되어 있습니다. 별도로 연결할 필요가 없습니다.',
+    'Marvi에는 바로 사용할 수 있는 관리형 STT/TTS가 포함되어 있습니다. 별도로 연결할 필요가 없습니다.',
   'onboarding.custom.voice.configureDesc':
     '직접 ElevenLabs / OpenAI Whisper 등을 사용하세요. 설정 › 음성에서 구성할 수 있습니다.',
   'onboarding.custom.oauth.title': '연결(OAuth)',
   'onboarding.custom.oauth.subtitle':
     'OAuth가 필요한 Gmail, Slack, Notion 및 기타 연결 서비스입니다.',
   'onboarding.custom.oauth.defaultDesc':
-    'OpenHuman은 관리형 Composio 워크스페이스를 실행합니다. 나중에 각 서비스를 한 번의 클릭으로 연결할 수 있습니다.',
+    'Marvi은 관리형 Composio 워크스페이스를 실행합니다. 나중에 각 서비스를 한 번의 클릭으로 연결할 수 있습니다.',
   'onboarding.custom.oauth.configureDesc':
     '직접 Composio 계정 또는 API 키를 가져오세요. 설정 › 연결에서 구성할 수 있습니다.',
   'onboarding.custom.search.title': '웹 검색',
-  'onboarding.custom.search.subtitle': 'OpenHuman이 사용자를 대신해 웹을 검색하는 방식입니다.',
+  'onboarding.custom.search.subtitle': 'Marvi이 사용자를 대신해 웹을 검색하는 방식입니다.',
   'onboarding.custom.search.defaultDesc':
-    'OpenHuman은 관리형 검색 백엔드를 사용합니다. 키가 필요 없습니다.',
+    'Marvi은 관리형 검색 백엔드를 사용합니다. 키가 필요 없습니다.',
   'onboarding.custom.search.configureDesc':
     '직접 검색 제공업체 키(Tavily, Brave 등)를 가져오세요. 설정 › 도구에서 구성할 수 있습니다.',
   'onboarding.custom.embeddings.title': 'Embeddings',
   'onboarding.custom.embeddings.subtitle':
-    'OpenHuman이 시맨틱 메모리 검색을 위한 벡터 임베딩을 생성하는 방식입니다.',
+    'Marvi이 시맨틱 메모리 검색을 위한 벡터 임베딩을 생성하는 방식입니다.',
   'onboarding.custom.embeddings.defaultDesc':
-    'OpenHuman이 관리형 임베딩 서비스를 사용합니다. API 키가 필요 없습니다.',
+    'Marvi이 관리형 임베딩 서비스를 사용합니다. API 키가 필요 없습니다.',
   'onboarding.custom.embeddings.configureDesc':
     '자체 임베딩 공급자(OpenAI, Voyage, Ollama 등)를 사용하세요.',
   'onboarding.custom.memory.title': '메모리',
   'onboarding.custom.memory.subtitle':
-    'OpenHuman이 사용자의 컨텍스트, 선호도, 이전 대화를 기억하는 방식입니다.',
+    'Marvi이 사용자의 컨텍스트, 선호도, 이전 대화를 기억하는 방식입니다.',
   'onboarding.custom.memory.defaultDesc':
-    'OpenHuman은 메모리 저장과 검색을 자동으로 관리합니다. 설정할 것이 없습니다.',
+    'Marvi은 메모리 저장과 검색을 자동으로 관리합니다. 설정할 것이 없습니다.',
   'onboarding.custom.memory.configureDesc':
     '메모리를 직접 검사, 내보내기 또는 삭제할 수 있습니다. 설정 › 메모리에서 구성할 수 있습니다.',
   'accounts.addAccount': '계정 추가',
@@ -856,7 +856,7 @@ const messages: TranslationMap = {
   'misc.downloading': '다운로드 중...',
   'misc.installing': '설치 중...',
   'misc.beta':
-    'OpenHuman은 초기 베타 버전입니다. 피드백을 공유하거나 발견한 버그를 신고해 주세요 — 모든 신고는 더 빠른 출시를 돕습니다.',
+    'Marvi은 초기 베타 버전입니다. 피드백을 공유하거나 발견한 버그를 신고해 주세요 — 모든 신고는 더 빠른 출시를 돕습니다.',
   'misc.betaFeedback': '피드백 보내기',
   'mnemonic.title': '복구 문구',
   'mnemonic.warning': '이 단어들을 순서대로 적어 안전한 곳에 보관하세요.',
@@ -880,11 +880,11 @@ const messages: TranslationMap = {
   'privacy.anonymizedAnalytics': '제품 분석',
   'privacy.shareAnonymizedData': '제품 분석 및 진단 공유',
   'privacy.shareAnonymizedDataDesc':
-    '안정적인 계정 ID와 앱 버전 메타데이터를 포함한 개인정보 제한 충돌 보고서와 사용 이벤트를 공유하여 OpenHuman 개선을 도와주세요. 메시지, 지갑 키, API 키, 세션 토큰은 절대 수집되지 않습니다.',
+    '안정적인 계정 ID와 앱 버전 메타데이터를 포함한 개인정보 제한 충돌 보고서와 사용 이벤트를 공유하여 Marvi 개선을 도와주세요. 메시지, 지갑 키, API 키, 세션 토큰은 절대 수집되지 않습니다.',
   'privacy.meetingFollowUps': '회의 후속 조치',
   'privacy.autoHandoffMeet': 'Google Meet transcript를 오케스트레이터에 자동 전달',
   'privacy.autoHandoffMeetDesc':
-    'Google Meet 통화가 끝나면 OpenHuman의 오케스트레이터가 transcript를 읽고 메시지 초안 작성, 후속 일정 예약, 연결된 Slack 워크스페이스에 요약 게시 같은 작업을 수행할 수 있습니다. 기본값은 꺼짐입니다.',
+    'Google Meet 통화가 끝나면 Marvi의 오케스트레이터가 transcript를 읽고 메시지 초안 작성, 후속 일정 예약, 연결된 Slack 워크스페이스에 요약 게시 같은 작업을 수행할 수 있습니다. 기본값은 꺼짐입니다.',
   'privacy.analyticsDisclaimer':
     '활성화하면 제품 분석 및 진단에 개인정보가 제한된 충돌 보고서와 사용 이벤트, 안정적인 계정 ID, 앱 버전 메타데이터가 포함될 수 있습니다. 메시지, 지갑 키, API 키, 세션 토큰은 절대 수집되지 않습니다. 이 설정은 언제든지 변경할 수 있습니다.',
   'settings.about.version': '버전',
@@ -976,18 +976,18 @@ const messages: TranslationMap = {
     '에이전트 메시지를 보내세요. 다음 제공업체 호출의 토큰 사용량이 약 10초 안에 차트에 표시됩니다.',
   'settings.search.title': '검색 엔진',
   'settings.search.menuDesc':
-    'OpenHuman 관리 검색을 기본값으로 사용하거나 API 키로 자체 제공업체를 연결하세요.',
+    'Marvi 관리 검색을 기본값으로 사용하거나 API 키로 자체 제공업체를 연결하세요.',
   'settings.search.description':
-    '에이전트가 사용할 검색 엔진을 선택하거나 검색 도구를 완전히 비활성화합니다. 관리형은 OpenHuman의 백엔드를 사용합니다(설정 불필요). 병렬, Brave, Querit은 API 키를 사용하여 내 컴퓨터에서 직접 실행됩니다.',
+    '에이전트가 사용할 검색 엔진을 선택하거나 검색 도구를 완전히 비활성화합니다. 관리형은 Marvi의 백엔드를 사용합니다(설정 불필요). 병렬, Brave, Querit은 API 키를 사용하여 내 컴퓨터에서 직접 실행됩니다.',
   'settings.search.engineAria': '검색 엔진',
   'settings.search.engineDisabledLabel': 'Disabled',
   'settings.search.engineDisabledDesc':
     '에이전트 컨텍스트 및 사용 가능한 도구 목록에서 검색 도구를 제거합니다.',
-  'settings.search.engineManagedLabel': 'OpenHuman 관리됨',
+  'settings.search.engineManagedLabel': 'Marvi 관리됨',
   'settings.search.engineManagedDesc':
-    '기본값입니다. OpenHuman 백엔드를 통해 라우팅되며 API 키가 필요하지 않습니다.',
+    '기본값입니다. Marvi 백엔드를 통해 라우팅되며 API 키가 필요하지 않습니다.',
   'settings.search.localManagedUnavailable':
-    '로컬 사용자는 OpenHuman 관리 검색을 사용할 수 없습니다. 웹 검색을 활성화하려면 자체 Parallel, Brave 또는 Querit API 키를 추가하세요.',
+    '로컬 사용자는 Marvi 관리 검색을 사용할 수 없습니다. 웹 검색을 활성화하려면 자체 Parallel, Brave 또는 Querit API 키를 추가하세요.',
   'settings.search.engineParallelLabel': 'Parallel',
   'settings.search.engineParallelDesc':
     '직접 Parallel API: 검색, 추출, 채팅, 리서치, 보강, 데이터셋 도구.',
@@ -1094,13 +1094,13 @@ const messages: TranslationMap = {
     '로컬 MCP 비밀 테이블에 암호화되어 저장됩니다. 로그에 남기거나 모델로 전송하지 않습니다.',
   'devices.betaBadge': '베타',
   'devices.betaText':
-    '이 기능은 현재 베타 버전입니다. iOS 기기를 이 OpenHuman과 페어링하여 원격 클라이언트로 사용할 수 있습니다.',
+    '이 기능은 현재 베타 버전입니다. iOS 기기를 이 Marvi과 페어링하여 원격 클라이언트로 사용할 수 있습니다.',
   'devices.comingSoonDescription':
     '기기 페어링이 곧 제공됩니다. 이 페이지에서 iPhone을 페어링하고 연결된 기기를 관리할 수 있게 됩니다.',
   'devices.title': '장치',
   'devices.pairIphone': 'iPhone 페어링',
   'devices.noPaired': '페어링된 장치가 없습니다.',
-  'devices.emptyState': 'iPhone에서 QR code을 스캔하여 이 OpenHuman 세션에 연결하세요.',
+  'devices.emptyState': 'iPhone에서 QR code을 스캔하여 이 Marvi 세션에 연결하세요.',
   'devices.devicePairedTitle': '기기 페어링됨',
   'devices.devicePairedMessage': 'iPhone이 성공적으로 연결되었습니다.',
   'devices.deviceRevokedTitle': '장치가 취소되었습니다.',
@@ -1121,7 +1121,7 @@ const messages: TranslationMap = {
   'devices.loadFailed': '장치를 로드하지 못했습니다: {message}',
   'devices.pairModal.title': 'iPhone 페어링',
   'devices.pairModal.loading': '페어링 코드 생성 중…',
-  'devices.pairModal.instructions': 'iPhone에서 OpenHuman 앱을 열고 이 코드를 스캔하세요.',
+  'devices.pairModal.instructions': 'iPhone에서 Marvi 앱을 열고 이 코드를 스캔하세요.',
   'devices.pairModal.expiresIn': '코드는 ~{count}분 후에 만료됩니다.',
   'devices.pairModal.expiresInPlural': '코드는 ~{count}분 후에 만료됩니다.',
   'devices.pairModal.showDetails': '세부 정보 표시',
@@ -1361,7 +1361,7 @@ const messages: TranslationMap = {
   'mcp.connectAuth.schemeRaw': '없음',
   'mcp.connectAuth.reconnectFailed': '자격 증명은 저장했지만 연결에 실패했습니다.',
   'mcp.connectAuth.oauthHint':
-    '이 서버는 OAuth를 사용합니다. OpenHuman을 인증하려면 브라우저로 로그인하세요.',
+    '이 서버는 OAuth를 사용합니다. Marvi을 인증하려면 브라우저로 로그인하세요.',
   'mcp.connectAuth.signIn': '브라우저로 로그인',
   'mcp.connectAuth.oauthWaiting': '로그인 대기 중…',
   'mcp.connectAuth.oauthOrToken':
@@ -1375,7 +1375,7 @@ const messages: TranslationMap = {
   'autonomy.title': '에이전트 자율성',
   'autonomy.maxActionsLabel': '시간당 최대 작업',
   'autonomy.maxActionsHelp':
-    '에이전트가 롤링 1시간 동안 실행할 수 있는 최대 도구 작업 수입니다. 새 값은 다음 채팅부터 적용됩니다. 크론 작업 및 채널 리스너는 OpenHuman을 재시작할 때까지 현재 제한을 유지합니다.',
+    '에이전트가 롤링 1시간 동안 실행할 수 있는 최대 도구 작업 수입니다. 새 값은 다음 채팅부터 적용됩니다. 크론 작업 및 채널 리스너는 Marvi을 재시작할 때까지 현재 제한을 유지합니다.',
   'autonomy.statusSaving': '저장 중…',
   'autonomy.statusSaved': '저장되었습니다.',
   'autonomy.statusFailed': '실패',
@@ -1428,8 +1428,7 @@ const messages: TranslationMap = {
   'settings.billing.openingBrowser': '브라우저를 여는 중...',
   'settings.billing.browserNotOpen': '브라우저가 열리지 않았다면 위 버튼을 사용하세요.',
   'settings.billing.browserOpenFailed': '브라우저를 자동으로 열 수 없습니다. 위 버튼을 사용하세요.',
-  'settings.tools.chooseCapabilities':
-    'OpenHuman이 사용자를 대신해 사용할 수 있는 기능을 선택하세요.',
+  'settings.tools.chooseCapabilities': 'Marvi이 사용자를 대신해 사용할 수 있는 기능을 선택하세요.',
   'settings.tools.saveChanges': '변경 사항 저장',
   'settings.tools.preferencesSaved': '기본 설정이 저장되었습니다',
   'settings.tools.saveFailed': '기본 설정 저장에 실패했습니다. 다시 시도하세요.',
@@ -1682,8 +1681,8 @@ const messages: TranslationMap = {
   'voice.providers.piperPreset.alanMedium': 'GB · Alan (남)',
   'voice.providers.piperPreset.jennyDiocoMedium': 'GB · Jenny Dioco (여)',
   'voice.providers.piperPreset.northernEnglishMaleMedium': 'GB · 북부 영어(남성)',
-  'voice.providers.chip.cloud': 'OpenHuman (관리형)',
-  'voice.providers.chip.cloudAria': 'OpenHuman 관리형 공급자는 항상 활성화되어 있습니다',
+  'voice.providers.chip.cloud': 'Marvi (관리형)',
+  'voice.providers.chip.cloudAria': 'Marvi 관리형 공급자는 항상 활성화되어 있습니다',
   'voice.providers.chip.whisper': 'Whisper (로컬)',
   'voice.providers.chip.enableWhisper': '로컬 Whisper STT 활성화',
   'voice.providers.chip.disableWhisper': '로컬 Whisper STT 비활성화',
@@ -1732,7 +1731,7 @@ const messages: TranslationMap = {
   'voice.externalProviders.add': 'Add',
   'pttSettings.title': '눌러서 말하기',
   'pttSettings.description':
-    "다른 앱을 사용하는 중에도 키를 누르고 있으면 OpenHuman과 대화할 수 있습니다. 키를 놓으면 녹음이 전송되고, '답변 읽어주기'가 켜져 있으면 OpenHuman이 답변을 음성으로 들려줍니다.",
+    "다른 앱을 사용하는 중에도 키를 누르고 있으면 Marvi과 대화할 수 있습니다. 키를 놓으면 녹음이 전송되고, '답변 읽어주기'가 켜져 있으면 Marvi이 답변을 음성으로 들려줍니다.",
   'pttSettings.shortcutLabel': '단축키',
   'pttSettings.shortcutPlaceholder': '키를 누르세요 (예: F13)',
   'pttSettings.shortcutUnsetHint':
@@ -1745,11 +1744,11 @@ const messages: TranslationMap = {
     '일반 키를 선택하세요(예: F13) — 보조 키로만 구성된 단축키는 눌러서 말하기에서 동작하지 않습니다.',
   'pttSettings.errorEmpty': '바인딩할 키를 선택하세요.',
   'pttSettings.errorAccessibility':
-    '이 단축키에는 macOS의 손쉬운 사용 권한이 필요합니다. 시스템 설정 → 개인정보 보호 및 보안 → 손쉬운 사용을 열고 OpenHuman을 활성화하세요.',
+    '이 단축키에는 macOS의 손쉬운 사용 권한이 필요합니다. 시스템 설정 → 개인정보 보호 및 보안 → 손쉬운 사용을 열고 Marvi을 활성화하세요.',
   'pttSettings.errorShortcutInUse':
     '다른 앱이 이미 이 단축키를 사용 중입니다. 다른 단축키를 선택하세요.',
   'pttSettings.errorUnsupportedWayland':
-    'Wayland 세션은 OpenHuman의 전역 단축키를 아직 지원하지 않습니다 — X11 세션으로 전환하거나 앱 내 받아쓰기 토글을 사용하세요.',
+    'Wayland 세션은 Marvi의 전역 단축키를 아직 지원하지 않습니다 — X11 세션으로 전환하거나 앱 내 받아쓰기 토글을 사용하세요.',
   'pttSettings.exclusiveFullscreenHint':
     '전용 전체 화면 게임에서는 오버레이가 표시되지 않습니다 — 알림음만 들립니다. 오버레이를 보려면 테두리 없는 전체 화면으로 전환하세요.',
   'pttOverlay.listening': '듣는 중…',
@@ -1989,7 +1988,7 @@ const messages: TranslationMap = {
   'chat.attachment.unsupportedType':
     '지원되지 않는 파일 형식입니다. 이미지(PNG, JPEG, WebP, GIF, BMP) 또는 PDF, TXT, Markdown 파일을 사용하세요.',
   'chat.attachment.imageNotSupported':
-    '이 모델은 이미지를 읽을 수 없습니다. 이미지를 첨부하려면 OpenHuman 추론 등급을 사용할 수 있습니다.',
+    '이 모델은 이미지를 읽을 수 없습니다. 이미지를 첨부하려면 Marvi 추론 등급을 사용할 수 있습니다.',
   'chat.attachment.readFailed': '파일을 읽을 수 없습니다',
   'memory.searchAria': '메모리 검색',
   'memory.searchPlaceholder': '메모리 항목 검색...',
@@ -2352,9 +2351,9 @@ const messages: TranslationMap = {
   'bootCheck.chooseCoreMode': '런타임 선택',
   'bootCheck.connectToCore': '런타임에 연결',
   'bootCheck.desktopDescription':
-    'OpenHuman은 생각하기 위한 런타임이 필요합니다. 어디에서 실행할지 선택하세요.',
+    'Marvi은 생각하기 위한 런타임이 필요합니다. 어디에서 실행할지 선택하세요.',
   'bootCheck.webDescription':
-    '웹에서 OpenHuman은 사용자가 제어하는 런타임에 연결됩니다. 아래에 URL과 인증 토큰을 입력하거나, 데스크톱 앱을 받아 이 컴퓨터에서 바로 실행하세요.',
+    '웹에서 Marvi은 사용자가 제어하는 런타임에 연결됩니다. 아래에 URL과 인증 토큰을 입력하거나, 데스크톱 앱을 받아 이 컴퓨터에서 바로 실행하세요.',
   'bootCheck.preferDesktop': '모든 것을 자신의 기기에 보관하고 싶으신가요?',
   'bootCheck.downloadDesktop': '데스크톱 앱 받기',
   'bootCheck.localRecommended': '로컬에서 실행(추천)',
@@ -2380,7 +2379,7 @@ const messages: TranslationMap = {
   'bootCheck.quit': '종료',
   'bootCheck.legacyDetected': '레거시 백그라운드 런타임 감지됨',
   'bootCheck.legacyDescription':
-    '별도로 설치된 OpenHuman 데몬이 이 기기에서 이미 실행 중입니다. 내장 런타임이 대신 실행되기 전에 이를 정리해야 합니다.',
+    '별도로 설치된 Marvi 데몬이 이 기기에서 이미 실행 중입니다. 내장 런타임이 대신 실행되기 전에 이를 정리해야 합니다.',
   'bootCheck.removing': '제거 중…',
   'bootCheck.removeContinue': '제거하고 계속',
   'bootCheck.localNeedsRestart': '로컬 런타임을 다시 시작해야 함',
@@ -2402,7 +2401,7 @@ const messages: TranslationMap = {
   'bootCheck.actionFailed': '문제가 발생했습니다. 다시 시도해 주세요.',
   'bootCheck.portConflictTitle': '앱 엔진을 시작할 수 없습니다',
   'bootCheck.portConflictBody':
-    '다른 프로세스가 OpenHuman에 필요한 네트워크 포트를 사용 중입니다. 자동으로 문제를 해결해 드리겠습니다.',
+    '다른 프로세스가 Marvi에 필요한 네트워크 포트를 사용 중입니다. 자동으로 문제를 해결해 드리겠습니다.',
   'bootCheck.portConflictFixButton': '자동 수정',
   'bootCheck.portConflictFixing': '수정 중…',
   'bootCheck.portConflictFixFailed':
@@ -2457,7 +2456,7 @@ const messages: TranslationMap = {
   'composio.reconnect': '다시 연결',
   'composio.expiredAuthorization': '{name} 인증이 만료되었습니다.',
   'composio.expiredDescription':
-    '{name} 도구를 다시 활성화하려면 다시 연결하세요. OpenHuman은 OAuth 액세스를 새로 고칠 때까지 이 통합을 사용할 수 없는 상태로 유지합니다.',
+    '{name} 도구를 다시 활성화하려면 다시 연결하세요. Marvi은 OAuth 액세스를 새로 고칠 때까지 이 통합을 사용할 수 없는 상태로 유지합니다.',
   'composio.envVarOverrides': '설정되어 있으며, 이 설정을 재정의합니다.',
   'composio.previewBadge': '미리보기',
   'composio.previewTooltip':
@@ -2508,7 +2507,7 @@ const messages: TranslationMap = {
   'accounts.webviewHost.timeoutHint': '시간 초과 힌트',
   'app.connectionBadge.composio': 'Composio',
   'app.connectionBadge.messaging': '메시징',
-  'app.connectionIndicator.connected': 'OpenHuman AI에 연결됨 🚀',
+  'app.connectionIndicator.connected': 'Marvi AI에 연결됨 🚀',
   'app.connectionIndicator.connecting': '연결 중',
   'app.connectionIndicator.coreOffline': '코어 오프라인',
   'app.connectionIndicator.disconnected': '연결 해제됨',
@@ -2557,7 +2556,7 @@ const messages: TranslationMap = {
   'app.openhumanLink.notifications.send': '테스트 알림 보내기',
   'app.openhumanLink.notifications.sendFailed': '보낼 수 없습니다: {error}',
   'app.openhumanLink.notifications.sent':
-    '테스트 알림이 전송되었습니다. 받지 못했다면 시스템 설정 → 알림 → OpenHuman으로 이동해 알림 허용을 켜고 배너 스타일을 지속으로 설정하세요.',
+    '테스트 알림이 전송되었습니다. 받지 못했다면 시스템 설정 → 알림 → Marvi으로 이동해 알림 허용을 켜고 배너 스타일을 지속으로 설정하세요.',
   'app.openhumanLink.skipForNow': '지금은 건너뛰기',
   'app.openhumanLink.telegramUnavailable': 'Telegram을 사용할 수 없음',
   'app.openhumanLink.title.accounts': '앱 연결',
@@ -2570,7 +2569,7 @@ const messages: TranslationMap = {
   'app.persistRehydration.heading': '제목',
   'app.persistRehydration.resetCta': '초기화 중…',
   'app.persistRehydration.resetting': '초기화 중…',
-  'app.routeLoading.initializing': 'OpenHuman 초기화 중...',
+  'app.routeLoading.initializing': 'Marvi 초기화 중...',
   'app.update.currentlyOn': '{version}',
   'app.update.errorFallback': '업데이트 중 문제가 발생했습니다.',
   'app.update.header.default': '업데이트',
@@ -2626,7 +2625,7 @@ const messages: TranslationMap = {
   'chat.approval.fallback': '에이전트가 승인이 필요한 작업을 실행하려고 합니다.',
   'chat.approval.title': '승인 필요',
   'chat.approval.tool': '도구:',
-  'channels.authMode.managed_dm': 'OpenHuman로 로그인',
+  'channels.authMode.managed_dm': 'Marvi로 로그인',
   'channels.authMode.oauth': 'OAuth 로그인',
   'channels.authMode.bot_token': '자체 봇 토큰 사용',
   'channels.authMode.api_key': '자체 API 키 사용',
@@ -2638,9 +2637,8 @@ const messages: TranslationMap = {
   'channels.discord.description': 'Discord을(를) 통해 메시지를 보내고 받습니다.',
   'channels.discord.authMode.bot_token.description': '자신만의 Discord 봇 토큰을 제공하세요.',
   'channels.discord.authMode.oauth.description':
-    'OAuth을 통해 OpenHuman 봇을 Discord 서버에 설치합니다.',
-  'channels.discord.authMode.managed_dm.description':
-    '개인 Discord 계정을 OpenHuman 봇에 연결하세요.',
+    'OAuth을 통해 Marvi 봇을 Discord 서버에 설치합니다.',
+  'channels.discord.authMode.managed_dm.description': '개인 Discord 계정을 Marvi 봇에 연결하세요.',
   'channels.discord.fields.bot_token.label': '봇 토큰',
   'channels.discord.fields.bot_token.placeholder': '귀하의 Discord 봇 토큰',
   'channels.discord.fields.guild_id.label': '서버(길드) ID',
@@ -2648,7 +2646,7 @@ const messages: TranslationMap = {
   'channels.telegram.displayName': 'Telegram',
   'channels.telegram.description': '메시지 보내기 및 받기 Telegram.',
   'channels.telegram.authMode.managed_dm.description':
-    'OpenHuman Telegram 봇에게 직접 메시지를 보냅니다.',
+    'Marvi Telegram 봇에게 직접 메시지를 보냅니다.',
   'channels.telegram.authMode.bot_token.description':
     '@BotFather에서 자신만의 Telegram 봇 토큰을 제공하세요.',
   'channels.telegram.fields.bot_token.label': '봇 토큰',
@@ -2699,16 +2697,16 @@ const messages: TranslationMap = {
   'iosPair.error.connectionFailed':
     '연결에 실패했습니다. 데스크탑 앱이 실행 중인지 확인하고 다시 시도하세요.',
   'iosPair.error.invalidQr':
-    '유효하지 않은 QR 코드입니다. OpenHuman 페어링 코드를 스캔하고 있는지 확인하세요.',
+    '유효하지 않은 QR 코드입니다. Marvi 페어링 코드를 스캔하고 있는지 확인하세요.',
   'iosPair.error.unreachableDesktop':
     '데스크탑에 연결할 수 없습니다. 두 기기가 모두 온라인 상태인지 확인하고 다시 시도하세요.',
   'iosPair.expired': 'QR code이 만료되었습니다. 데스크탑에 코드 재생성을 요청하십시오.',
   'iosPair.instructions':
-    '데스크탑에서 OpenHuman을 열고 설정 > 기기로 이동한 후 "기기 페어링"을 탭하여 QR 코드를 표시하세요.',
+    '데스크탑에서 Marvi을 열고 설정 > 기기로 이동한 후 "기기 페어링"을 탭하여 QR 코드를 표시하세요.',
   'iosPair.retryScan': '스캔 재시도',
   'iosPair.scanQrCode': '스캔 QR code',
   'iosPair.scannerOpening': '스캐너 여는 중...',
-  'iosPair.step.openDesktop': '데스크톱에서 OpenHuman 열기',
+  'iosPair.step.openDesktop': '데스크톱에서 Marvi 열기',
   'iosPair.step.openSettings': '설정 > 장치로 이동',
   'iosPair.step.showQr': '"기기 페어링"을 탭하여 QR 표시',
   'iosPair.title': '데스크톱과 페어링',
@@ -2743,7 +2741,7 @@ const messages: TranslationMap = {
   'composio.connect.permissionsDefault': '읽기 + 쓰기가 기본적으로 활성화됨',
   'composio.connect.permissionsNote': '노출할 수 있음',
   'composio.connect.permissionsNoteSuffix':
-    'OpenHuman 자체 에이전트 권한은 아래에서 읽기, 쓰기, 관리자 토글로 제어됩니다.',
+    'Marvi 자체 에이전트 권한은 아래에서 읽기, 쓰기, 관리자 토글로 제어됩니다.',
   'composio.connect.reopenBrowser': '브라우저 다시 열기',
   'composio.connect.requestingUrl': '연결 URL 요청 중…',
   'composio.connect.requiredFieldEmpty': '이 필드는 필수입니다.',
@@ -2846,7 +2844,7 @@ const messages: TranslationMap = {
   'daemon.serviceBlockingGate.retryFailed':
     '다시 시도에 실패했습니다. 최신 앱 빌드를 다운로드하고 다시 시도하세요.',
   'daemon.serviceBlockingGate.retrying': '다시 시도 중...',
-  'daemon.serviceBlockingGate.title': 'OpenHuman 코어를 사용할 수 없습니다',
+  'daemon.serviceBlockingGate.title': 'Marvi 코어를 사용할 수 없습니다',
   'home.banners.discordSubtitle': 'Discord 부제목',
   'home.banners.discordTitle': 'Discord 참여하기',
   'home.banners.earlyBirdDismiss': '얼리버드 배너 닫기',
@@ -2855,7 +2853,7 @@ const messages: TranslationMap = {
   'home.banners.earlyBirdTitle': '첫 1,000명의 사용자는 60% 할인을 받습니다.',
   'home.banners.earlyBirdUseCode': '얼리버드 코드 사용',
   'home.banners.getSubscription': '구독하기',
-  'home.banners.promoCreditsBody': 'OpenHuman을 사용해 보고, 더 필요할 때',
+  'home.banners.promoCreditsBody': 'Marvi을 사용해 보고, 더 필요할 때',
   'home.banners.promoCreditsTitle': '{amount}의 프로모션 크레딧이 있습니다.',
   'home.banners.promoCreditsUsage': '10배 더 많은 사용량을 받으세요.',
   'intelligence.memoryChunk.detail.chunk': '청크',
@@ -2883,7 +2881,7 @@ const messages: TranslationMap = {
   'intelligence.diagram.skillInstallCommand': 'npx skills add yizhiyanhua-ai/fireworks-tech-graph',
   'intelligence.diagram.promptExample':
     '현재 스웜의 아키텍처 다이어그램을 다크 터미널 스타일로 생성하세요',
-  'intelligence.diagram.imageAlt': '최신 생성된 OpenHuman 아키텍처 다이어그램',
+  'intelligence.diagram.imageAlt': '최신 생성된 Marvi 아키텍처 다이어그램',
   'intelligence.diagram.refreshesEvery': '{seconds}초마다 새로 고침',
   'intelligence.memoryText.entityTypePrefix': '엔터티 유형',
   'intelligence.screenDebug.active': '활성',
@@ -3109,7 +3107,7 @@ const messages: TranslationMap = {
   'openhuman.team_list_teams': '팀 목록 팀',
   'overlay.ariaAttention': '주의 메시지',
   'overlay.ariaCompanion': '컴패니언 활성',
-  'overlay.ariaOrb': 'OpenHuman 오버레이',
+  'overlay.ariaOrb': 'Marvi 오버레이',
   'overlay.ariaVoiceActive': '음성 입력 활성',
   'overlay.companion.error': '오류',
   'overlay.companion.listening': '듣는 중…',
@@ -3387,7 +3385,7 @@ const messages: TranslationMap = {
   'settings.ai.noSpendRows': '로드된 지출 행이 없습니다.',
   'settings.ai.topHours': '상위 시간',
   'settings.ai.noHourlySpend': '아직 시간당 지출이 없습니다.',
-  'settings.ai.openhumanDefault': 'OpenHuman(기본값)',
+  'settings.ai.openhumanDefault': 'Marvi(기본값)',
   'settings.ai.localModelResolved': 'Ollama · {model}',
   'settings.ai.customRoutingForWorkload': '{label}에 대한 사용자 정의 라우팅',
   'settings.ai.loadingModels': '모델 로드 중...',
@@ -3446,12 +3444,12 @@ const messages: TranslationMap = {
   'settings.ai.composioSyncScans': 'Composio 동기화 검색',
   'settings.ai.totalBackgroundApiReadBudget': '총 bg API 읽기 예산',
   'settings.ai.memoryWorkerPolls': '메모리 작업자 설문 조사',
-  'settings.ai.defaultProviderName': 'OpenHuman',
+  'settings.ai.defaultProviderName': 'Marvi',
   'settings.ai.routing.managed': '관리됨',
   'settings.ai.routing.managedDesc':
-    'OpenHuman이 모든 추론을 클라우드에서 실행하고, 작업에 가장 적합한 모델을 선택하며, 비용을 최적화하고 가장 안전한 라우팅 기본값을 유지합니다.',
+    'Marvi이 모든 추론을 클라우드에서 실행하고, 작업에 가장 적합한 모델을 선택하며, 비용을 최적화하고 가장 안전한 라우팅 기본값을 유지합니다.',
   'settings.ai.routing.managedMsg':
-    'OpenHuman이 모든 워크로드의 추론을 처리하고 비용, 품질, 보안을 고려해 최적의 경로를 자동으로 선택합니다.',
+    'Marvi이 모든 워크로드의 추론을 처리하고 비용, 품질, 보안을 고려해 최적의 경로를 자동으로 선택합니다.',
   'settings.ai.routing.useYourOwn': '자체 모델 사용',
   'settings.ai.routing.useYourOwnDesc':
     '제공업체와 모델 하나를 선택하고 모든 워크로드를 해당 경로로 라우팅합니다. 간단하지만 경량 추론과 대형 추론이 같은 경로를 공유하므로 비효율적일 수 있습니다.',
@@ -3635,16 +3633,16 @@ const messages: TranslationMap = {
   'settings.composio.confirmSwitch': '이해했습니다. Direct로 전환',
   'settings.composio.confirmTitle': '⚠️ Direct 모드로 전환',
   'settings.composio.confirmWarning':
-    '기존 통합(Gmail, Slack, GitHub 등 OpenHuman을 통해 연결된 통합)은 표시되지 않습니다 — OpenHuman 관리형 Composio 테넌트에 있습니다.',
+    '기존 통합(Gmail, Slack, GitHub 등 Marvi을 통해 연결된 통합)은 표시되지 않습니다 — Marvi 관리형 Composio 테넌트에 있습니다.',
   'settings.composio.intro':
     'Composio는 에이전트가 호출할 수 있는 도구로 250개 이상의 외부 앱을 통합합니다. 이러한 도구 호출이 라우팅되는 방식을 선택하세요.',
   'settings.composio.title': 'Composio',
   'settings.composio.modeDirect': 'Direct(직접 API 키 사용)',
   'settings.composio.modeDirectDesc':
     '호출이 backend.composio.dev로 직접 이동합니다. 독립적이고 오프라인 친화적입니다. 도구 실행은 동기식으로 작동하지만, 실시간 트리거 웹훅은 아직 Direct 모드에서 라우팅되지 않습니다(후속 이슈).',
-  'settings.composio.modeManaged': '관리형(OpenHuman이 대신 처리)',
+  'settings.composio.modeManaged': '관리형(Marvi이 대신 처리)',
   'settings.composio.modeManagedDesc':
-    'OpenHuman이 백엔드를 통해 도구 호출을 프록시합니다(권장). 인증은 중개되며, Composio API 키를 붙여넣을 필요가 없습니다. 웹훅은 완전히 라우팅됩니다.',
+    'Marvi이 백엔드를 통해 도구 호출을 프록시합니다(권장). 인증은 중개되며, Composio API 키를 붙여넣을 필요가 없습니다. 웹훅은 완전히 라우팅됩니다.',
   'settings.composio.routingMode': '라우팅 모드',
   'settings.composio.saveErrorNoKey':
     '저장에 실패했습니다. Direct 모드에는 비어 있지 않은 API 키가 필요합니다.',
@@ -3875,7 +3873,7 @@ const messages: TranslationMap = {
   'settings.localModel.status.ollamaDiagnostics': 'Ollama 진단',
   'settings.localModel.status.ollamaNotInstalled': 'Ollama 런타임을 사용할 수 없음',
   'settings.localModel.status.ollamaNotInstalledDesc':
-    'OpenHuman은 이제 Ollama를 외부 추론 런타임으로 취급합니다. 직접 Ollama 서버를 시작하고 원하는 모델을 가져온 뒤 작업 라우팅을 해당 서버로 지정하세요.',
+    'Marvi은 이제 Ollama를 외부 추론 런타임으로 취급합니다. 직접 Ollama 서버를 시작하고 원하는 모델을 가져온 뒤 작업 라우팅을 해당 서버로 지정하세요.',
   'settings.localModel.status.progress': '진행률',
   'settings.localModel.status.provider': '제공업체',
   'settings.localModel.status.retryBootstrap': '부트스트랩 다시 시도',
@@ -3902,7 +3900,7 @@ const messages: TranslationMap = {
     'Telegram/Discord 인증 모드 및 기본 채널 라우팅 구성',
   'settings.developerMenu.tools.title': '도구',
   'settings.developerMenu.tools.desc':
-    'OpenHuman이 사용자를 대신하여 사용할 수 있는 기능 활성화 또는 비활성화',
+    'Marvi이 사용자를 대신하여 사용할 수 있는 기능 활성화 또는 비활성화',
   'settings.developerMenu.agentChat.title': '에이전트 채팅',
   'settings.developerMenu.agentChat.desc': '모델 및 온도 재정의를 통한 테스트 에이전트 대화',
   'settings.developerMenu.devWorkflow.title': '개발 워크플로',
@@ -4073,7 +4071,7 @@ const messages: TranslationMap = {
   'settings.developerMenu.integrationTriggers.desc':
     'Composio 통합 트리거에 대한 AI 분류 설정 구성',
   'settings.developerMenu.mcpServer.title': 'MCP 서버',
-  'settings.developerMenu.mcpServer.desc': 'OpenHuman에 연결하도록 외부 MCP 클라이언트 구성',
+  'settings.developerMenu.mcpServer.desc': 'Marvi에 연결하도록 외부 MCP 클라이언트 구성',
   'settings.developerMenu.autonomy.title': '에이전트 자율성',
   'settings.developerMenu.autonomy.desc': '도구 작업 속도 제한 및 안전 임계값',
   'settings.developerMenu.autocomplete.title': '자동 완성',
@@ -4091,7 +4089,7 @@ const messages: TranslationMap = {
   'settings.mcpServer.copied': '복사되었습니다!',
   'settings.mcpServer.openConfigFile': '구성 파일 열기',
   'settings.mcpServer.binaryPathNotFound':
-    'OpenHuman 바이너리를 찾을 수 없습니다. 소스에서 실행하는 경우 다음을 사용하여 빌드하세요: cargo build --bin openhuman-core',
+    'Marvi 바이너리를 찾을 수 없습니다. 소스에서 실행하는 경우 다음을 사용하여 빌드하세요: cargo build --bin openhuman-core',
   'settings.mcpServer.openConfigError': '구성 파일을 열지 못했습니다.',
   'settings.mcpServer.clientClaudeDesktop': 'Claude Desktop',
   'settings.mcpServer.clientCursor': '커서',
@@ -4285,7 +4283,7 @@ const messages: TranslationMap = {
   'settings.mascot.characterPreview': '미리보기',
   'settings.mascot.characterStates': '상태',
   'settings.mascot.characterVisemes': '입 모양',
-  'settings.mascot.colorAria': 'OpenHuman 색상',
+  'settings.mascot.colorAria': 'Marvi 색상',
   'settings.mascot.colorDesc': '색상 설명',
   'settings.mascot.colorHeading': '색상 제목',
   'settings.mascot.colorBlack': '검정',
@@ -4295,15 +4293,15 @@ const messages: TranslationMap = {
   'settings.mascot.primaryColor': '기본 색상',
   'settings.mascot.secondaryColor': '보조 색상',
   'settings.mascot.colorYellow': '노랑',
-  'settings.mascot.libraryUnavailable': 'OpenHuman 라이브러리를 사용할 수 없음',
-  'settings.mascot.title': 'OpenHuman',
-  'settings.mascot.loadingLibrary': 'OpenHuman 라이브러리 불러오는 중…',
+  'settings.mascot.libraryUnavailable': 'Marvi 라이브러리를 사용할 수 없음',
+  'settings.mascot.title': 'Marvi',
+  'settings.mascot.loadingLibrary': 'Marvi 라이브러리 불러오는 중…',
   'settings.mascot.loadDetailError': '마스코트를 로드할 수 없습니다.',
   'settings.mascot.loadLibraryError': '마스코트 라이브러리를 로드할 수 없습니다.',
-  'settings.mascot.localDefault': '로컬 OpenHuman(기본값)',
+  'settings.mascot.localDefault': '로컬 Marvi(기본값)',
   'settings.mascot.menuTitle': '마스코트',
   'settings.mascot.menuDesc': '앱 전체에서 사용되는 마스코트 색상 선택',
-  'settings.mascot.noCharacters': '아직 사용할 수 있는 OpenHuman 캐릭터가 없습니다',
+  'settings.mascot.noCharacters': '아직 사용할 수 있는 Marvi 캐릭터가 없습니다',
   'settings.mascot.noColorVariants': '색상 변형 없음',
   'settings.mascot.voice.current': '현재',
   'settings.mascot.voice.customDesc':
@@ -4357,7 +4355,7 @@ const messages: TranslationMap = {
     '합리적인 기본값 — 매번 추가 토큰을 많이 쓰지 않으면서 좋은 연속성을 제공합니다.',
   'settings.memoryWindow.balanced.label': '균형',
   'settings.memoryWindow.description':
-    'OpenHuman이 새 에이전트 실행마다 주입하는 기억된 컨텍스트의 양입니다. 창이 클수록 과거 대화를 더 잘 인식하지만, 매 실행마다 더 많은 토큰을 사용하고 비용도 더 듭니다.',
+    'Marvi이 새 에이전트 실행마다 주입하는 기억된 컨텍스트의 양입니다. 창이 클수록 과거 대화를 더 잘 인식하지만, 매 실행마다 더 많은 토큰을 사용하고 비용도 더 듭니다.',
   'settings.memoryWindow.extended.badge': '더 많은 컨텍스트',
   'settings.memoryWindow.extended.hint':
     '각 실행에 더 많은 장기 메모리를 주입합니다. 턴당 토큰 비용이 더 높습니다.',
@@ -4558,20 +4556,20 @@ const messages: TranslationMap = {
   'skills.install.urlLabel': '스킬 URL',
   'skills.install.urlPlaceholder': 'https://raw.githubusercontent.com/owner/repo/main/SKILL.md',
   'skills.meetingBots.bannerDesc':
-    'Google Meet 링크를 넣으면 OpenHuman이 게스트로 참여하여 말하고, 듣고, 반응합니다.',
-  'skills.meetingBots.bannerTitle': 'OpenHuman을 회의에 보내기',
-  'skills.meetingBots.busyTitle': 'OpenHuman이 바쁩니다',
+    'Google Meet 링크를 넣으면 Marvi이 게스트로 참여하여 말하고, 듣고, 반응합니다.',
+  'skills.meetingBots.bannerTitle': 'Marvi을 회의에 보내기',
+  'skills.meetingBots.busyTitle': 'Marvi이 바쁩니다',
   'skills.meetingBots.comingSoon': '곧 제공 예정',
-  'skills.meetingBots.couldNotStartTitle': 'OpenHuman을 시작할 수 없습니다',
+  'skills.meetingBots.couldNotStartTitle': 'Marvi을 시작할 수 없습니다',
   'skills.meetingBots.displayName': '표시 이름',
-  'skills.meetingBots.failedToStart': 'OpenHuman 시작에 실패했습니다.',
+  'skills.meetingBots.failedToStart': 'Marvi 시작에 실패했습니다.',
   'skills.meetingBots.joiningMessage': '몇 초 안에 참가자로 표시될 것입니다.',
-  'skills.meetingBots.joiningTitle': 'OpenHuman이 회의에 참여하는 중',
+  'skills.meetingBots.joiningTitle': 'Marvi이 회의에 참여하는 중',
   'skills.meetingBots.meetingLink': '회의 링크',
-  'skills.meetingBots.modalAriaLabel': 'OpenHuman을 회의에 보내기',
+  'skills.meetingBots.modalAriaLabel': 'Marvi을 회의에 보내기',
   'skills.meetingBots.modalDesc':
-    'OpenHuman이 익명 게스트로 참여하여 비디오를 통화에 스트리밍하고 에이전트를 통해 응답합니다.',
-  'skills.meetingBots.modalTitle': 'OpenHuman을 회의에 보내기',
+    'Marvi이 익명 게스트로 참여하여 비디오를 통화에 스트리밍하고 에이전트를 통해 응답합니다.',
+  'skills.meetingBots.modalTitle': 'Marvi을 회의에 보내기',
   'skills.meetingBots.newBadge': '새 항목',
   'skills.meetingBots.platformComingSoon': '{label} 지원이 곧 제공될 예정입니다.',
   'skills.meetingBots.platformHints.gmeet': 'Meet.google.com/abc-defg-hij',
@@ -4600,7 +4598,7 @@ const messages: TranslationMap = {
   'skills.meetingBots.respondToParticipantDesc':
     '회의에서 사용하는 정확한 표시 이름을 입력하세요. 봇은 이름(웨이크 구문)을 말할 때만 응답합니다.',
   'skills.meetingBots.wakePhrase': '웨이크 구문',
-  'skills.meetingBots.wakePhraseHint': 'Hey OpenHuman',
+  'skills.meetingBots.wakePhraseHint': 'Hey Marvi',
   'skills.meetingBots.wakePhraseDesc': '참가자가 봇이 응답하기 전에 이것을 말해야 합니다.',
   'skills.meetingBots.activeMode': '부르면 응답하기',
   'skills.meetingBots.activeModeDesc':
@@ -4755,7 +4753,7 @@ const messages: TranslationMap = {
   'chat.parentThread': '상위 스레드',
   'chat.removeReaction': '{emoji} 제거',
   'settings.composio.loading': '불러오는 중…',
-  'settings.mascot.noCharactersAvailable': '아직 사용할 수 있는 OpenHuman 캐릭터가 없습니다',
+  'settings.mascot.noCharactersAvailable': '아직 사용할 수 있는 Marvi 캐릭터가 없습니다',
   'skills.uninstall.confirmTitle': '{name}을(를) 제거하시겠습니까?',
   'conversations.taskKanban.blocked': '차단됨',
   'conversations.taskKanban.done': '완료',
@@ -4778,7 +4776,7 @@ const messages: TranslationMap = {
   'settings.composio.notYetRouted': '아직 라우팅되지 않음',
   'settings.localModel.download.manageExternal': '외부 런타임에서 이 모델을 관리하세요.',
   'settings.localModel.status.manageOllamaExternal':
-    'OpenHuman 외부에서 Ollama 프로세스와 모델 가져오기를 관리한 다음 진단을 다시 실행하세요.',
+    'Marvi 외부에서 Ollama 프로세스와 모델 가져오기를 관리한 다음 진단을 다시 실행하세요.',
   'settings.localModel.status.ollamaDocs': 'Ollama 문서',
   'settings.localModel.status.thenRetry':
     '설정 지침을 확인한 다음 런타임에 연결할 수 있게 되면 다시 시도하세요.',
@@ -4790,7 +4788,7 @@ const messages: TranslationMap = {
   'devOptions.menuMessagingDesc': 'Telegram/Discord 인증 모드 및 기본 채널 라우팅 구성',
   'devOptions.menuTools': '도구',
   'devOptions.menuToolsDesc':
-    'OpenHuman이(가) 사용자를 대신하여 사용할 수 있는 기능 활성화 또는 비활성화',
+    'Marvi이(가) 사용자를 대신하여 사용할 수 있는 기능 활성화 또는 비활성화',
   'devOptions.menuAgentChat': '에이전트 채팅',
   'devOptions.menuAgentChatDesc': '모델 및 온도 재정의를 사용한 테스트 에이전트 대화',
   'devOptions.menuCronJobs': '크론 작업',
@@ -5254,7 +5252,7 @@ const messages: TranslationMap = {
 
   'keyring.consent.title': '보안 저장소를 사용할 수 없음',
   'keyring.consent.description':
-    '운영 체제 키체인에 접근할 수 없습니다. OpenHuman이 로컬 암호화 저장소를 사용하여 비밀을 저장하려면 귀하의 허가가 필요합니다.',
+    '운영 체제 키체인에 접근할 수 없습니다. Marvi이 로컬 암호화 저장소를 사용하여 비밀을 저장하려면 귀하의 허가가 필요합니다.',
   'keyring.consent.reasonPrefix': '이유:',
   'keyring.consent.showDetails': '이것은 무엇을 의미하나요?',
   'keyring.consent.hideDetails': '세부 정보 숨기기',
@@ -5294,7 +5292,7 @@ const messages: TranslationMap = {
   'memory.health.remediation.budget_exhausted':
     '메모리 임베딩이 관리형 예산에 도달했습니다. 로컬 Ollama 임베딩을 설정하거나(설정 → AI → 임베딩) 메모리를 계속 구축하려면 자체 임베딩 API 키를 추가하세요.',
   'memory.health.remediation.auth_missing':
-    '임베딩 자격 증명을 찾을 수 없습니다. OpenHuman에 로그인하거나 설정 → AI → 임베딩에서 로컬 Ollama 임베딩을 설정하세요.',
+    '임베딩 자격 증명을 찾을 수 없습니다. Marvi에 로그인하거나 설정 → AI → 임베딩에서 로컬 Ollama 임베딩을 설정하세요.',
   'memory.health.remediation.auth_invalid':
     '임베딩 자격 증명이 거부되었습니다. 다시 인증하거나 설정 → AI → 임베딩에서 로컬 Ollama 임베딩으로 전환하세요.',
   'memory.health.remediation.embeddings_unconfigured':
@@ -5380,11 +5378,11 @@ const messages: TranslationMap = {
   'onboarding.custom.vault.subtitle':
     '메모리 노트가 기록되는 위치, 소스 데이터를 읽는 방법, 볼트 파이프라인이 정상인지 확인하세요.',
   'onboarding.custom.vault.defaultDesc':
-    'OpenHuman 관리형 메모리 기본값을 사용합니다. 볼트 경로와 동기화 상태는 나중에 검토할 수 있습니다.',
+    'Marvi 관리형 메모리 기본값을 사용합니다. 볼트 경로와 동기화 상태는 나중에 검토할 수 있습니다.',
   'onboarding.custom.vault.configureDesc':
     '볼트 소유권을 검토하고 상태 검사를 실행하며 메모리 컨트롤을 지금 조정하세요.',
   'onboarding.custom.vault.localDisabledReason':
-    '관리형 설정은 OpenHuman 로그인이 필요하며 로컬 모드에서는 사용할 수 없습니다.',
+    '관리형 설정은 Marvi 로그인이 필요하며 로컬 모드에서는 사용할 수 없습니다.',
   'onboarding.custom.vault.exitError': '온보딩을 완료할 수 없습니다. 다시 시도해 주세요.',
   'vaultHealth.title': '볼트 상태 체크리스트',
   'vaultHealth.setupTitle': '볼트 설정 상태',
@@ -5404,9 +5402,9 @@ const messages: TranslationMap = {
   'vaultHealth.existsLabel': '워크스페이스 볼트 경로가 존재합니다',
   'vaultHealth.existsRecovery':
     '볼트 폴더가 없습니다. 동기화를 시작하거나 이 폴더를 만든 후 체크리스트를 새로 고침하세요.',
-  'vaultHealth.writableLabel': 'OpenHuman이 볼트에 쓸 수 있습니다',
+  'vaultHealth.writableLabel': 'Marvi이 볼트에 쓸 수 있습니다',
   'vaultHealth.writableRecovery':
-    'OpenHuman이 아직 이 볼트에 쓸 수 없습니다. 쓰기 권한을 부여하고 새로 고침하세요.',
+    'Marvi이 아직 이 볼트에 쓸 수 없습니다. 쓰기 권한을 부여하고 새로 고침하세요.',
   'vaultHealth.obsidianLabel': '볼트가 Obsidian에 등록되어 있습니다',
   'vaultHealth.obsidianRecovery':
     'Obsidian에서 이 경로에 대해 "폴더를 볼트로 열기"를 선택한 후 체크리스트를 새로 고침하세요.',
@@ -5421,14 +5419,13 @@ const messages: TranslationMap = {
   'vaultHealth.timeDaysAgo': '{n}일 전',
   'memoryData.howItWorks': '메모리 저장 방식',
   'memoryData.workspaceVault': '워크스페이스 볼트 · 쓰기',
-  'memoryData.workspaceVaultDesc':
-    'OpenHuman이 생성된 메모리 노트를 memory_tree/content에 기록합니다.',
+  'memoryData.workspaceVaultDesc': 'Marvi이 생성된 메모리 노트를 memory_tree/content에 기록합니다.',
   'memoryData.connectedSources': '연결된 소스 · 읽기',
   'memoryData.connectedSourcesDesc':
     '폴더, 사서함, 채팅, 저장소가 메모리 인덱싱을 위해 가져와집니다 — 원본 파일은 절대 수정되지 않습니다.',
   'memoryData.internalFiles': '내부 메모리 트리 파일',
   'memoryData.internalFilesDesc':
-    '인덱스, 큐 상태, 요약은 OpenHuman이 관리하여 회상과 동기화를 정상 상태로 유지합니다.',
+    '인덱스, 큐 상태, 요약은 Marvi이 관리하여 회상과 동기화를 정상 상태로 유지합니다.',
   'memoryData.windowError': '메모리 창',
   'memoryData.windowUpdated': '메모리 창 업데이트됨',
   'memoryData.windowUpdatedMsg': '{window}(으)로 설정되었습니다.',

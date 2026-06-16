@@ -73,13 +73,13 @@ impl fmt::Display for CefLockError {
                 // compiled for both (`cfg(any(macos, linux))`), so a hardcoded
                 // macOS `pkill` pattern would mislead Linux users.
                 let workaround = if cfg!(target_os = "macos") {
-                    "pkill -f \"OpenHuman.app/Contents\"\n  pkill -f \"openhuman-core\""
+                    "pkill -f \"Marvi.app/Contents\"\n  pkill -f \"openhuman-core\""
                 } else {
                     "pkill -f openhuman\n  pkill -f openhuman-core"
                 };
                 write!(
                     f,
-                    "CEF cache at {} is held by another OpenHuman instance \
+                    "CEF cache at {} is held by another Marvi instance \
                      (host {}, pid {}).\n\
                      Quit the running instance and try again.\n\
                      Workaround:\n  {}",

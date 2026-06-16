@@ -616,7 +616,7 @@ fn legacy_inference_url_without_matching_provider_returns_byok_sentinel() {
 }
 
 #[test]
-fn hosted_endpoint_entry_is_treated_as_openhuman_backend() {
+fn hosted_endpoint_entry_falls_back_to_local_default() {
     let mut hosted = openai_entry("p_hosted", "custom-hosted");
     hosted.endpoint = "https://staging-api.tinyhumans.ai/openai/v1".to_string();
     hosted.auth_style = AuthStyle::Bearer;
@@ -624,7 +624,7 @@ fn hosted_endpoint_entry_is_treated_as_openhuman_backend() {
     let mut config = config_with_providers(vec![hosted]);
     config.primary_cloud = Some("p_hosted".to_string());
 
-    assert_eq!(provider_for_role("reasoning", &config), "openhuman");
+    assert!(provider_for_role("reasoning", &config).starts_with("ollama:"));
 }
 
 #[test]
@@ -1025,11 +1025,12 @@ fn byok_intent_with_matching_entry_resolves_correctly() {
 }
 
 #[test]
-fn openhuman_inference_url_never_triggers_sentinel() {
-    // inference_url pointing at the managed backend is not BYOK intent.
+fn openhuman_inference_url_falls_back_to_local_default() {
+    // inference_url pointing at the former managed backend is not BYOK intent,
+    // but local-first builds must not route to a hosted provider either.
     let mut config = Config::default();
     config.inference_url = Some("https://api.openhuman.ai/v1".to_string());
-    assert_eq!(provider_for_role("reasoning", &config), "openhuman");
+    assert!(provider_for_role("reasoning", &config).starts_with("ollama:"));
 }
 
 #[test]

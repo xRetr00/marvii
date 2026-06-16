@@ -679,21 +679,17 @@ async fn apply_model_settings_empty_strings_clear_optional_fields() {
 }
 
 #[tokio::test]
-async fn apply_model_settings_preserves_existing_reserved_slug_cloud_providers() {
-    // Sentry TAURI-RUST-5 regression. The migration
-    // `unify_ai_provider_settings` seeds an "openhuman"-slug entry into
-    // `cloud_providers`. The frontend echoes the full cloud_providers
-    // list back on every settings save, but the schema handlers filter
-    // out reserved-slug entries before passing them through. Without
-    // this preservation step the filtered patch would silently delete
-    // the built-in entry — losing the `primary_cloud` referent and
-    // breaking inference routing.
+async fn apply_model_settings_drops_existing_reserved_slug_cloud_providers() {
+    // Local-first builds do not preserve the legacy hosted "openhuman"
+    // provider. The schema handler filters reserved slugs before this patch is
+    // applied; apply_model_settings should accept that replacement literally
+    // instead of reinjecting hosted backend entries.
     use crate::openhuman::config::schema::cloud_providers::{AuthStyle, CloudProviderCreds};
 
     let tmp = tempdir().unwrap();
     let mut cfg = tmp_config(&tmp);
-    // Simulate the post-migration state: a built-in "openhuman" entry plus
-    // a user-added custom provider.
+    // Simulate the old post-migration state: a hosted "openhuman" entry plus a
+    // user-added custom provider.
     cfg.cloud_providers = vec![
         CloudProviderCreds {
             id: "openhuman-builtin".into(),
@@ -743,21 +739,17 @@ async fn apply_model_settings_preserves_existing_reserved_slug_cloud_providers()
     assert_eq!(myopenai.label, "My OpenAI (edited)");
     assert_eq!(myopenai.default_model.as_deref(), Some("gpt-4o-mini"));
 
-    // And the built-in "openhuman" entry is still there.
-    let openhuman = cfg
-        .cloud_providers
-        .iter()
-        .find(|e| e.slug == "openhuman")
-        .expect("openhuman built-in must be preserved across saves");
-    assert_eq!(openhuman.id, "openhuman-builtin");
-    assert_eq!(openhuman.endpoint, "https://api.tinyhumans.ai");
+    assert!(
+        cfg.cloud_providers.iter().all(|e| e.slug != "openhuman"),
+        "hosted openhuman provider must not be reinjected"
+    );
 }
 
 #[tokio::test]
-async fn apply_model_settings_does_not_double_add_reserved_entries() {
-    // Defensive: if a caller bypasses the schema handler (CLI / tests) and
-    // includes a reserved-slug entry in the patch, the preservation logic
-    // must not double-add it.
+async fn apply_model_settings_replaces_reserved_entries_literally() {
+    // If a caller bypasses the schema handler and includes a reserved-slug
+    // entry in the patch, apply_model_settings performs a literal replacement.
+    // The runtime factory rejects hosted OpenHuman routing separately.
     use crate::openhuman::config::schema::cloud_providers::{AuthStyle, CloudProviderCreds};
 
     let tmp = tempdir().unwrap();
@@ -787,8 +779,7 @@ async fn apply_model_settings_does_not_double_add_reserved_entries() {
 
     let _ = apply_model_settings(&mut cfg, patch).await.expect("apply");
 
-    // Exactly one "openhuman" entry survives; the patch's version wins
-    // (since it was already in `providers` before preservation ran).
+    // Exactly one "openhuman" entry survives; the patch's version wins.
     let count = cfg
         .cloud_providers
         .iter()

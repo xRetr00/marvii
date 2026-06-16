@@ -115,11 +115,6 @@ type TestStatus =
   | { kind: 'auth' }
   | { kind: 'unreachable'; reason: string };
 
-// Desktop release artifact URL surfaced on the web build's mode picker so
-// users without a remote core have a clear path to install the app instead
-// of being trapped on the cloud-only form.
-const DESKTOP_DOWNLOAD_URL = 'https://github.com/tinyhumansai/openhuman/releases/latest';
-
 function ModePicker({ onConfirm }: PickerProps) {
   const { t } = useT();
   // Web build cannot spawn a local sidecar, so the only viable choice is
@@ -241,22 +236,6 @@ function ModePicker({ onConfirm }: PickerProps) {
         {isDesktop ? t('bootCheck.desktopDescription') : t('bootCheck.webDescription')}
       </p>
 
-      {!isDesktop && (
-        <div
-          className="mt-4 rounded-xl border border-stone-200 dark:border-neutral-800 bg-stone-50 dark:bg-neutral-800/60 p-3 text-xs text-stone-600 dark:text-neutral-300"
-          data-testid="web-download-cta">
-          {t('bootCheck.preferDesktop')}{' '}
-          <a
-            href={DESKTOP_DOWNLOAD_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-primary-500 underline hover:text-primary-600">
-            {t('bootCheck.downloadDesktop')}
-          </a>
-          .
-        </div>
-      )}
-
       <div className="mt-5 flex flex-col gap-3">
         {/* Local option — desktop only; web builds cannot spawn a sidecar. */}
         {isDesktop && (
@@ -276,8 +255,8 @@ function ModePicker({ onConfirm }: PickerProps) {
           </button>
         )}
 
-        {/* Cloud option — always available; the only option on the web build. */}
-        {isDesktop && (
+        {/* Cloud option — web/debug only. Windows desktop is local-first. */}
+        {!isDesktop && (
           <button
             type="button"
             onClick={() => setSelected('cloud')}

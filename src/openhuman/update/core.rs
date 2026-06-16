@@ -1,4 +1,4 @@
-//! Core self-update logic: check GitHub Releases for a newer `openhuman-core` binary
+//! Core self-update logic: check GitHub Releases for a newer core binary
 //! and download + stage it for the Tauri shell to swap in.
 
 use std::io::Write;
@@ -12,8 +12,8 @@ use crate::openhuman::update::types::{GitHubAsset, GitHubRelease, UpdateApplyRes
 use crate::openhuman::util::utf8_safe_prefix_at_byte_boundary;
 
 /// GitHub owner/repo for the core binary releases.
-const GITHUB_OWNER: &str = "tinyhumansai";
-const GITHUB_REPO: &str = "openhuman";
+const GITHUB_OWNER: &str = "xRetr00";
+const GITHUB_REPO: &str = "marvii";
 
 /// Current binary version (set at compile time from Cargo.toml).
 pub fn current_version() -> &'static str {
@@ -83,7 +83,7 @@ fn is_newer(latest: &str, current: &str) -> bool {
     l > c
 }
 
-/// Check GitHub Releases for a newer version of openhuman-core.
+/// Check GitHub Releases for a newer version of the bundled core.
 pub async fn check_available() -> Result<UpdateInfo, String> {
     let current = current_version();
     log::info!(
@@ -94,7 +94,7 @@ pub async fn check_available() -> Result<UpdateInfo, String> {
     let url = format!("https://api.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPO}/releases/latest");
 
     let client = reqwest::Client::builder()
-        .user_agent("openhuman-core-updater")
+        .user_agent("marvi-core-updater")
         .timeout(std::time::Duration::from_secs(15))
         .build()
         .map_err(|e| format!("failed to build HTTP client: {e}"))?;
@@ -225,7 +225,7 @@ pub async fn download_and_stage_with_version(
     );
 
     let client = reqwest::Client::builder()
-        .user_agent("openhuman-core-updater")
+        .user_agent("marvi-core-updater")
         .timeout(std::time::Duration::from_secs(300))
         .build()
         .map_err(|e| format!("failed to build HTTP client: {e}"))?;

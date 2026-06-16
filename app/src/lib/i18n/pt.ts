@@ -266,8 +266,8 @@ const messages: TranslationMap = {
   'clearData.failedLogout': 'Falha ao sair. Por favor, tente novamente.',
   'clearData.failedPersist':
     'Falha ao limpar o estado persistido do app. Por favor, tente novamente.',
-  'welcome.logoAlt': 'OpenHuman',
-  'welcome.title': 'Bem-vindo ao OpenHuman',
+  'welcome.logoAlt': 'Marvi',
+  'welcome.title': 'Bem-vindo ao Marvi',
   'welcome.subtitle':
     'Sua super inteligência artificial pessoal. Privada, simples e extremamente poderosa.',
   'welcome.connectPrompt': 'Configurar URL de RPC (Avançado)',
@@ -277,7 +277,7 @@ const messages: TranslationMap = {
   'welcome.clearAppDataWarning':
     'Isso apaga segredos e contas armazenados localmente neste dispositivo. Sua conta na nuvem não é afetada — você pode entrar novamente logo após.',
   'welcome.resetErrorFallback':
-    'Não foi possível limpar os dados do app. Por favor, feche e reabra o OpenHuman e tente novamente.',
+    'Não foi possível limpar os dados do app. Por favor, feche e reabra o Marvi e tente novamente.',
   'welcome.signingIn': 'Fazendo login...',
   'welcome.termsIntro': 'Ao continuar, você concorda com os',
   'welcome.termsOfUse': 'Termos',
@@ -297,7 +297,7 @@ const messages: TranslationMap = {
   'home.statusBackendOnly':
     'Reconectando ao backend… seu agente estará disponível novamente em breve.',
   'home.statusCoreUnreachable':
-    'O processo em segundo plano do OpenHuman não está respondendo. Ele pode ter travado ou falhado ao iniciar.',
+    'O processo em segundo plano do Marvi não está respondendo. Ele pode ter travado ou falhado ao iniciar.',
   'home.statusInternetOffline':
     'Seu dispositivo está offline agora. Verifique sua rede ou reinicie o app para reconectar.',
   'home.restartCore': 'Reiniciar Core',
@@ -617,13 +617,13 @@ const messages: TranslationMap = {
   'rewards.referrals': 'Indicações',
   'rewards.coupons': 'Resgatar',
   'rewards.localUnavailable':
-    'O login local não rende recompensas, cupons nem crédito de indicação. Saia e continue entrando com uma conta OpenHuman se quiser que as recompensas contem.',
+    'O login local não rende recompensas, cupons nem crédito de indicação. Saia e continue entrando com uma conta Marvi se quiser que as recompensas contem.',
   'rewards.localUnavailableCta': 'Abrir configurações da conta',
   'rewards.credits': 'Créditos',
   'rewards.referralCode': 'Seu código de indicação',
   'rewards.copyCode': 'Copiar código',
   'rewards.share': 'Compartilhar',
-  'onboarding.welcome': 'Olá. Eu sou o OpenHuman.',
+  'onboarding.welcome': 'Olá. Eu sou o Marvi.',
   'onboarding.welcomeDesc':
     'Seu assistente de IA superinteligente que roda no seu computador. Privado, simples e extremamente poderoso.',
   'onboarding.context': 'Coleta de Contexto',
@@ -635,14 +635,14 @@ const messages: TranslationMap = {
   'onboarding.referral': 'Indicação',
   'onboarding.referralDesc': 'Aplique um código de indicação, se tiver um.',
   'onboarding.finish': 'Concluir Configuração',
-  'onboarding.finishDesc': 'Tudo pronto! Comece a usar o OpenHuman.',
+  'onboarding.finishDesc': 'Tudo pronto! Comece a usar o Marvi.',
   'onboarding.skip': 'Pular',
   'onboarding.getStarted': 'Começar',
-  'onboarding.runtimeChoice.title': 'Como você gostaria de rodar o OpenHuman?',
+  'onboarding.runtimeChoice.title': 'Como você gostaria de rodar o Marvi?',
   'onboarding.runtimeChoice.subtitle':
     'Escolha a configuração que melhor se encaixa para você. Você pode alterar isso depois nas Configurações.',
   'onboarding.runtimeChoice.cloud.title': 'Simples',
-  'onboarding.runtimeChoice.cloud.tagline': 'Deixe o OpenHuman gerenciar tudo para você.',
+  'onboarding.runtimeChoice.cloud.tagline': 'Deixe o Marvi gerenciar tudo para você.',
   'onboarding.runtimeChoice.cloud.f1': 'Segurança integrada',
   'onboarding.runtimeChoice.cloud.f2': 'Compressão de tokens para ampliar seu uso',
   'onboarding.runtimeChoice.cloud.f3': 'Uma assinatura, todos os modelos incluídos',
@@ -699,7 +699,7 @@ const messages: TranslationMap = {
   'onboarding.custom.stepperMemory': 'Memória',
   'onboarding.custom.stepCounter': 'Etapa {n} de {total}',
   'onboarding.custom.defaultTitle': 'Padrão',
-  'onboarding.custom.defaultSubtitle': 'Deixe o OpenHuman gerenciar para você.',
+  'onboarding.custom.defaultSubtitle': 'Deixe o Marvi gerenciar para você.',
   'onboarding.custom.configureTitle': 'Configurar',
   'onboarding.custom.configureSubtitle': 'Vou escolher o que usar.',
   'onboarding.custom.progressAriaLabel': 'Progresso do onboarding',
@@ -713,40 +713,40 @@ const messages: TranslationMap = {
   'onboarding.custom.inference.subtitle':
     'Qual modelo de linguagem deve responder suas perguntas e executar seus agentes?',
   'onboarding.custom.inference.defaultDesc':
-    'O OpenHuman direciona cada carga de trabalho para um modelo padrão adequado. Sem chaves, sem configuração.',
+    'O Marvi direciona cada carga de trabalho para um modelo padrão adequado. Sem chaves, sem configuração.',
   'onboarding.custom.inference.configureDesc':
     'Traga sua própria chave OpenAI ou Anthropic. Usamos para todas as cargas de trabalho baseadas em texto.',
   'onboarding.custom.voice.title': 'Voz',
   'onboarding.custom.voice.subtitle': 'Fala para texto e texto para fala no modo de voz.',
   'onboarding.custom.voice.defaultDesc':
-    'O OpenHuman vem com STT/TTS gerenciado que funciona sem configuração.',
+    'O Marvi vem com STT/TTS gerenciado que funciona sem configuração.',
   'onboarding.custom.voice.configureDesc':
     'Use seu próprio ElevenLabs / OpenAI Whisper / etc. Configure em Configurações › Voz.',
   'onboarding.custom.oauth.title': 'Conexões (OAuth)',
   'onboarding.custom.oauth.subtitle':
     'Gmail, Slack, Notion e outros serviços conectados que precisam de OAuth.',
   'onboarding.custom.oauth.defaultDesc':
-    'O OpenHuman usa um espaço de trabalho Composio gerenciado. Um clique para conectar cada serviço depois.',
+    'O Marvi usa um espaço de trabalho Composio gerenciado. Um clique para conectar cada serviço depois.',
   'onboarding.custom.oauth.configureDesc':
     'Traga sua própria conta Composio / chave de API. Configure em Configurações › Conexões.',
   'onboarding.custom.search.title': 'Pesquisa na Web',
-  'onboarding.custom.search.subtitle': 'Como o OpenHuman pesquisa na web em seu nome.',
+  'onboarding.custom.search.subtitle': 'Como o Marvi pesquisa na web em seu nome.',
   'onboarding.custom.search.defaultDesc':
-    'O OpenHuman usa um backend de pesquisa gerenciado. Sem chaves necessárias.',
+    'O Marvi usa um backend de pesquisa gerenciado. Sem chaves necessárias.',
   'onboarding.custom.search.configureDesc':
     'Traga sua própria chave de provedor de pesquisa (Tavily, Brave, etc.). Configure em Configurações › Ferramentas.',
   'onboarding.custom.embeddings.title': 'Embeddings',
   'onboarding.custom.embeddings.subtitle':
-    'Como o OpenHuman gera embeddings vetoriais para busca semântica na memória.',
+    'Como o Marvi gera embeddings vetoriais para busca semântica na memória.',
   'onboarding.custom.embeddings.defaultDesc':
-    'O OpenHuman usa um serviço gerenciado de embeddings. Nenhuma chave de API necessária.',
+    'O Marvi usa um serviço gerenciado de embeddings. Nenhuma chave de API necessária.',
   'onboarding.custom.embeddings.configureDesc':
     'Use seu próprio provedor de embeddings (OpenAI, Voyage, Ollama, etc.).',
   'onboarding.custom.memory.title': 'Memória',
   'onboarding.custom.memory.subtitle':
-    'Como o OpenHuman se lembra do seu contexto, preferências e conversas anteriores.',
+    'Como o Marvi se lembra do seu contexto, preferências e conversas anteriores.',
   'onboarding.custom.memory.defaultDesc':
-    'O OpenHuman gerencia o armazenamento e a recuperação de memória automaticamente. Sem nada para configurar.',
+    'O Marvi gerencia o armazenamento e a recuperação de memória automaticamente. Sem nada para configurar.',
   'onboarding.custom.memory.configureDesc':
     'Inspecione, exporte ou limpe a memória você mesmo. Configure em Configurações › Memória.',
   'accounts.addAccount': 'Adicionar Conta',
@@ -884,7 +884,7 @@ const messages: TranslationMap = {
   'misc.downloading': 'Baixando...',
   'misc.installing': 'Instalando...',
   'misc.beta':
-    'O OpenHuman está em beta inicial. Sinta-se à vontade para compartilhar feedback ou reportar bugs que encontrar — cada relato nos ajuda a melhorar mais rápido.',
+    'O Marvi está em beta inicial. Sinta-se à vontade para compartilhar feedback ou reportar bugs que encontrar — cada relato nos ajuda a melhorar mais rápido.',
   'misc.betaFeedback': 'Enviar feedback',
   'mnemonic.title': 'Frase de Recuperação',
   'mnemonic.warning': 'Anote estas palavras em ordem e guarde-as em um lugar seguro.',
@@ -908,12 +908,12 @@ const messages: TranslationMap = {
   'privacy.anonymizedAnalytics': 'Análises do Produto',
   'privacy.shareAnonymizedData': 'Compartilhar análises do produto e diagnósticos',
   'privacy.shareAnonymizedDataDesc':
-    'Ajude a melhorar o OpenHuman compartilhando relatórios de falhas e eventos de uso com privacidade limitada, incluindo um ID de conta estável e metadados da versão do app. Mensagens, chaves de carteira, chaves de API e tokens de sessão nunca são coletados.',
+    'Ajude a melhorar o Marvi compartilhando relatórios de falhas e eventos de uso com privacidade limitada, incluindo um ID de conta estável e metadados da versão do app. Mensagens, chaves de carteira, chaves de API e tokens de sessão nunca são coletados.',
   'privacy.meetingFollowUps': 'Acompanhamentos de reuniões',
   'privacy.autoHandoffMeet':
     'Transferência automática de transcrições do Google Meet para o orquestrador',
   'privacy.autoHandoffMeetDesc':
-    'Quando uma chamada do Google Meet termina, o orquestrador do OpenHuman pode ler a transcrição e pode realizar ações como redigir mensagens, agendar acompanhamentos ou postar resumos no seu espaço de trabalho Slack conectado. Desativado por padrão.',
+    'Quando uma chamada do Google Meet termina, o orquestrador do Marvi pode ler a transcrição e pode realizar ações como redigir mensagens, agendar acompanhamentos ou postar resumos no seu espaço de trabalho Slack conectado. Desativado por padrão.',
   'privacy.analyticsDisclaimer':
     'Quando ativados, as análises do produto e os diagnósticos podem incluir relatórios de falhas e eventos de uso com privacidade limitada, um ID de conta estável e metadados da versão do app. Mensagens, chaves de carteira, chaves de API e tokens de sessão nunca são coletados. Você pode alterar essa configuração a qualquer momento.',
   'settings.about.version': 'Versão',
@@ -1006,18 +1006,18 @@ const messages: TranslationMap = {
     'Envie uma mensagem de agente — o uso de tokens na próxima chamada do provedor preencherá o gráfico em cerca de 10 segundos.',
   'settings.search.title': 'Mecanismo de pesquisa',
   'settings.search.menuDesc':
-    'Padrão para pesquisa gerenciada por OpenHuman ou conecte seu próprio provedor com uma chave API.',
+    'Padrão para pesquisa gerenciada por Marvi ou conecte seu próprio provedor com uma chave API.',
   'settings.search.description':
-    'Escolha o mecanismo de busca usado pelo agente, ou desative as ferramentas de pesquisa completamente. Gerenciado usa o backend do OpenHuman (sem configuração). Parallel, Brave e Querit funcionam diretamente do seu computador usando sua chave de API.',
+    'Escolha o mecanismo de busca usado pelo agente, ou desative as ferramentas de pesquisa completamente. Gerenciado usa o backend do Marvi (sem configuração). Parallel, Brave e Querit funcionam diretamente do seu computador usando sua chave de API.',
   'settings.search.engineAria': 'Mecanismo de pesquisa',
   'settings.search.engineDisabledLabel': 'Disabled',
   'settings.search.engineDisabledDesc':
     'Remover ferramentas de busca do contexto do agente e da lista de ferramentas disponíveis.',
-  'settings.search.engineManagedLabel': 'OpenHuman Gerenciado',
+  'settings.search.engineManagedLabel': 'Marvi Gerenciado',
   'settings.search.engineManagedDesc':
-    'Padrão. Roteado através do backend OpenHuman — nenhuma chave API é necessária.',
+    'Padrão. Roteado através do backend Marvi — nenhuma chave API é necessária.',
   'settings.search.localManagedUnavailable':
-    'A busca gerenciada pela OpenHuman não está disponível para usuários locais. Adicione sua própria chave de API do Parallel ou Brave para habilitar a busca na web.',
+    'A busca gerenciada pela Marvi não está disponível para usuários locais. Adicione sua própria chave de API do Parallel ou Brave para habilitar a busca na web.',
   'settings.search.engineParallelLabel': 'Paralelo',
   'settings.search.engineParallelDesc':
     'Paralelo Direto API: buscar, extrair, conversar, pesquisar, enriquecer, ferramentas de conjunto de dados.',
@@ -1126,14 +1126,13 @@ const messages: TranslationMap = {
     'Armazenado criptografado na tabela de segredos local MCP. Nunca registrado ou enviado para um modelo.',
   'devices.betaBadge': 'Beta',
   'devices.betaText':
-    'Este recurso está atualmente em beta. Vincule iPhones a este OpenHuman para usá-los como cliente remoto.',
+    'Este recurso está atualmente em beta. Vincule iPhones a este Marvi para usá-los como cliente remoto.',
   'devices.comingSoonDescription':
     'O pareamento de dispositivos está chegando em breve. Esta página será o lugar para parear iPhones e gerenciar dispositivos conectados.',
   'devices.title': 'Dispositivos',
   'devices.pairIphone': 'Emparelhar iPhone',
   'devices.noPaired': 'Nenhum dispositivo emparelhado',
-  'devices.emptyState':
-    'Escaneie um QR code no seu iPhone para conectá-lo a esta sessão do OpenHuman.',
+  'devices.emptyState': 'Escaneie um QR code no seu iPhone para conectá-lo a esta sessão do Marvi.',
   'devices.devicePairedTitle': 'Dispositivo emparelhado',
   'devices.devicePairedMessage': 'iPhone conectado com sucesso.',
   'devices.deviceRevokedTitle': 'Dispositivo revogado',
@@ -1154,7 +1153,7 @@ const messages: TranslationMap = {
   'devices.loadFailed': 'Falha ao carregar dispositivos: {message}',
   'devices.pairModal.title': 'Emparelhar iPhone',
   'devices.pairModal.loading': 'Gerando código de emparelhamento…',
-  'devices.pairModal.instructions': 'Abra o app OpenHuman no seu iPhone e escaneie este código.',
+  'devices.pairModal.instructions': 'Abra o app Marvi no seu iPhone e escaneie este código.',
   'devices.pairModal.expiresIn': 'O código expira em ~{count} minuto',
   'devices.pairModal.expiresInPlural': 'O código expira em ~{count} minutos',
   'devices.pairModal.showDetails': 'Mostrar detalhes',
@@ -1402,7 +1401,7 @@ const messages: TranslationMap = {
   'mcp.connectAuth.schemeRaw': 'Nenhum',
   'mcp.connectAuth.reconnectFailed': 'As credenciais foram salvas, mas a conexão falhou.',
   'mcp.connectAuth.oauthHint':
-    'Este servidor usa OAuth. Entre pelo seu navegador para autorizar o OpenHuman.',
+    'Este servidor usa OAuth. Entre pelo seu navegador para autorizar o Marvi.',
   'mcp.connectAuth.signIn': 'Entrar com o navegador',
   'mcp.connectAuth.oauthWaiting': 'Aguardando o login…',
   'mcp.connectAuth.oauthOrToken':
@@ -1418,7 +1417,7 @@ const messages: TranslationMap = {
   'autonomy.title': 'Autonomia do agente',
   'autonomy.maxActionsLabel': 'Máximo de ações por hora',
   'autonomy.maxActionsHelp':
-    'Número máximo de ações de ferramentas que um agente pode executar por hora corrida. O novo valor se aplica ao próximo chat. Cron jobs e ouvintes de canais mantêm o limite atual até você reiniciar o OpenHuman.',
+    'Número máximo de ações de ferramentas que um agente pode executar por hora corrida. O novo valor se aplica ao próximo chat. Cron jobs e ouvintes de canais mantêm o limite atual até você reiniciar o Marvi.',
   'autonomy.statusSaving': 'Salvando…',
   'autonomy.statusSaved': 'Salvo.',
   'autonomy.statusFailed': 'Falha',
@@ -1474,7 +1473,7 @@ const messages: TranslationMap = {
   'settings.billing.browserOpenFailed':
     'O navegador não pôde ser aberto automaticamente. Use o botão acima.',
   'settings.tools.chooseCapabilities':
-    'Escolha quais funcionalidades o OpenHuman pode usar em seu nome.',
+    'Escolha quais funcionalidades o Marvi pode usar em seu nome.',
   'settings.tools.saveChanges': 'Salvar Alterações',
   'settings.tools.preferencesSaved': 'Preferências salvas',
   'settings.tools.saveFailed': 'Falha ao salvar preferências. Tente novamente.',
@@ -1738,8 +1737,8 @@ const messages: TranslationMap = {
   'voice.providers.piperPreset.alanMedium': 'GB · Alan (masculino)',
   'voice.providers.piperPreset.jennyDiocoMedium': 'GB · Jenny Dioco (feminino)',
   'voice.providers.piperPreset.northernEnglishMaleMedium': 'GB · Inglês do Norte (masculino)',
-  'voice.providers.chip.cloud': 'OpenHuman (Gerenciado)',
-  'voice.providers.chip.cloudAria': 'O provedor gerenciado OpenHuman está sempre ativado',
+  'voice.providers.chip.cloud': 'Marvi (Gerenciado)',
+  'voice.providers.chip.cloudAria': 'O provedor gerenciado Marvi está sempre ativado',
   'voice.providers.chip.whisper': 'Whisper (Local)',
   'voice.providers.chip.enableWhisper': 'Ativar Whisper STT local',
   'voice.providers.chip.disableWhisper': 'Desativar Whisper STT local',
@@ -1788,7 +1787,7 @@ const messages: TranslationMap = {
   'voice.externalProviders.add': 'Add',
   'pttSettings.title': 'Pressionar para falar',
   'pttSettings.description':
-    'Mantenha uma tecla pressionada para falar com o OpenHuman enquanto está noutro aplicativo. Soltar a tecla envia o áudio; se «Ler respostas em voz alta» estiver ativo, o OpenHuman lê a resposta.',
+    'Mantenha uma tecla pressionada para falar com o Marvi enquanto está noutro aplicativo. Soltar a tecla envia o áudio; se «Ler respostas em voz alta» estiver ativo, o Marvi lê a resposta.',
   'pttSettings.shortcutLabel': 'Atalho',
   'pttSettings.shortcutPlaceholder': 'Pressione uma tecla (por exemplo, F13)',
   'pttSettings.shortcutUnsetHint':
@@ -1801,10 +1800,10 @@ const messages: TranslationMap = {
     'Escolha uma tecla normal (por exemplo, F13) — atalhos apenas com modificadores não funcionam para pressionar para falar.',
   'pttSettings.errorEmpty': 'Escolha uma tecla para vincular.',
   'pttSettings.errorAccessibility':
-    'O macOS precisa de permissão de Acessibilidade para este atalho. Abra Ajustes do Sistema → Privacidade e Segurança → Acessibilidade e ative o OpenHuman.',
+    'O macOS precisa de permissão de Acessibilidade para este atalho. Abra Ajustes do Sistema → Privacidade e Segurança → Acessibilidade e ative o Marvi.',
   'pttSettings.errorShortcutInUse': 'Outro aplicativo já está a usar este atalho. Escolha outro.',
   'pttSettings.errorUnsupportedWayland':
-    'As sessões Wayland ainda não suportam atalhos globais no OpenHuman — mude para uma sessão X11 ou use o controlo de ditado integrado no aplicativo.',
+    'As sessões Wayland ainda não suportam atalhos globais no Marvi — mude para uma sessão X11 ou use o controlo de ditado integrado no aplicativo.',
   'pttSettings.exclusiveFullscreenHint':
     'Em jogos no modo de ecrã inteiro exclusivo a sobreposição não será apresentada — só ouvirá o aviso sonoro. Mude para ecrã inteiro sem margens para ver a sobreposição.',
   'pttOverlay.listening': 'A escutar…',
@@ -2051,7 +2050,7 @@ const messages: TranslationMap = {
   'chat.attachment.unsupportedType':
     'Tipo de arquivo não suportado. Use uma imagem (PNG, JPEG, WebP, GIF, BMP) ou um arquivo PDF, TXT ou Markdown.',
   'chat.attachment.imageNotSupported':
-    'Este modelo não consegue ler imagens. Você pode usar o nível Raciocínio do OpenHuman para anexar sua imagem.',
+    'Este modelo não consegue ler imagens. Você pode usar o nível Raciocínio do Marvi para anexar sua imagem.',
   'chat.attachment.readFailed': 'Não foi possível ler o arquivo',
   'memory.searchAria': 'Pesquisar memória',
   'memory.searchPlaceholder': 'Pesquisar entradas de memória...',
@@ -2422,9 +2421,9 @@ const messages: TranslationMap = {
   'bootCheck.chooseCoreMode': 'Selecionar um Runtime',
   'bootCheck.connectToCore': 'Conectar ao Seu Runtime',
   'bootCheck.desktopDescription':
-    'O OpenHuman precisa de um runtime para pensar. Escolha onde ele deve ficar.',
+    'O Marvi precisa de um runtime para pensar. Escolha onde ele deve ficar.',
   'bootCheck.webDescription':
-    'Na web, o OpenHuman conecta-se a um runtime que você controla. Insira o URL e o token de autenticação abaixo, ou baixe o app desktop para rodar um na sua máquina.',
+    'Na web, o Marvi conecta-se a um runtime que você controla. Insira o URL e o token de autenticação abaixo, ou baixe o app desktop para rodar um na sua máquina.',
   'bootCheck.preferDesktop': 'Prefere manter tudo no seu próprio dispositivo?',
   'bootCheck.downloadDesktop': 'Baixar o App Desktop',
   'bootCheck.localRecommended': 'Rodar Localmente (Recomendado)',
@@ -2451,7 +2450,7 @@ const messages: TranslationMap = {
   'bootCheck.quit': 'Sair',
   'bootCheck.legacyDetected': 'Runtime de Segundo Plano Legado Detectado',
   'bootCheck.legacyDescription':
-    'Um daemon OpenHuman instalado separadamente já está rodando neste dispositivo. Precisamos removê-lo antes que o runtime integrado possa assumir.',
+    'Um daemon Marvi instalado separadamente já está rodando neste dispositivo. Precisamos removê-lo antes que o runtime integrado possa assumir.',
   'bootCheck.removing': 'Removendo…',
   'bootCheck.removeContinue': 'Remover e Continuar',
   'bootCheck.localNeedsRestart': 'O Runtime Local Precisa de uma Reinicialização',
@@ -2473,7 +2472,7 @@ const messages: TranslationMap = {
   'bootCheck.actionFailed': 'Algo deu errado. Por favor, tente novamente.',
   'bootCheck.portConflictTitle': 'Não foi possível iniciar o motor do aplicativo',
   'bootCheck.portConflictBody':
-    'Outro processo está usando a porta de rede que o OpenHuman precisa. Tentaremos corrigir isso automaticamente.',
+    'Outro processo está usando a porta de rede que o Marvi precisa. Tentaremos corrigir isso automaticamente.',
   'bootCheck.portConflictFixButton': 'Corrigir automaticamente',
   'bootCheck.portConflictFixing': 'Corrigindo…',
   'bootCheck.portConflictFixFailed':
@@ -2528,7 +2527,7 @@ const messages: TranslationMap = {
   'composio.reconnect': 'Reconectar',
   'composio.expiredAuthorization': '{name} autorização expirou',
   'composio.expiredDescription':
-    'Reconecte para reativar as ferramentas {name}. OpenHuman manterá esta integração indisponível até que você atualize o acesso de OAuth.',
+    'Reconecte para reativar as ferramentas {name}. Marvi manterá esta integração indisponível até que você atualize o acesso de OAuth.',
   'composio.envVarOverrides': 'está definida, ela substitui esta configuração.',
   'composio.previewBadge': 'Visualização',
   'composio.previewTooltip':
@@ -2579,7 +2578,7 @@ const messages: TranslationMap = {
   'accounts.webviewHost.timeoutHint': 'Dica de timeout',
   'app.connectionBadge.composio': 'Composio',
   'app.connectionBadge.messaging': 'Mensagens',
-  'app.connectionIndicator.connected': 'Conectado ao OpenHuman AI 🚀',
+  'app.connectionIndicator.connected': 'Conectado ao Marvi AI 🚀',
   'app.connectionIndicator.connecting': 'Conectando',
   'app.connectionIndicator.coreOffline': 'Núcleo offline',
   'app.connectionIndicator.disconnected': 'Desconectado',
@@ -2628,7 +2627,7 @@ const messages: TranslationMap = {
   'app.openhumanLink.notifications.send': 'Enviar notificação de teste',
   'app.openhumanLink.notifications.sendFailed': 'Não foi possível enviar: {error}',
   'app.openhumanLink.notifications.sent':
-    'Notificação de teste enviada. Se você não a recebeu, vá em Configurações do Sistema → Notificações → OpenHuman, ative Permitir Notificações e defina o Estilo de Banner como Persistente.',
+    'Notificação de teste enviada. Se você não a recebeu, vá em Configurações do Sistema → Notificações → Marvi, ative Permitir Notificações e defina o Estilo de Banner como Persistente.',
   'app.openhumanLink.skipForNow': 'Pular por enquanto',
   'app.openhumanLink.telegramUnavailable': 'Telegram indisponível',
   'app.openhumanLink.title.accounts': 'Conecte seus apps',
@@ -2641,7 +2640,7 @@ const messages: TranslationMap = {
   'app.persistRehydration.heading': 'Título',
   'app.persistRehydration.resetCta': 'Redefinindo…',
   'app.persistRehydration.resetting': 'Redefinindo…',
-  'app.routeLoading.initializing': 'Inicializando OpenHuman...',
+  'app.routeLoading.initializing': 'Inicializando Marvi...',
   'app.update.currentlyOn': '{version}',
   'app.update.errorFallback': 'Algo deu errado durante a atualização.',
   'app.update.header.default': 'Atualizar',
@@ -2696,7 +2695,7 @@ const messages: TranslationMap = {
   'chat.approval.fallback': 'O agente quer executar uma ação que precisa da sua aprovação.',
   'chat.approval.title': 'Aprovação necessária',
   'chat.approval.tool': 'Ferramenta:',
-  'channels.authMode.managed_dm': 'Faça login com OpenHuman',
+  'channels.authMode.managed_dm': 'Faça login com Marvi',
   'channels.authMode.oauth': 'OAuth Faça login',
   'channels.authMode.bot_token': 'Use seu próprio token de bot',
   'channels.authMode.api_key': 'Use o seu próprio Chave API',
@@ -2708,9 +2707,9 @@ const messages: TranslationMap = {
   'channels.discord.description': 'Envie e receba mensagens via Discord.',
   'channels.discord.authMode.bot_token.description': 'Forneça seu próprio token de bot Discord.',
   'channels.discord.authMode.oauth.description':
-    'Instale o bot OpenHuman em seu servidor Discord via OAuth.',
+    'Instale o bot Marvi em seu servidor Discord via OAuth.',
   'channels.discord.authMode.managed_dm.description':
-    'Vincule sua conta pessoal Discord ao bot OpenHuman.',
+    'Vincule sua conta pessoal Discord ao bot Marvi.',
   'channels.discord.fields.bot_token.label': 'Token de bot',
   'channels.discord.fields.bot_token.placeholder': 'Seu token de bot Discord',
   'channels.discord.fields.guild_id.label': 'ID do servidor (guilda)',
@@ -2718,7 +2717,7 @@ const messages: TranslationMap = {
   'channels.telegram.displayName': 'Telegram',
   'channels.telegram.description': 'Enviar e receber mensagens via Telegram.',
   'channels.telegram.authMode.managed_dm.description':
-    'Envie uma mensagem diretamente para o bot OpenHuman Telegram.',
+    'Envie uma mensagem diretamente para o bot Marvi Telegram.',
   'channels.telegram.authMode.bot_token.description':
     'Forneça seu próprio token de bot Telegram de @BotFather.',
   'channels.telegram.fields.bot_token.label': 'Token de bot',
@@ -2771,16 +2770,16 @@ const messages: TranslationMap = {
   'iosPair.error.connectionFailed':
     'Falha na conexão. Verifique se o app desktop está em execução e tente novamente.',
   'iosPair.error.invalidQr':
-    'QR code inválido. Certifique-se de estar escaneando um código de pareamento do OpenHuman.',
+    'QR code inválido. Certifique-se de estar escaneando um código de pareamento do Marvi.',
   'iosPair.error.unreachableDesktop':
     'Não foi possível alcançar o desktop. Certifique-se de que ambos os dispositivos estão online e tente novamente.',
   'iosPair.expired': 'QR code expirou. Peça à área de trabalho para regenerar o código.',
   'iosPair.instructions':
-    'Abra o OpenHuman no seu desktop, vá em Configurações > Dispositivos e toque em "Parear telefone" para exibir o QR code.',
+    'Abra o Marvi no seu desktop, vá em Configurações > Dispositivos e toque em "Parear telefone" para exibir o QR code.',
   'iosPair.retryScan': 'Repetir verificação',
   'iosPair.scanQrCode': 'Digitalizar QR code',
   'iosPair.scannerOpening': 'Scanner abrindo...',
-  'iosPair.step.openDesktop': 'Abra OpenHuman na área de trabalho',
+  'iosPair.step.openDesktop': 'Abra Marvi na área de trabalho',
   'iosPair.step.openSettings': 'Vá para Configurações > Dispositivos',
   'iosPair.step.showQr': 'Toque em "Parear telefone" para mostrar QR',
   'iosPair.title': 'Emparelhe com seu desktop',
@@ -2815,7 +2814,7 @@ const messages: TranslationMap = {
   'composio.connect.permissionsDefault': 'Leitura + Escrita ativadas por padrão',
   'composio.connect.permissionsNote': 'pode expor',
   'composio.connect.permissionsNoteSuffix':
-    'As permissões do agente do OpenHuman são controladas abaixo como botões de leitura, escrita e admin.',
+    'As permissões do agente do Marvi são controladas abaixo como botões de leitura, escrita e admin.',
   'composio.connect.reopenBrowser': 'Reabrir navegador',
   'composio.connect.requestingUrl': 'Solicitando URL de conexão…',
   'composio.connect.requiredFieldEmpty': 'Este campo é obrigatório.',
@@ -2919,7 +2918,7 @@ const messages: TranslationMap = {
   'daemon.serviceBlockingGate.retryFailed':
     'Nova tentativa falhou. Baixe a versão mais recente do app e tente novamente.',
   'daemon.serviceBlockingGate.retrying': 'Tentando novamente...',
-  'daemon.serviceBlockingGate.title': 'O core do OpenHuman está indisponível',
+  'daemon.serviceBlockingGate.title': 'O core do Marvi está indisponível',
   'home.banners.discordSubtitle': 'Subtítulo do Discord',
   'home.banners.discordTitle': 'Entre no Nosso Discord',
   'home.banners.earlyBirdDismiss': 'Dispensar banner de early bird',
@@ -2956,7 +2955,7 @@ const messages: TranslationMap = {
   'intelligence.diagram.skillInstallCommand': 'npx skills add yizhiyanhua-ai/fireworks-tech-graph',
   'intelligence.diagram.promptExample':
     'Gere um diagrama de arquitetura do swarm atual no estilo de terminal escuro',
-  'intelligence.diagram.imageAlt': 'Último diagrama de arquitetura OpenHuman gerado',
+  'intelligence.diagram.imageAlt': 'Último diagrama de arquitetura Marvi gerado',
   'intelligence.diagram.refreshesEvery': 'Atualiza a cada {seconds}s',
   'intelligence.memoryText.entityTypePrefix': 'Tipo de entidade',
   'intelligence.screenDebug.active': 'Ativo',
@@ -3190,7 +3189,7 @@ const messages: TranslationMap = {
   'openhuman.team_list_teams': 'Listar equipes',
   'overlay.ariaAttention': 'Mensagem de atenção',
   'overlay.ariaCompanion': 'Companion ativo',
-  'overlay.ariaOrb': 'Orb do OpenHuman',
+  'overlay.ariaOrb': 'Orb do Marvi',
   'overlay.ariaVoiceActive': 'Entrada de voz ativa',
   'overlay.companion.error': 'Erro',
   'overlay.companion.listening': 'Ouvindo…',
@@ -3473,7 +3472,7 @@ const messages: TranslationMap = {
   'settings.ai.noSpendRows': 'Nenhuma linha de gastos carregada.',
   'settings.ai.topHours': 'Principais horários',
   'settings.ai.noHourlySpend': 'Ainda não há gasto por hora.',
-  'settings.ai.openhumanDefault': 'OpenHuman (padrão)',
+  'settings.ai.openhumanDefault': 'Marvi (padrão)',
   'settings.ai.localModelResolved': 'Ollama · {model}',
   'settings.ai.customRoutingForWorkload': 'Roteamento personalizado para {label}',
   'settings.ai.loadingModels': 'Carregando modelos...',
@@ -3532,12 +3531,12 @@ const messages: TranslationMap = {
   'settings.ai.composioSyncScans': 'Composio varreduras de sincronização',
   'settings.ai.totalBackgroundApiReadBudget': 'Total bg API orçamento de leitura',
   'settings.ai.memoryWorkerPolls': 'Pesquisas de trabalho de memória',
-  'settings.ai.defaultProviderName': 'OpenHuman',
+  'settings.ai.defaultProviderName': 'Marvi',
   'settings.ai.routing.managed': 'Gerenciadas',
   'settings.ai.routing.managedDesc':
-    'OpenHuman executará toda a inferência na nuvem, escolherá o melhor modelo para a tarefa, otimizará os custos e manterá os padrões de roteamento mais seguros.',
+    'Marvi executará toda a inferência na nuvem, escolherá o melhor modelo para a tarefa, otimizará os custos e manterá os padrões de roteamento mais seguros.',
   'settings.ai.routing.managedMsg':
-    'OpenHuman irá gerenciar toda a inferência para cada carga de trabalho e escolherá automaticamente a melhor rota em termos de custo, qualidade e segurança.',
+    'Marvi irá gerenciar toda a inferência para cada carga de trabalho e escolherá automaticamente a melhor rota em termos de custo, qualidade e segurança.',
   'settings.ai.routing.useYourOwn': 'Use seus próprios modelos',
   'settings.ai.routing.useYourOwnDesc':
     'Escolha um provedor + modelo e direcione todas as cargas de trabalho através dele. Isso é simples, mas pode ser ineficiente porque inferências leves e pesadas compartilham a mesma rota.',
@@ -3728,16 +3727,16 @@ const messages: TranslationMap = {
   'settings.composio.confirmSwitch': 'Entendi, alternar para Direto',
   'settings.composio.confirmTitle': '⚠️ Alternando para o modo Direto',
   'settings.composio.confirmWarning':
-    'Suas integrações existentes (Gmail, Slack, GitHub, etc. conectadas via OpenHuman) não ficarão visíveis — elas vivem no tenant do Composio gerenciado pelo OpenHuman.',
+    'Suas integrações existentes (Gmail, Slack, GitHub, etc. conectadas via Marvi) não ficarão visíveis — elas vivem no tenant do Composio gerenciado pelo Marvi.',
   'settings.composio.intro':
     'O Composio integra mais de 250 apps externos como ferramentas que seu agente pode chamar. Escolha como essas chamadas são roteadas.',
   'settings.composio.title': 'Composio',
   'settings.composio.modeDirect': 'Direto (traga sua própria chave de API)',
   'settings.composio.modeDirectDesc':
     'As chamadas vão direto para backend.composio.dev. Soberano / amigável para offline. A execução de ferramentas funciona de forma síncrona; webhooks de gatilhos em tempo real ainda não são roteados no modo direto (issue de acompanhamento).',
-  'settings.composio.modeManaged': 'Gerenciado (OpenHuman cuida para você)',
+  'settings.composio.modeManaged': 'Gerenciado (Marvi cuida para você)',
   'settings.composio.modeManagedDesc':
-    'O OpenHuman faz proxy das chamadas de ferramentas pelo nosso backend (recomendado). A autenticação é intermediada; você nunca cola uma chave de API do Composio. Webhooks são totalmente roteados.',
+    'O Marvi faz proxy das chamadas de ferramentas pelo nosso backend (recomendado). A autenticação é intermediada; você nunca cola uma chave de API do Composio. Webhooks são totalmente roteados.',
   'settings.composio.routingMode': 'Modo de roteamento',
   'settings.composio.saveErrorNoKey':
     'Falha ao salvar. O modo Direto requer uma chave de API não vazia.',
@@ -3970,7 +3969,7 @@ const messages: TranslationMap = {
   'settings.localModel.status.ollamaDiagnostics': 'Diagnósticos do Ollama',
   'settings.localModel.status.ollamaNotInstalled': 'Runtime do Ollama indisponível',
   'settings.localModel.status.ollamaNotInstalledDesc':
-    'O OpenHuman agora trata o Ollama como um runtime de inferência externo. Inicie seu próprio servidor Ollama, baixe os modelos desejados e aponte o roteamento de carga para ele.',
+    'O Marvi agora trata o Ollama como um runtime de inferência externo. Inicie seu próprio servidor Ollama, baixe os modelos desejados e aponte o roteamento de carga para ele.',
   'settings.localModel.status.progress': 'Progresso',
   'settings.localModel.status.provider': 'Provedor',
   'settings.localModel.status.retryBootstrap': 'Tentar Bootstrap Novamente',
@@ -3999,7 +3998,7 @@ const messages: TranslationMap = {
     'Configure modos de autenticação Telegram/Discord e o roteamento de canal padrão',
   'settings.developerMenu.tools.title': 'Ferramentas',
   'settings.developerMenu.tools.desc':
-    'Ative ou desative capacidades que o OpenHuman pode usar em seu nome',
+    'Ative ou desative capacidades que o Marvi pode usar em seu nome',
   'settings.developerMenu.agentChat.title': 'Chat do agente',
   'settings.developerMenu.agentChat.desc':
     'Teste conversas do agente com substituições de modelo e temperatura',
@@ -4179,7 +4178,7 @@ const messages: TranslationMap = {
     'Configure as opções de triagem por IA para gatilhos de integração Composio',
   'settings.developerMenu.mcpServer.title': 'MCP Servidor',
   'settings.developerMenu.mcpServer.desc':
-    'Configurar clientes MCP externos para se conectarem a OpenHuman',
+    'Configurar clientes MCP externos para se conectarem a Marvi',
   'settings.developerMenu.autonomy.title': 'Autonomia do agente',
   'settings.developerMenu.autonomy.desc':
     'Limites de taxa de ações de ferramentas e limites de segurança',
@@ -4200,7 +4199,7 @@ const messages: TranslationMap = {
   'settings.mcpServer.copied': 'Copiado!',
   'settings.mcpServer.openConfigFile': 'Abra o arquivo de configuração',
   'settings.mcpServer.binaryPathNotFound':
-    'OpenHuman binário não encontrado. Se estiver executando a partir do código-fonte, crie com: cargo build --bin openhuman-core',
+    'Marvi binário não encontrado. Se estiver executando a partir do código-fonte, crie com: cargo build --bin openhuman-core',
   'settings.mcpServer.openConfigError': 'Falha ao abrir o arquivo de configuração',
   'settings.mcpServer.clientClaudeDesktop': 'Área de trabalho Claude',
   'settings.mcpServer.clientCursor': 'Cursor',
@@ -4405,7 +4404,7 @@ const messages: TranslationMap = {
   'settings.mascot.characterPreview': 'Visualização',
   'settings.mascot.characterStates': 'estados',
   'settings.mascot.characterVisemes': 'visemas',
-  'settings.mascot.colorAria': 'OpenHuman cor',
+  'settings.mascot.colorAria': 'Marvi cor',
   'settings.mascot.colorDesc': 'Descrição de cor',
   'settings.mascot.colorHeading': 'Título de cor',
   'settings.mascot.colorBlack': 'Preto',
@@ -4415,15 +4414,15 @@ const messages: TranslationMap = {
   'settings.mascot.primaryColor': 'Cor primária',
   'settings.mascot.secondaryColor': 'Cor secundária',
   'settings.mascot.colorYellow': 'Amarelo',
-  'settings.mascot.libraryUnavailable': 'OpenHuman biblioteca indisponível',
-  'settings.mascot.title': 'OpenHuman',
-  'settings.mascot.loadingLibrary': 'Carregando biblioteca do OpenHuman…',
+  'settings.mascot.libraryUnavailable': 'Marvi biblioteca indisponível',
+  'settings.mascot.title': 'Marvi',
+  'settings.mascot.loadingLibrary': 'Carregando biblioteca do Marvi…',
   'settings.mascot.loadDetailError': 'Não foi possível carregar o mascote.',
   'settings.mascot.loadLibraryError': 'Não foi possível carregar a biblioteca de mascotes.',
-  'settings.mascot.localDefault': 'OpenHuman local (padrão)',
+  'settings.mascot.localDefault': 'Marvi local (padrão)',
   'settings.mascot.menuTitle': 'Mascote',
   'settings.mascot.menuDesc': 'Escolha a cor do mascote usada em todo o app',
-  'settings.mascot.noCharacters': 'Nenhum personagem do OpenHuman disponível ainda',
+  'settings.mascot.noCharacters': 'Nenhum personagem do Marvi disponível ainda',
   'settings.mascot.noColorVariants': 'Sem variantes de cor',
   'settings.mascot.voice.current': 'atual',
   'settings.mascot.voice.customDesc':
@@ -4477,7 +4476,7 @@ const messages: TranslationMap = {
     'Padrão sensato — boa continuidade sem queimar tokens extras em cada execução.',
   'settings.memoryWindow.balanced.label': 'Balanceado',
   'settings.memoryWindow.description':
-    'Quanto contexto lembrado o OpenHuman injeta em cada nova execução do agente. Janelas maiores parecem mais cientes de conversas passadas, mas usam mais tokens — e custam mais — a cada execução.',
+    'Quanto contexto lembrado o Marvi injeta em cada nova execução do agente. Janelas maiores parecem mais cientes de conversas passadas, mas usam mais tokens — e custam mais — a cada execução.',
   'settings.memoryWindow.extended.badge': 'Mais contexto',
   'settings.memoryWindow.extended.hint':
     'Mais memória de longo prazo injetada em cada execução. Custo maior por turno.',
@@ -4684,17 +4683,17 @@ const messages: TranslationMap = {
   'skills.install.urlPlaceholder': 'https://raw.githubusercontent.com/owner/repo/main/SKILL.md',
   'skills.meetingBots.bannerDesc': 'Descrição do banner',
   'skills.meetingBots.bannerTitle': 'Título do banner',
-  'skills.meetingBots.busyTitle': 'OpenHuman está ocupado',
+  'skills.meetingBots.busyTitle': 'Marvi está ocupado',
   'skills.meetingBots.comingSoon': 'Em breve',
-  'skills.meetingBots.couldNotStartTitle': 'Não foi possível iniciar o OpenHuman',
+  'skills.meetingBots.couldNotStartTitle': 'Não foi possível iniciar o Marvi',
   'skills.meetingBots.displayName': 'Nome de exibição',
-  'skills.meetingBots.failedToStart': 'Falha ao iniciar o OpenHuman.',
+  'skills.meetingBots.failedToStart': 'Falha ao iniciar o Marvi.',
   'skills.meetingBots.joiningMessage': 'Ele deve aparecer como participante em alguns segundos.',
-  'skills.meetingBots.joiningTitle': 'OpenHuman está entrando na reunião',
+  'skills.meetingBots.joiningTitle': 'Marvi está entrando na reunião',
   'skills.meetingBots.meetingLink': 'Link da reunião',
-  'skills.meetingBots.modalAriaLabel': 'Enviar OpenHuman para uma reunião',
+  'skills.meetingBots.modalAriaLabel': 'Enviar Marvi para uma reunião',
   'skills.meetingBots.modalDesc': 'Descrição do modal',
-  'skills.meetingBots.modalTitle': 'Enviar OpenHuman para uma reunião',
+  'skills.meetingBots.modalTitle': 'Enviar Marvi para uma reunião',
   'skills.meetingBots.newBadge': 'Badge novo',
   'skills.meetingBots.platformComingSoon': 'O suporte {label} estará disponível em breve.',
   'skills.meetingBots.platformHints.gmeet': 'meet.google.com/abc-defg-hij',
@@ -4724,7 +4723,7 @@ const messages: TranslationMap = {
   'skills.meetingBots.respondToParticipantDesc':
     'Insira o seu nome de exibição exato da reunião. O bot só responde quando você diz o nome dele (frase de ativação).',
   'skills.meetingBots.wakePhrase': 'Frase de ativação',
-  'skills.meetingBots.wakePhraseHint': 'Hey OpenHuman',
+  'skills.meetingBots.wakePhraseHint': 'Hey Marvi',
   'skills.meetingBots.wakePhraseDesc': 'O participante deve dizer isso antes de o bot responder.',
   'skills.meetingBots.activeMode': 'Responder quando eu falar com ele',
   'skills.meetingBots.activeModeDesc':
@@ -4878,7 +4877,7 @@ const messages: TranslationMap = {
   'chat.parentThread': 'thread pai',
   'chat.removeReaction': 'Remover {emoji}',
   'settings.composio.loading': 'Carregando…',
-  'settings.mascot.noCharactersAvailable': 'Nenhum personagem do OpenHuman disponível ainda',
+  'settings.mascot.noCharactersAvailable': 'Nenhum personagem do Marvi disponível ainda',
   'skills.uninstall.confirmTitle': 'Desinstalar {name}?',
   'conversations.taskKanban.blocked': 'Bloqueado',
   'conversations.taskKanban.done': 'Concluído',
@@ -4901,7 +4900,7 @@ const messages: TranslationMap = {
   'settings.composio.notYetRouted': 'ainda não roteado',
   'settings.localModel.download.manageExternal': 'Gerencie este modelo no seu runtime externo.',
   'settings.localModel.status.manageOllamaExternal':
-    'Gerencie o processo do Ollama e o download de modelos fora do OpenHuman e, em seguida, execute o diagnóstico novamente.',
+    'Gerencie o processo do Ollama e o download de modelos fora do Marvi e, em seguida, execute o diagnóstico novamente.',
   'settings.localModel.status.ollamaDocs': 'Documentação do Ollama',
   'settings.localModel.status.thenRetry':
     'para instruções de configuração, em seguida tente novamente depois que seu runtime estiver acessível.',
@@ -4915,8 +4914,7 @@ const messages: TranslationMap = {
   'devOptions.menuMessagingDesc':
     'Configurar modos de autenticação Telegram/Discord e roteamento de canal padrão',
   'devOptions.menuTools': 'Ferramentas',
-  'devOptions.menuToolsDesc':
-    'Habilitar ou desabilitar recursos que OpenHuman pode usar em seu nome',
+  'devOptions.menuToolsDesc': 'Habilitar ou desabilitar recursos que Marvi pode usar em seu nome',
   'devOptions.menuAgentChat': 'Bate-papo do agente',
   'devOptions.menuAgentChatDesc':
     'Testar conversação do agente com substituições de modelo e temperatura',
@@ -5393,7 +5391,7 @@ const messages: TranslationMap = {
 
   'keyring.consent.title': 'Armazenamento seguro indisponível',
   'keyring.consent.description':
-    'O chaveiro do sistema operacional não está acessível. O OpenHuman precisa da sua permissão para armazenar segredos usando armazenamento local criptografado.',
+    'O chaveiro do sistema operacional não está acessível. O Marvi precisa da sua permissão para armazenar segredos usando armazenamento local criptografado.',
   'keyring.consent.reasonPrefix': 'Motivo:',
   'keyring.consent.showDetails': 'O que isso significa?',
   'keyring.consent.hideDetails': 'Ocultar detalhes',
@@ -5434,7 +5432,7 @@ const messages: TranslationMap = {
   'memory.health.remediation.budget_exhausted':
     'Os embeddings de memória atingiram o orçamento gerenciado. Configure embeddings locais do Ollama (Configurações → IA → Incorporações) ou adicione sua própria chave de API de embeddings para continuar construindo a memória.',
   'memory.health.remediation.auth_missing':
-    'Nenhuma credencial de embeddings encontrada. Faça login no OpenHuman ou configure embeddings locais do Ollama em Configurações → IA → Incorporações.',
+    'Nenhuma credencial de embeddings encontrada. Faça login no Marvi ou configure embeddings locais do Ollama em Configurações → IA → Incorporações.',
   'memory.health.remediation.auth_invalid':
     'Suas credenciais de embeddings foram rejeitadas. Autentique-se novamente ou mude para embeddings locais do Ollama em Configurações → IA → Incorporações.',
   'memory.health.remediation.embeddings_unconfigured':
@@ -5526,11 +5524,11 @@ const messages: TranslationMap = {
   'onboarding.custom.vault.subtitle':
     'Confirme onde as notas de memória são gravadas, como os dados de origem são lidos e se o pipeline do vault está saudável.',
   'onboarding.custom.vault.defaultDesc':
-    'Use os padrões de memória gerenciados pelo OpenHuman. O caminho do vault e a integridade da sincronização ainda podem ser revisados depois.',
+    'Use os padrões de memória gerenciados pelo Marvi. O caminho do vault e a integridade da sincronização ainda podem ser revisados depois.',
   'onboarding.custom.vault.configureDesc':
     'Revise a propriedade do vault, execute verificações de integridade e ajuste os controles de memória agora.',
   'onboarding.custom.vault.localDisabledReason':
-    'A configuração gerenciada requer login no OpenHuman e não está disponível no modo local.',
+    'A configuração gerenciada requer login no Marvi e não está disponível no modo local.',
   'onboarding.custom.vault.exitError':
     'Não foi possível concluir o processo de integração. Por favor, tente novamente.',
 
@@ -5553,9 +5551,9 @@ const messages: TranslationMap = {
   'vaultHealth.existsLabel': 'O caminho do vault do espaço de trabalho existe',
   'vaultHealth.existsRecovery':
     'A pasta do vault está ausente. Inicie uma sincronização ou crie esta pasta e atualize este checklist.',
-  'vaultHealth.writableLabel': 'O vault pode ser gravado pelo OpenHuman',
+  'vaultHealth.writableLabel': 'O vault pode ser gravado pelo Marvi',
   'vaultHealth.writableRecovery':
-    'O OpenHuman ainda não consegue gravar neste vault. Conceda permissões de escrita e atualize.',
+    'O Marvi ainda não consegue gravar neste vault. Conceda permissões de escrita e atualize.',
   'vaultHealth.obsidianLabel': 'O vault está registrado no Obsidian',
   'vaultHealth.obsidianRecovery':
     'No Obsidian, escolha "Abrir pasta como vault" para este caminho e atualize este checklist.',
@@ -5573,13 +5571,13 @@ const messages: TranslationMap = {
   'memoryData.howItWorks': 'Como o armazenamento de memória funciona',
   'memoryData.workspaceVault': 'Vault do espaço de trabalho · gravação',
   'memoryData.workspaceVaultDesc':
-    'O OpenHuman grava as notas de memória geradas em memory_tree/content.',
+    'O Marvi grava as notas de memória geradas em memory_tree/content.',
   'memoryData.connectedSources': 'Fontes conectadas · leitura',
   'memoryData.connectedSourcesDesc':
     'Pastas, caixas de correio, chats e repositórios são importados para indexação de memória — seus arquivos originais nunca são reescritos.',
   'memoryData.internalFiles': 'Arquivos internos da árvore de memória',
   'memoryData.internalFilesDesc':
-    'Índices, estado da fila e resumos são gerenciados pelo OpenHuman para manter a recuperação e a sincronização saudáveis.',
+    'Índices, estado da fila e resumos são gerenciados pelo Marvi para manter a recuperação e a sincronização saudáveis.',
   'memoryData.windowError': 'Janela de memória',
   'memoryData.windowUpdated': 'Janela de memória atualizada',
   'memoryData.windowUpdatedMsg': 'Definida para {window}.',

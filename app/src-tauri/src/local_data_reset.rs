@@ -180,7 +180,7 @@ fn reset_local_data_delete_error(
         #[cfg(not(target_os = "windows"))]
         {
             return Err(format!(
-                "Failed to remove {label} at {} because it is locked by another OpenHuman window or process. Close all OpenHuman windows and try again. ({error})",
+                "Failed to remove {label} at {} because it is locked by another Marvi window or process. Close all Marvi windows and try again. ({error})",
                 path.display()
             ));
         }
@@ -246,13 +246,13 @@ fn schedule_reboot_delete_or_describe(
             );
             if partial_total == 0 {
                 Err(format!(
-                    "Failed to remove {label} at {} because it is locked by another OpenHuman window or process, and scheduling deletion on next reboot also failed ({}). Close all OpenHuman windows and try again. ({original_error})",
+                    "Failed to remove {label} at {} because it is locked by another Marvi window or process, and scheduling deletion on next reboot also failed ({}). Close all Marvi windows and try again. ({original_error})",
                     path.display(),
                     failure.error,
                 ))
             } else {
                 Err(format!(
-                    "Failed to remove {label} at {} because it is locked by another OpenHuman window or process. {} files and {} folders were queued for the next reboot before scheduling failed ({}); the rest still needs manual cleanup. Close all OpenHuman windows and try again. ({original_error})",
+                    "Failed to remove {label} at {} because it is locked by another Marvi window or process. {} files and {} folders were queued for the next reboot before scheduling failed ({}); the rest still needs manual cleanup. Close all Marvi windows and try again. ({original_error})",
                     path.display(),
                     failure.partial.files,
                     failure.partial.dirs,

@@ -19,7 +19,7 @@ export default function ModelQualityPill({ className }: ModelQualityPillProps) {
       title={t('composer.modelSelector')}
       disabled
       className={`flex items-center gap-1 text-xs text-stone-400 dark:text-neutral-500 disabled:cursor-default disabled:opacity-100 select-none ${className ?? ''}`}>
-      <span>OpenHuman</span>
+      <span>Marvi</span>
       <span className="text-stone-300 dark:text-neutral-600">·</span>
       <span>{t('composer.qualityHigh')}</span>
       <svg

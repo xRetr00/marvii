@@ -10,48 +10,12 @@ import {
   clearStoredCoreToken,
   storeRpcUrl,
 } from '../../utils/configPersistence';
-import { PRIVACY_POLICY_URL, TERMS_OF_USE_URL } from '../../utils/links';
-import { openUrl } from '../../utils/openUrl';
 import Welcome from '../Welcome';
 
 const mockStoreSessionToken = vi.fn().mockResolvedValue(undefined);
 
 vi.mock('../../providers/CoreStateProvider', () => ({
   useCoreState: () => ({ storeSessionToken: mockStoreSessionToken }),
-}));
-
-const oauthButtonSpy = vi.fn();
-const oauthOverrideSpy = vi.fn();
-
-vi.mock('../../components/oauth/OAuthProviderButton', () => ({
-  default: ({
-    provider,
-    onClickOverride,
-  }: {
-    provider: { id: string };
-    onClickOverride?: () => void;
-  }) => (
-    <button
-      type="button"
-      onClick={() => {
-        oauthButtonSpy(provider.id);
-        if (onClickOverride) {
-          oauthOverrideSpy(provider.id);
-          onClickOverride();
-        }
-      }}>
-      {provider.id}
-    </button>
-  ),
-}));
-
-vi.mock('../../components/oauth/providerConfigs', () => ({
-  oauthProviderConfigs: [
-    { id: 'google', showOnWelcome: true },
-    { id: 'github', showOnWelcome: true },
-    { id: 'twitter', showOnWelcome: true },
-    { id: 'discord', showOnWelcome: false },
-  ],
 }));
 
 vi.mock('../../store/deepLinkAuthState', () => ({ useDeepLinkAuthState: vi.fn() }));
@@ -68,8 +32,6 @@ const { mockClearAllAppData } = vi.hoisted(() => ({
 vi.mock('../../utils/clearAllAppData', () => ({
   clearAllAppData: (...args: unknown[]) => mockClearAllAppData(...args),
 }));
-
-vi.mock('../../utils/openUrl', () => ({ openUrl: vi.fn().mockResolvedValue(undefined) }));
 
 vi.mock('../../services/coreRpcClient', () => ({
   clearCoreRpcUrlCache: vi.fn(),
@@ -108,9 +70,6 @@ vi.mock('../../utils/configPersistence', () => ({
 
 describe('Welcome auth entrypoint', () => {
   beforeEach(() => {
-    oauthButtonSpy.mockReset();
-    oauthOverrideSpy.mockReset();
-    vi.mocked(openUrl).mockClear();
     vi.mocked(useDeepLinkAuthState).mockReturnValue({
       isProcessing: false,
       errorMessage: null,
@@ -118,44 +77,23 @@ describe('Welcome auth entrypoint', () => {
     });
   });
 
-  it('renders only the OAuth buttons when auth is idle', () => {
+  it('renders only the local auth entrypoint when auth is idle', () => {
     renderWithProviders(<Welcome />);
 
     expect(screen.queryByLabelText('Email address')).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Continue with email' })).not.toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'google' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'github' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'twitter' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Continue locally/i })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'google' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'github' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'twitter' })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'discord' })).not.toBeInTheDocument();
   });
 
-  it('renders legal links with valid targets and opens them externally', () => {
+  it('does not render hosted auth legal links', () => {
     renderWithProviders(<Welcome />);
 
-    const termsLink = screen.getByRole('link', { name: 'Terms' });
-    const privacyLink = screen.getByRole('link', { name: 'Privacy Policy' });
-
-    expect(termsLink).toHaveAttribute('href', TERMS_OF_USE_URL);
-    expect(privacyLink).toHaveAttribute('href', PRIVACY_POLICY_URL);
-
-    fireEvent.click(termsLink);
-    fireEvent.click(privacyLink);
-
-    expect(openUrl).toHaveBeenNthCalledWith(1, TERMS_OF_USE_URL);
-    expect(openUrl).toHaveBeenNthCalledWith(2, PRIVACY_POLICY_URL);
-  });
-
-  it('delegates OAuth clicks to OAuthProviderButton without an override', () => {
-    renderWithProviders(<Welcome />);
-
-    fireEvent.click(screen.getByRole('button', { name: 'google' }));
-    fireEvent.click(screen.getByRole('button', { name: 'github' }));
-    fireEvent.click(screen.getByRole('button', { name: 'twitter' }));
-
-    expect(oauthButtonSpy).toHaveBeenNthCalledWith(1, 'google');
-    expect(oauthButtonSpy).toHaveBeenNthCalledWith(2, 'github');
-    expect(oauthButtonSpy).toHaveBeenNthCalledWith(3, 'twitter');
-    expect(oauthOverrideSpy).not.toHaveBeenCalled();
+    expect(screen.queryByRole('link', { name: 'Terms' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'Privacy Policy' })).not.toBeInTheDocument();
   });
 
   it('shows the deep-link processing state when auth is already in progress', () => {
@@ -287,7 +225,7 @@ describe('Welcome — Select runtime button', () => {
   });
 });
 
-describe('Welcome — OAuth buttons presence', () => {
+describe('Welcome — hosted auth removal', () => {
   beforeEach(() => {
     vi.mocked(useDeepLinkAuthState).mockReturnValue({
       isProcessing: false,
@@ -296,21 +234,16 @@ describe('Welcome — OAuth buttons presence', () => {
     });
   });
 
-  it('renders all providers with showOnWelcome=true', () => {
+  it('does not render OAuth provider buttons', () => {
     renderWithProviders(<Welcome />);
 
-    expect(screen.getByRole('button', { name: 'google' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'github' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'twitter' })).toBeInTheDocument();
-  });
-
-  it('does not render providers with showOnWelcome=false', () => {
-    renderWithProviders(<Welcome />);
-
+    expect(screen.queryByRole('button', { name: 'google' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'github' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'twitter' })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'discord' })).not.toBeInTheDocument();
   });
 
-  it('hides OAuth buttons while auth is processing', () => {
+  it('hides the local login button while auth is processing', () => {
     vi.mocked(useDeepLinkAuthState).mockReturnValue({
       isProcessing: true,
       errorMessage: null,
@@ -318,7 +251,7 @@ describe('Welcome — OAuth buttons presence', () => {
     });
     renderWithProviders(<Welcome />);
 
-    expect(screen.queryByRole('button', { name: 'google' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Continue locally/i })).not.toBeInTheDocument();
   });
 });
 

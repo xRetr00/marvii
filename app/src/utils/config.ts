@@ -4,8 +4,7 @@ const APP_ENV = (import.meta.env.VITE_OPENHUMAN_APP_ENV as string | undefined)
   ?.trim()
   .toLowerCase();
 
-const DEFAULT_BACKEND_URL =
-  APP_ENV === 'staging' ? 'https://staging-api.tinyhumans.ai' : 'https://api.tinyhumans.ai';
+const DEFAULT_BACKEND_URL = '';
 
 /**
  * Build-time fallback for the Core JSON-RPC endpoint URL.
@@ -97,8 +96,7 @@ export const CONSUMER_FIRST_SESSION_ENABLED =
  */
 export const CHAT_ATTACHMENTS_ENABLED = import.meta.env.VITE_CHAT_ATTACHMENTS === 'true';
 
-export const SKILLS_GITHUB_REPO =
-  import.meta.env.VITE_SKILLS_GITHUB_REPO || 'tinyhumansai/openhuman-skills';
+export const SKILLS_GITHUB_REPO = import.meta.env.VITE_SKILLS_GITHUB_REPO || '';
 
 /** Google Analytics 4 Measurement ID. Leave blank to disable GA. */
 export const GA_MEASUREMENT_ID = import.meta.env.VITE_GA_MEASUREMENT_ID as string | undefined;
@@ -108,14 +106,12 @@ export const GA_FORCE_DEV = import.meta.env.VITE_GA_FORCE_DEV === 'true';
 
 /** OpenPanel project client id. Leave blank to disable OpenPanel analytics. */
 export const OPENPANEL_CLIENT_ID = (
-  (import.meta.env.VITE_OPENPANEL_CLIENT_ID as string | undefined) ??
-  'e9c996d5-497f-4eec-9bde-630019ad525b'
+  (import.meta.env.VITE_OPENPANEL_CLIENT_ID as string | undefined) ?? ''
 ).trim();
 
 /** OpenPanel API base URL. */
 export const OPENPANEL_API_URL = (
-  (import.meta.env.VITE_OPENPANEL_API_URL as string | undefined) ??
-  'https://panel.tinyhumans.ai/api'
+  (import.meta.env.VITE_OPENPANEL_API_URL as string | undefined) ?? ''
 ).trim();
 
 /** Sentry DSN for error reporting. Leave blank to disable. */
@@ -138,7 +134,7 @@ export const BACKEND_URL =
 
 /** Telegram bot username used for managed DM linking when backend does not return a launch URL. */
 export const TELEGRAM_BOT_USERNAME =
-  (import.meta.env.VITE_TELEGRAM_BOT_USERNAME as string | undefined) || 'openhuman_bot';
+  (import.meta.env.VITE_TELEGRAM_BOT_USERNAME as string | undefined) || '';
 
 /** Dev only: auto-inject JWT token to skip login flow. */
 export const DEV_JWT_TOKEN = import.meta.env.DEV
@@ -206,7 +202,7 @@ export const MINIMUM_SUPPORTED_APP_VERSION =
 /** URL for the latest app release download page. Used for OAuth version-gate recovery and crash-recovery prompts. Override via VITE_LATEST_APP_DOWNLOAD_URL for deployment-specific download pages. */
 export const LATEST_APP_DOWNLOAD_URL =
   (import.meta.env.VITE_LATEST_APP_DOWNLOAD_URL as string | undefined)?.trim() ||
-  'https://github.com/tinyhumansai/openhuman/releases/latest';
+  'https://github.com/xRetr00/marvii/releases/latest';
 
 /**
  * Set `VITE_SENTRY_SMOKE_TEST=true` in one build (or in `.env.local`) to

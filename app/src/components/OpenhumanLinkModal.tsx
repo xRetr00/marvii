@@ -239,12 +239,12 @@ const NotificationsBody = ({ close }: { close: () => void }) => {
         setPermissionState(nextState);
         setStatus('error');
         setError(
-          'Notification permission is off. Enable OpenHuman in System Settings → Notifications, then retry.'
+          'Notification permission is off. Enable Marvi in System Settings → Notifications, then retry.'
         );
         return;
       }
       const sendResult = await showNativeNotification({
-        title: 'OpenHuman is good to go',
+        title: 'Marvi is good to go',
         body: 'You will get pings here when something needs your attention.',
         tag: 'welcome-notification-test',
       });
@@ -252,7 +252,7 @@ const NotificationsBody = ({ close }: { close: () => void }) => {
         setStatus('error');
         setError(
           sendResult.error ??
-            'OpenHuman could not trigger a system notification. Check OS notification settings and retry.'
+            'Marvi could not trigger a system notification. Check OS notification settings and retry.'
         );
         return;
       }

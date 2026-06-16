@@ -664,7 +664,7 @@ pub fn provider_display_name(provider: &str) -> &'static str {
         "google-meet" => "Google Meet",
         "zoom" => "Zoom",
         "browserscan" => "BrowserScan",
-        _ => "OpenHuman",
+        _ => "Marvi",
     }
 }
 
@@ -1061,7 +1061,7 @@ impl From<&NotificationBypassPrefs> for NotificationBypassPrefsPayload {
 /// — kept inline here so the shell crate doesn't take a build-time dep on
 /// the core library. Disambiguates from natively-installed apps (Slack,
 /// Discord, Telegram desktop) firing the same message twice.
-const OPENHUMAN_TITLE_PREFIX: &str = "OpenHuman: ";
+const OPENHUMAN_TITLE_PREFIX: &str = "Marvi: ";
 
 fn slack_scanner_enabled() -> bool {
     std::env::var("OPENHUMAN_DISABLE_SLACK_SCANNER")
