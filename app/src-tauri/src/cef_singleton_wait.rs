@@ -119,7 +119,7 @@ pub(crate) fn wait_for_cache_release() {
             WaitDecision::KeepWaiting => {
                 let delay = backoff_delay(attempt);
                 log::warn!(
-                    "[cef-singleton-wait] {others} prior OpenHuman process(es) still alive (CEF cache lock); waiting {} ms before re-check (elapsed {} ms, TAURI-RUST-F)",
+                    "[cef-singleton-wait] {others} prior Marvi process(es) still alive (CEF cache lock); waiting {} ms before re-check (elapsed {} ms, TAURI-RUST-F)",
                     delay.as_millis(),
                     start.elapsed().as_millis()
                 );
@@ -128,7 +128,7 @@ pub(crate) fn wait_for_cache_release() {
             }
             WaitDecision::GiveUp => {
                 log::error!(
-                    "[cef-singleton-wait] {others} prior OpenHuman process(es) still hold the CEF cache after {} ms budget; exiting cleanly instead of panicking in cef::initialize (TAURI-RUST-F)",
+                    "[cef-singleton-wait] {others} prior Marvi process(es) still hold the CEF cache after {} ms budget; exiting cleanly instead of panicking in cef::initialize (TAURI-RUST-F)",
                     WAIT_BUDGET.as_millis()
                 );
                 // Best-effort: hand any openhuman:// deep links in our argv to

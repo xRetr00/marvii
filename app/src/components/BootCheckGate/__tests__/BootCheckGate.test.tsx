@@ -98,7 +98,7 @@ describe('BootCheckGate — picker (unset mode)', () => {
     renderGate();
     expect(screen.getByText('Select a Runtime')).toBeInTheDocument();
     expect(screen.getByText('Run Locally (Recommended)')).toBeInTheDocument();
-    expect(screen.getByText('Run on the Cloud (Complex)')).toBeInTheDocument();
+    expect(screen.queryByText('Run on the Cloud (Complex)')).not.toBeInTheDocument();
   });
 
   it('does NOT render children while in picker', () => {
@@ -118,185 +118,11 @@ describe('BootCheckGate — picker (unset mode)', () => {
       expect(screen.getByTestId('app-content')).toBeInTheDocument();
     });
   });
-
-  it('shows URL input when user selects Cloud', () => {
-    renderGate();
-
-    fireEvent.click(screen.getByText('Run on the Cloud (Complex)'));
-
-    expect(screen.getByPlaceholderText(/https:\/\/core\.example\.com/)).toBeInTheDocument();
-  });
-
-  it('shows URL validation error when cloud URL is empty', () => {
-    renderGate();
-
-    fireEvent.click(screen.getByText('Run on the Cloud (Complex)'));
-    fireEvent.click(screen.getByRole('button', { name: 'Continue' }));
-
-    expect(screen.getByText('Please enter a runtime URL.')).toBeInTheDocument();
-  });
-
-  it('shows URL validation error for non-http URL', () => {
-    renderGate();
-
-    fireEvent.click(screen.getByText('Run on the Cloud (Complex)'));
-    const input = screen.getByPlaceholderText(/https:\/\/core\.example\.com/);
-    fireEvent.change(input, { target: { value: 'ftp://invalid' } });
-    fireEvent.click(screen.getByRole('button', { name: 'Continue' }));
-
-    expect(screen.getByText(/start with http/)).toBeInTheDocument();
-  });
-
-  it('shows URL validation error for malformed URL string', () => {
-    renderGate();
-
-    fireEvent.click(screen.getByText('Run on the Cloud (Complex)'));
-    const input = screen.getByPlaceholderText(/https:\/\/core\.example\.com/);
-    fireEvent.change(input, { target: { value: 'not a url at all' } });
-    fireEvent.click(screen.getByRole('button', { name: 'Continue' }));
-
-    expect(screen.getByText(/That doesn't look like a valid URL/)).toBeInTheDocument();
-  });
-
-  it('shows token validation error when cloud URL is valid but token is missing', () => {
-    renderGate();
-
-    fireEvent.click(screen.getByText('Run on the Cloud (Complex)'));
-    const urlInput = screen.getByPlaceholderText(/https:\/\/core\.example\.com/);
-    fireEvent.change(urlInput, { target: { value: 'https://core.example.com/rpc' } });
-    // Token left blank.
-    fireEvent.click(screen.getByRole('button', { name: 'Continue' }));
-
-    expect(screen.getByText(/We'll need an auth token to connect/i)).toBeInTheDocument();
-  });
-
-  it('accepts a Tailscale HTTP core URL in cloud mode', async () => {
-    mockRunBootCheck.mockResolvedValue({ kind: 'match' });
-
-    renderGate();
-    fireEvent.click(screen.getByText('Run on the Cloud (Complex)'));
-    fireEvent.change(screen.getByPlaceholderText(/https:\/\/core\.example\.com/), {
-      target: { value: 'http://100.116.244.64:7788/rpc' },
-    });
-    fireEvent.change(screen.getByPlaceholderText(/Bearer token/i), {
-      target: { value: 'tok-1234' },
-    });
-    fireEvent.click(screen.getByRole('button', { name: 'Continue' }));
-
-    await waitFor(() => {
-      expect(screen.getByTestId('app-content')).toBeInTheDocument();
-    });
-    expect(mockRunBootCheck).toHaveBeenCalledWith(
-      expect.objectContaining({
-        kind: 'cloud',
-        url: 'http://100.116.244.64:7788/rpc',
-        token: 'tok-1234',
-      }),
-      expect.any(Object)
-    );
-  });
-
-  it('normalizes a cloud core base URL to the /rpc endpoint before continuing', async () => {
-    mockRunBootCheck.mockResolvedValue({ kind: 'match' });
-
-    renderGate();
-    fireEvent.click(screen.getByText('Run on the Cloud (Complex)'));
-    fireEvent.change(screen.getByPlaceholderText(/https:\/\/core\.example\.com/), {
-      target: { value: 'https://example.trycloudflare.com/' },
-    });
-    fireEvent.change(screen.getByPlaceholderText(/Bearer token/i), {
-      target: { value: 'tok-1234' },
-    });
-    fireEvent.click(screen.getByRole('button', { name: 'Continue' }));
-
-    await waitFor(() => {
-      expect(screen.getByTestId('app-content')).toBeInTheDocument();
-    });
-    expect(mockRunBootCheck).toHaveBeenCalledWith(
-      expect.objectContaining({
-        kind: 'cloud',
-        url: 'https://example.trycloudflare.com/rpc',
-        token: 'tok-1234',
-      }),
-      expect.any(Object)
-    );
-  });
-
-  it('warns about public HTTP cloud URLs but does not block them', async () => {
-    mockRunBootCheck.mockResolvedValue({ kind: 'match' });
-
-    renderGate();
-
-    fireEvent.click(screen.getByText('Run on the Cloud (Complex)'));
-    const urlInput = screen.getByPlaceholderText(/https:\/\/core\.example\.com/);
-    fireEvent.change(urlInput, { target: { value: 'http://core.example.com/rpc' } });
-
-    // Non-blocking warning shows inline as soon as the public HTTP URL is typed.
-    expect(screen.getByText(/traffic will not be encrypted/i)).toBeInTheDocument();
-
-    fireEvent.change(screen.getByPlaceholderText(/Bearer token/i), {
-      target: { value: 'tok-1234' },
-    });
-    fireEvent.click(screen.getByRole('button', { name: 'Continue' }));
-
-    // The boot check still proceeds with the HTTP URL.
-    await waitFor(() => {
-      expect(mockRunBootCheck).toHaveBeenCalledWith(
-        expect.objectContaining({
-          kind: 'cloud',
-          url: 'http://core.example.com/rpc',
-          token: 'tok-1234',
-        }),
-        expect.any(Object)
-      );
-    });
-  });
-
-  it('clears the token error as soon as the user types into the token field', () => {
-    renderGate();
-
-    fireEvent.click(screen.getByText('Run on the Cloud (Complex)'));
-    fireEvent.change(screen.getByPlaceholderText(/https:\/\/core\.example\.com/), {
-      target: { value: 'https://core.example.com/rpc' },
-    });
-    fireEvent.click(screen.getByRole('button', { name: 'Continue' }));
-    expect(screen.getByText(/We'll need an auth token to connect/i)).toBeInTheDocument();
-
-    const tokenInput = screen.getByPlaceholderText(/Bearer token/i);
-    fireEvent.change(tokenInput, { target: { value: 'tok' } });
-
-    expect(screen.queryByText(/We'll need an auth token to connect/i)).not.toBeInTheDocument();
-  });
-
-  it('advances past picker and triggers boot check when cloud URL + token are both set', async () => {
-    mockRunBootCheck.mockResolvedValue({ kind: 'match' });
-
-    renderGate();
-    fireEvent.click(screen.getByText('Run on the Cloud (Complex)'));
-    fireEvent.change(screen.getByPlaceholderText(/https:\/\/core\.example\.com/), {
-      target: { value: 'https://core.example.com/rpc' },
-    });
-    fireEvent.change(screen.getByPlaceholderText(/Bearer token/i), {
-      target: { value: 'tok-1234' },
-    });
-    fireEvent.click(screen.getByRole('button', { name: 'Continue' }));
-
-    await waitFor(() => {
-      expect(screen.getByTestId('app-content')).toBeInTheDocument();
-    });
-    expect(mockRunBootCheck).toHaveBeenCalledWith(
-      expect.objectContaining({
-        kind: 'cloud',
-        url: 'https://core.example.com/rpc',
-        token: 'tok-1234',
-      }),
-      expect.any(Object)
-    );
-  });
 });
 
 describe('BootCheckGate — picker test connection', () => {
   beforeEach(() => {
+    mockedIsTauri.mockReturnValue(false);
     mockTestCoreRpcConnection.mockReset();
   });
 
@@ -730,11 +556,7 @@ describe('BootCheckGate — picker (web build, !isTauri)', () => {
     expect(screen.getByText('Connect to Your Runtime')).toBeInTheDocument();
     expect(screen.queryByText('Select a Runtime')).not.toBeInTheDocument();
     expect(screen.queryByText('Run Locally (Recommended)')).not.toBeInTheDocument();
-    // The selectable Cloud tile is also gone — cloud is implicit and the
-    // URL/token form is rendered directly.
-    expect(
-      screen.queryByRole('button', { name: 'Run on the Cloud (Complex)' })
-    ).not.toBeInTheDocument();
+    expect(screen.getByText('Run on the Cloud (Complex)')).toBeInTheDocument();
   });
 
   it('renders the cloud form fields immediately (cloud is the only option)', () => {
@@ -744,18 +566,10 @@ describe('BootCheckGate — picker (web build, !isTauri)', () => {
     expect(screen.getByPlaceholderText(/Bearer token/i)).toBeInTheDocument();
   });
 
-  it('shows a Download desktop app CTA linking to the release page', () => {
+  it('does not render a hosted desktop download CTA', () => {
     renderGate();
 
-    const cta = screen.getByTestId('web-download-cta');
-    expect(cta).toBeInTheDocument();
-    const link = cta.querySelector('a');
-    expect(link).not.toBeNull();
-    expect(link?.getAttribute('href')).toMatch(
-      /github\.com\/tinyhumansai\/openhuman\/releases\/latest/
-    );
-    expect(link?.getAttribute('target')).toBe('_blank');
-    expect(link?.getAttribute('rel')).toMatch(/noopener/);
+    expect(screen.queryByTestId('web-download-cta')).not.toBeInTheDocument();
   });
 
   it('continues into a cloud boot check when URL + token are provided', async () => {

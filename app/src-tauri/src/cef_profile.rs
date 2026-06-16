@@ -168,7 +168,7 @@ fn is_trusted_queued_purge_path(default_openhuman_dir: &Path, target: &Path) -> 
 /// not delete the pending-purge list before it is processed.
 fn pending_purge_marker_path(default_openhuman_dir: &Path) -> Result<PathBuf, String> {
     let parent = default_openhuman_dir.parent().ok_or_else(|| {
-        "default OpenHuman data dir has no parent; cannot place CEF purge marker outside the data tree"
+        "default Marvi data dir has no parent; cannot place CEF purge marker outside the data tree"
             .to_string()
     })?;
     Ok(parent.join(PENDING_PURGE_STATE_FILE))
@@ -233,7 +233,7 @@ fn save_pending_purge_state(
 ) -> Result<(), String> {
     std::fs::create_dir_all(default_openhuman_dir).map_err(|error| {
         format!(
-            "create OpenHuman root dir {}: {error}",
+            "create Marvi root dir {}: {error}",
             default_openhuman_dir.display()
         )
     })?;

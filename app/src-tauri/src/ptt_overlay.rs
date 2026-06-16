@@ -24,7 +24,7 @@ pub(crate) fn ensure_window<R: Runtime>(app: &AppHandle<R>) -> Result<(), String
     }
     let url = WebviewUrl::App("index.html#/ptt-overlay".into());
     let mut builder = WebviewWindowBuilder::new(app, OVERLAY_LABEL, url)
-        .title("OpenHuman Push-to-Talk")
+        .title("Marvi Push-to-Talk")
         .inner_size(160.0, 56.0)
         .decorations(false)
         .transparent(true)

@@ -1,6 +1,6 @@
 # update
 
-Self-update domain for the `openhuman-core` binary. Checks GitHub Releases (`tinyhumansai/openhuman`, "latest" endpoint) for a newer build of the platform-appropriate core binary, downloads + atomically stages it next to the running executable, and (depending on the configured restart strategy) publishes a self-restart so the Tauri shell/supervisor can swap it in. Also exposes a cheap no-network version probe and a periodic background checker. Network failures are classified so transient transport/HTTP problems don't spam Sentry.
+Self-update domain for the bundled core binary. Checks GitHub Releases (`xRetr00/marvii`, "latest" endpoint) for a newer build of the platform-appropriate core binary, downloads + atomically stages it next to the running executable, and (depending on the configured restart strategy) publishes a self-restart so the Tauri shell/supervisor can swap it in. Also exposes a cheap no-network version probe and a periodic background checker. Network failures are classified so transient transport/HTTP problems don't spam Sentry.
 
 ## Responsibilities
 - Query the GitHub Releases "latest" API and compare semver-ish tags against the compiled `CARGO_PKG_VERSION` (`is_newer`).

@@ -1,11 +1,11 @@
 #!/usr/bin/env pwsh
 <#
 .SYNOPSIS
-  OpenHuman installer for Windows.
+  Marvi installer for Windows.
 
 .DESCRIPTION
   Intended for:
-  irm https://raw.githubusercontent.com/tinyhumansai/openhuman/main/scripts/install.ps1 | iex
+  irm https://raw.githubusercontent.com/xRetr00/marvii/main/scripts/install.ps1 | iex
 
   Also works when saved and run directly:
   .\scripts\install.ps1 -DryRun
@@ -62,12 +62,12 @@ function Select-OpenHumanWindowsAssetFromRelease {
     return $null
   }
 
-  $msi = $assets | Where-Object { $_.name -match 'OpenHuman_.*x64.*\.msi$' } | Select-Object -First 1
+  $msi = $assets | Where-Object { $_.name -match '(Marvi|OpenHuman)_.*x64.*\.msi$' } | Select-Object -First 1
   if ($msi) {
     return $msi
   }
 
-  $exe = $assets | Where-Object { $_.name -match 'OpenHuman_.*x64.*\.exe$' } | Select-Object -First 1
+  $exe = $assets | Where-Object { $_.name -match '(Marvi|OpenHuman)_.*x64.*\.exe$' } | Select-Object -First 1
   if ($exe) {
     return $exe
   }
@@ -88,7 +88,7 @@ function Install-OpenHuman {
   $ErrorActionPreference = "Stop"
 
   $InstallerVersion = "1.1.0"
-  $Repo = "tinyhumansai/openhuman"
+  $Repo = "xRetr00/marvii"
   $LatestReleaseApiUrl = "https://api.github.com/repos/$Repo/releases/latest"
 
   function Write-Info([string]$Message) { Write-Host "-> $Message" -ForegroundColor Cyan }
@@ -98,13 +98,13 @@ function Install-OpenHuman {
 
   function Show-Usage {
     @"
-OpenHuman Installer (Windows)
+Marvi Installer (Windows)
 
 Usage:
   install.ps1 [-Channel stable] [-DryRun] [-Help] [-Version]
 
 Examples:
-  irm https://raw.githubusercontent.com/tinyhumansai/openhuman/main/scripts/install.ps1 | iex
+  irm https://raw.githubusercontent.com/xRetr00/marvii/main/scripts/install.ps1 | iex
   .\scripts\install.ps1 -DryRun
 "@
   }
@@ -115,7 +115,7 @@ Examples:
   }
 
   if ($Version) {
-    Write-Output "openhuman-installer $InstallerVersion"
+    Write-Output "marvi-installer $InstallerVersion"
     return
   }
 
@@ -217,7 +217,7 @@ Examples:
     return
   }
 
-  Write-Info "Installing OpenHuman"
+  Write-Info "Installing Marvi"
   if ($assetName -like "*.msi") {
     $msiArgs = Get-OpenHumanMsiexecInstallArgumentList -MsiPath $tmpFile
     $elevated = Test-OpenHumanWindowsProcessElevated
@@ -229,7 +229,7 @@ Examples:
     }
     if ($proc.ExitCode -ne 0) {
       Write-Err "MSI install failed with exit code $($proc.ExitCode)."
-      Write-WarnMsg "If this persists, capture a log: msiexec /i `"$tmpFile`" /l*v `"$env:TEMP\OpenHuman-msi.log`""
+      Write-WarnMsg "If this persists, capture a log: msiexec /i `"$tmpFile`" /l*v `"$env:TEMP\Marvi-msi.log`""
       return
     }
   } elseif ($assetName -like "*.exe") {
@@ -244,20 +244,22 @@ Examples:
   }
 
   $expectedPaths = @(
+    "$env:LOCALAPPDATA\Programs\Marvi\Marvi.exe",
+    "$env:ProgramFiles\Marvi\Marvi.exe",
     "$env:LOCALAPPDATA\Programs\OpenHuman\OpenHuman.exe",
     "$env:ProgramFiles\OpenHuman\OpenHuman.exe"
   )
   $launchPath = $expectedPaths | Where-Object { Test-Path $_ } | Select-Object -First 1
 
   Write-Output ""
-  Write-Output "OpenHuman is ready."
+  Write-Output "Marvi is ready."
   if ($launchPath) {
     Write-Output "Launch: `"$launchPath`""
-    Write-Output "Uninstall: Settings -> Apps -> Installed apps -> OpenHuman"
+    Write-Output "Uninstall: Settings -> Apps -> Installed apps -> Marvi"
   } else {
     Write-WarnMsg "Could not locate installed executable automatically."
-    Write-Output "Try launching OpenHuman from Start Menu."
-    Write-Output "Uninstall: Settings -> Apps -> Installed apps -> OpenHuman"
+    Write-Output "Try launching Marvi from Start Menu."
+    Write-Output "Uninstall: Settings -> Apps -> Installed apps -> Marvi"
   }
 }
 

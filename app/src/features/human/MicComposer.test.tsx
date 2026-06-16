@@ -654,7 +654,7 @@ describe('MicComposer', () => {
   it('does not retry permanent errors (stale sidecar)', async () => {
     transcribeWithFactoryMock.mockRejectedValueOnce(
       new Error(
-        'Voice transcription is unavailable in this build. Restart the OpenHuman desktop app to pick up the latest core sidecar.'
+        'Voice transcription is unavailable in this build. Restart the Marvi desktop app to pick up the latest core sidecar.'
       )
     );
     const onError = vi.fn();

@@ -255,8 +255,8 @@ const messages: TranslationMap = {
   'clearData.failed': 'ডেটা মুছতে ও লগ আউট করতে ব্যর্থ হয়েছে। আবার চেষ্টা করুন।',
   'clearData.failedLogout': 'লগ আউট করতে ব্যর্থ হয়েছে। আবার চেষ্টা করুন।',
   'clearData.failedPersist': 'অ্যাপ স্টেট মুছতে ব্যর্থ হয়েছে। আবার চেষ্টা করুন।',
-  'welcome.logoAlt': 'OpenHuman',
-  'welcome.title': 'OpenHuman-এ স্বাগতম',
+  'welcome.logoAlt': 'Marvi',
+  'welcome.title': 'Marvi-এ স্বাগতম',
   'welcome.subtitle':
     'আপনার ব্যক্তিগত AI সুপার ইন্টেলিজেন্স। ব্যক্তিগত, সহজ এবং অত্যন্ত শক্তিশালী।',
   'welcome.connectPrompt': 'RPC URL কনফিগার করুন (অ্যাডভান্সড)',
@@ -266,7 +266,7 @@ const messages: TranslationMap = {
   'welcome.clearAppDataWarning':
     'এটি এই ডিভাইসে স্থানীয়ভাবে সংরক্ষিত সিক্রেট এবং অ্যাকাউন্ট মুছে দেয়। আপনার ক্লাউড অ্যাকাউন্ট প্রভাবিত হয় না — আপনি এরপরই আবার সাইন ইন করতে পারবেন।',
   'welcome.resetErrorFallback':
-    'অ্যাপ ডেটা মুছতে পারেনি। OpenHuman বন্ধ করে আবার খুলুন, তারপর আবার চেষ্টা করুন।',
+    'অ্যাপ ডেটা মুছতে পারেনি। Marvi বন্ধ করে আবার খুলুন, তারপর আবার চেষ্টা করুন।',
   'welcome.signingIn': 'আপনাকে সাইন ইন করা হচ্ছে...',
   'welcome.termsIntro': 'চালিয়ে যাওয়ার মাধ্যমে, আপনি',
   'welcome.termsOfUse': 'শর্তাবলীতে সম্মত হন',
@@ -285,7 +285,7 @@ const messages: TranslationMap = {
     'আপনার ডিভাইস সংযুক্ত। সংযোগ সক্রিয় রাখতে অ্যাপটি চালু রাখুন। নিচের বাটন দিয়ে এজেন্টকে মেসেজ করুন।',
   'home.statusBackendOnly': 'ব্যাকএন্ডে পুনরায় সংযোগ হচ্ছে… আপনার এজেন্ট শীঘ্রই আবার পাওয়া যাবে।',
   'home.statusCoreUnreachable':
-    'লোকাল কোর সাইডকার সাড়া দিচ্ছে না। OpenHuman ব্যাকগ্রাউন্ড প্রসেস ক্র্যাশ হয়েছে বা শুরু হয়নি।',
+    'লোকাল কোর সাইডকার সাড়া দিচ্ছে না। Marvi ব্যাকগ্রাউন্ড প্রসেস ক্র্যাশ হয়েছে বা শুরু হয়নি।',
   'home.statusInternetOffline':
     'আপনার ডিভাইস এখন অফলাইনে। নেটওয়ার্ক পরীক্ষা করুন বা অ্যাপ রিস্টার্ট করুন।',
   'home.restartCore': 'কোর রিস্টার্ট',
@@ -603,13 +603,13 @@ const messages: TranslationMap = {
   'rewards.referrals': 'রেফারেল',
   'rewards.coupons': 'রিডিম',
   'rewards.localUnavailable':
-    'লোকাল লগইনে কোনো রিওয়ার্ড, কুপন বা রেফারেল ক্রেডিট মেলে না। রিওয়ার্ড পেতে লগ আউট করে একটি OpenHuman অ্যাকাউন্ট দিয়ে সাইন ইন করুন।',
+    'লোকাল লগইনে কোনো রিওয়ার্ড, কুপন বা রেফারেল ক্রেডিট মেলে না। রিওয়ার্ড পেতে লগ আউট করে একটি Marvi অ্যাকাউন্ট দিয়ে সাইন ইন করুন।',
   'rewards.localUnavailableCta': 'অ্যাকাউন্ট সেটিংস খুলুন',
   'rewards.credits': 'ক্রেডিট',
   'rewards.referralCode': 'আপনার রেফারেল কোড',
   'rewards.copyCode': 'কোড কপি করুন',
   'rewards.share': 'শেয়ার',
-  'onboarding.welcome': 'হ্যালো। আমি OpenHuman।',
+  'onboarding.welcome': 'হ্যালো। আমি Marvi।',
   'onboarding.welcomeDesc':
     'আপনার সুপার-ইন্টেলিজেন্ট AI অ্যাসিস্ট্যান্ট যা আপনার কম্পিউটারে চলে। ব্যক্তিগত, সহজ এবং অত্যন্ত শক্তিশালী।',
   'onboarding.context': 'কন্টেক্সট সংগ্রহ',
@@ -621,14 +621,14 @@ const messages: TranslationMap = {
   'onboarding.referral': 'রেফারেল',
   'onboarding.referralDesc': 'যদি রেফারেল কোড থাকে তা প্রয়োগ করুন।',
   'onboarding.finish': 'সেটআপ সম্পন্ন',
-  'onboarding.finishDesc': 'সব প্রস্তুত! OpenHuman ব্যবহার শুরু করুন।',
+  'onboarding.finishDesc': 'সব প্রস্তুত! Marvi ব্যবহার শুরু করুন।',
   'onboarding.skip': 'এড়িয়ে যান',
   'onboarding.getStarted': 'শুরু করুন',
-  'onboarding.runtimeChoice.title': 'আপনি কীভাবে OpenHuman চালাতে চান?',
+  'onboarding.runtimeChoice.title': 'আপনি কীভাবে Marvi চালাতে চান?',
   'onboarding.runtimeChoice.subtitle':
     'আপনার জন্য উপযুক্ত সেটআপ বেছে নিন। পরে সেটিংসে পরিবর্তন করা যাবে।',
   'onboarding.runtimeChoice.cloud.title': 'সহজ',
-  'onboarding.runtimeChoice.cloud.tagline': 'OpenHuman সব কিছু পরিচালনা করবে।',
+  'onboarding.runtimeChoice.cloud.tagline': 'Marvi সব কিছু পরিচালনা করবে।',
   'onboarding.runtimeChoice.cloud.f1': 'বিল্ট-ইন নিরাপত্তা',
   'onboarding.runtimeChoice.cloud.f2': 'ব্যবহার আরও দীর্ঘ করতে টোকেন কম্প্রেশন',
   'onboarding.runtimeChoice.cloud.f3': 'একটি সাবস্ক্রিপশনে সব মডেল',
@@ -681,7 +681,7 @@ const messages: TranslationMap = {
   'onboarding.custom.stepperMemory': 'মেমোরি',
   'onboarding.custom.stepCounter': 'ধাপ {n} / {total}',
   'onboarding.custom.defaultTitle': 'ডিফল্ট',
-  'onboarding.custom.defaultSubtitle': 'OpenHuman আপনার হয়ে পরিচালনা করবে।',
+  'onboarding.custom.defaultSubtitle': 'Marvi আপনার হয়ে পরিচালনা করবে।',
   'onboarding.custom.configureTitle': 'কনফিগার',
   'onboarding.custom.configureSubtitle': 'আমি কী ব্যবহার করব তা বেছে নেব।',
   'onboarding.custom.progressAriaLabel': 'অনবোর্ডিং অগ্রগতি',
@@ -695,40 +695,40 @@ const messages: TranslationMap = {
   'onboarding.custom.inference.subtitle':
     'কোন ল্যাঙ্গুয়েজ মডেল আপনার প্রশ্নের উত্তর দেবে এবং এজেন্ট চালাবে?',
   'onboarding.custom.inference.defaultDesc':
-    'OpenHuman প্রতিটি ওয়ার্কলোড একটি সেন্সিবল ডিফল্ট মডেলে রুট করে। কোনো কী বা সেটআপ নেই।',
+    'Marvi প্রতিটি ওয়ার্কলোড একটি সেন্সিবল ডিফল্ট মডেলে রুট করে। কোনো কী বা সেটআপ নেই।',
   'onboarding.custom.inference.configureDesc':
     'নিজের OpenAI বা Anthropic কী আনুন। আমরা সব টেক্সট-ভিত্তিক কাজে এটি ব্যবহার করি।',
   'onboarding.custom.voice.title': 'ভয়েস',
   'onboarding.custom.voice.subtitle': 'ভয়েস মোডের জন্য স্পিচ-টু-টেক্সট এবং টেক্সট-টু-স্পিচ।',
   'onboarding.custom.voice.defaultDesc':
-    'OpenHuman ম্যানেজড STT/TTS সহ আসে যা সরাসরি কাজ করে। কিছু সেটআপ করতে হবে না।',
+    'Marvi ম্যানেজড STT/TTS সহ আসে যা সরাসরি কাজ করে। কিছু সেটআপ করতে হবে না।',
   'onboarding.custom.voice.configureDesc':
     'নিজের ElevenLabs / OpenAI Whisper / ইত্যাদি ব্যবহার করুন। Settings › Voice-এ কনফিগার করুন।',
   'onboarding.custom.oauth.title': 'সংযোগ (OAuth)',
   'onboarding.custom.oauth.subtitle':
     'Gmail, Slack, Notion এবং OAuth প্রয়োজন এমন অন্যান্য সংযুক্ত সার্ভিস।',
   'onboarding.custom.oauth.defaultDesc':
-    'OpenHuman একটি ম্যানেজড Composio ওয়ার্কস্পেস চালায়। পরে প্রতিটি সার্ভিস সংযুক্ত করতে এক ক্লিক।',
+    'Marvi একটি ম্যানেজড Composio ওয়ার্কস্পেস চালায়। পরে প্রতিটি সার্ভিস সংযুক্ত করতে এক ক্লিক।',
   'onboarding.custom.oauth.configureDesc':
     'নিজের Composio অ্যাকাউন্ট / API কী আনুন। Settings › Connections-এ কনফিগার করুন।',
   'onboarding.custom.search.title': 'ওয়েব সার্চ',
-  'onboarding.custom.search.subtitle': 'OpenHuman আপনার হয়ে কীভাবে ওয়েব সার্চ করে।',
+  'onboarding.custom.search.subtitle': 'Marvi আপনার হয়ে কীভাবে ওয়েব সার্চ করে।',
   'onboarding.custom.search.defaultDesc':
-    'OpenHuman ম্যানেজড সার্চ ব্যাকএন্ড ব্যবহার করে। কোনো কী লাগে না।',
+    'Marvi ম্যানেজড সার্চ ব্যাকএন্ড ব্যবহার করে। কোনো কী লাগে না।',
   'onboarding.custom.search.configureDesc':
     'নিজের সার্চ প্রোভাইডার কী আনুন (Tavily, Brave ইত্যাদি)। Settings › Tools-এ কনফিগার করুন।',
   'onboarding.custom.embeddings.title': 'Embeddings',
   'onboarding.custom.embeddings.subtitle':
-    'OpenHuman কীভাবে সিমান্টিক মেমোরি অনুসন্ধানের জন্য ভেক্টর এম্বেডিং তৈরি করে।',
+    'Marvi কীভাবে সিমান্টিক মেমোরি অনুসন্ধানের জন্য ভেক্টর এম্বেডিং তৈরি করে।',
   'onboarding.custom.embeddings.defaultDesc':
-    'OpenHuman একটি পরিচালিত এম্বেডিং সেবা ব্যবহার করে। কোনো API কী প্রয়োজন নেই।',
+    'Marvi একটি পরিচালিত এম্বেডিং সেবা ব্যবহার করে। কোনো API কী প্রয়োজন নেই।',
   'onboarding.custom.embeddings.configureDesc':
     'আপনার নিজস্ব এম্বেডিং প্রোভাইডার ব্যবহার করুন (OpenAI, Voyage, Ollama, ইত্যাদি)।',
   'onboarding.custom.memory.title': 'মেমোরি',
   'onboarding.custom.memory.subtitle':
-    'OpenHuman কীভাবে আপনার কন্টেক্সট, পছন্দ ও পূর্ববর্তী কথোপকথন মনে রাখে।',
+    'Marvi কীভাবে আপনার কন্টেক্সট, পছন্দ ও পূর্ববর্তী কথোপকথন মনে রাখে।',
   'onboarding.custom.memory.defaultDesc':
-    'OpenHuman স্বয়ংক্রিয়ভাবে মেমোরি স্টোরেজ ও রিট্রিভাল পরিচালনা করে। কিছু সেটআপ করতে হবে না।',
+    'Marvi স্বয়ংক্রিয়ভাবে মেমোরি স্টোরেজ ও রিট্রিভাল পরিচালনা করে। কিছু সেটআপ করতে হবে না।',
   'onboarding.custom.memory.configureDesc':
     'মেমোরি নিজে পরীক্ষা, এক্সপোর্ট বা মুছুন। Settings › Memory-এ কনফিগার করুন।',
   'accounts.addAccount': 'অ্যাকাউন্ট যোগ করুন',
@@ -861,7 +861,7 @@ const messages: TranslationMap = {
   'misc.downloading': 'ডাউনলোড হচ্ছে...',
   'misc.installing': 'ইনস্টল হচ্ছে...',
   'misc.beta':
-    'OpenHuman এখন আর্লি বেটায় আছে। যেকোনো মতামত বা বাগ রিপোর্ট করুন — প্রতিটি রিপোর্ট আমাদের দ্রুত এগিয়ে যেতে সাহায্য করে।',
+    'Marvi এখন আর্লি বেটায় আছে। যেকোনো মতামত বা বাগ রিপোর্ট করুন — প্রতিটি রিপোর্ট আমাদের দ্রুত এগিয়ে যেতে সাহায্য করে।',
   'misc.betaFeedback': 'ফিডব্যাক পাঠান',
   'mnemonic.title': 'রিকভারি ফ্রেজ',
   'mnemonic.warning': 'এই শব্দগুলো ক্রমানুসারে লিখে নিরাপদ স্থানে সংরক্ষণ করুন।',
@@ -885,11 +885,11 @@ const messages: TranslationMap = {
   'privacy.anonymizedAnalytics': 'প্রোডাক্ট অ্যানালিটিক্স',
   'privacy.shareAnonymizedData': 'প্রোডাক্ট অ্যানালিটিক্স ও ডায়াগনস্টিকস শেয়ার করুন',
   'privacy.shareAnonymizedDataDesc':
-    'গোপনীয়তা-সীমিত ক্র্যাশ রিপোর্ট ও ব্যবহার ইভেন্ট শেয়ার করে OpenHuman উন্নত করতে সাহায্য করুন, যার মধ্যে স্থিতিশীল অ্যাকাউন্ট ID ও অ্যাপ সংস্করণ মেটাডেটা থাকে। বার্তা, ওয়ালেট কী, API কী বা সেশন টোকেন কখনো সংগ্রহ করা হয় না।',
+    'গোপনীয়তা-সীমিত ক্র্যাশ রিপোর্ট ও ব্যবহার ইভেন্ট শেয়ার করে Marvi উন্নত করতে সাহায্য করুন, যার মধ্যে স্থিতিশীল অ্যাকাউন্ট ID ও অ্যাপ সংস্করণ মেটাডেটা থাকে। বার্তা, ওয়ালেট কী, API কী বা সেশন টোকেন কখনো সংগ্রহ করা হয় না।',
   'privacy.meetingFollowUps': 'মিটিং ফলো-আপ',
   'privacy.autoHandoffMeet': 'Google Meet ট্রান্সক্রিপ্ট স্বয়ংক্রিয়ভাবে অর্কেস্ট্রেটরে পাঠান',
   'privacy.autoHandoffMeetDesc':
-    'Google Meet কল শেষ হলে, OpenHuman-এর অর্কেস্ট্রেটর ট্রান্সক্রিপ্ট পড়তে এবং বার্তা ড্রাফট করা, ফলো-আপ নির্ধারণ করা বা সংযুক্ত Slack ওয়ার্কস্পেসে সারসংক্ষেপ পোস্ট করার মতো কাজ করতে পারে। ডিফল্টে বন্ধ।',
+    'Google Meet কল শেষ হলে, Marvi-এর অর্কেস্ট্রেটর ট্রান্সক্রিপ্ট পড়তে এবং বার্তা ড্রাফট করা, ফলো-আপ নির্ধারণ করা বা সংযুক্ত Slack ওয়ার্কস্পেসে সারসংক্ষেপ পোস্ট করার মতো কাজ করতে পারে। ডিফল্টে বন্ধ।',
   'privacy.analyticsDisclaimer':
     'সক্রিয় থাকলে, প্রোডাক্ট অ্যানালিটিক্স ও ডায়াগনস্টিকসে গোপনীয়তা-সীমিত ক্র্যাশ রিপোর্ট ও ব্যবহার ইভেন্ট, স্থিতিশীল অ্যাকাউন্ট ID এবং অ্যাপ সংস্করণ মেটাডেটা থাকতে পারে। বার্তা, ওয়ালেট কী, API কী বা সেশন টোকেন কখনো সংগ্রহ করা হয় না। যেকোনো সময় এই সেটিং পরিবর্তন করা যাবে।',
   'settings.about.version': 'ভার্সন',
@@ -980,15 +980,15 @@ const messages: TranslationMap = {
   'settings.search.menuDesc':
     'Xqx1q1x - নিজ হাতে অনুসন্ধান অথবা তার নিজের উপলব্ধকারীর সাথে যোগাযোগ স্থাপন করুন। Xqxqxkey কী- র সাথে একযোগে কাজ করার জন্য',
   'settings.search.description':
-    'এজেন্ট যে সার্চ ইঞ্জিন ব্যবহার করে তা বেছে নিন, অথবা সার্চ টুলগুলো সম্পূর্ণভাবে নিষ্ক্রিয় করুন। Managed OpenHuman-এর ব্যাকএন্ড ব্যবহার করে (কোনো সেটআপ নেই)। Parallel, Brave, এবং Querit আপনার API কী ব্যবহার করে সরাসরি আপনার মেশিন থেকে চলে।',
+    'এজেন্ট যে সার্চ ইঞ্জিন ব্যবহার করে তা বেছে নিন, অথবা সার্চ টুলগুলো সম্পূর্ণভাবে নিষ্ক্রিয় করুন। Managed Marvi-এর ব্যাকএন্ড ব্যবহার করে (কোনো সেটআপ নেই)। Parallel, Brave, এবং Querit আপনার API কী ব্যবহার করে সরাসরি আপনার মেশিন থেকে চলে।',
   'settings.search.engineAria': 'সার্চ ইঞ্জিন',
   'settings.search.engineDisabledLabel': 'Disabled',
   'settings.search.engineDisabledDesc':
     'এজেন্ট প্রেক্ষাপট এবং উপলব্ধ টুল তালিকা থেকে সার্চ টুলগুলি সরিয়ে দিন।',
-  'settings.search.engineManagedLabel': 'OpenHuman পরিচালিত',
+  'settings.search.engineManagedLabel': 'Marvi পরিচালিত',
   'settings.search.engineManagedDesc': 'ডিফল্ট xqx1x ব্যাক-এন্ড দ্বারা রুট',
   'settings.search.localManagedUnavailable':
-    'লোকাল ব্যবহারকারীদের জন্য OpenHuman Managed সার্চ উপলভ্য নয়। ওয়েব সার্চ চালু করতে আপনার নিজের Parallel বা Brave API key যোগ করুন।',
+    'লোকাল ব্যবহারকারীদের জন্য Marvi Managed সার্চ উপলভ্য নয়। ওয়েব সার্চ চালু করতে আপনার নিজের Parallel বা Brave API key যোগ করুন।',
   'settings.search.engineParallelLabel': 'Parallel',
   'settings.search.engineParallelDesc':
     'সরাসরি xqxxxxxxxxxxxxqx; অনুসন্ধান, চ্যাট, গবেষণা, সমৃদ্ধ টুল।',
@@ -1096,13 +1096,13 @@ const messages: TranslationMap = {
     'স্থানীয় xqxqx গোপন টেবিলের মধ্যে সংরক্ষণ করা হয়েছে। কোনো অস্বীকৃত অথবা কোনো মডেল পাঠানো হয়নি।',
   'devices.betaBadge': 'বিটা',
   'devices.betaText':
-    'এই ফিচারটি এখন বেটায় আছে। iOS ফোনকে রিমোট ক্লায়েন্ট হিসেবে ব্যবহার করতে এই OpenHuman-এর সাথে পেয়ার করুন।',
+    'এই ফিচারটি এখন বেটায় আছে। iOS ফোনকে রিমোট ক্লায়েন্ট হিসেবে ব্যবহার করতে এই Marvi-এর সাথে পেয়ার করুন।',
   'devices.comingSoonDescription':
     'ডিভাইস পেয়ারিং শীঘ্রই আসছে। এই পেজে iPhone পেয়ারিং এবং সংযুক্ত ডিভাইস ম্যানেজ করা যাবে।',
   'devices.title': 'ডিভাইস',
   'devices.pairIphone': 'পেয়ার iPhone',
   'devices.noPaired': 'কোনো পেয়ার করা ডিভাইস নেই',
-  'devices.emptyState': 'এই OpenHuman সেশনে সংযোগ করতে আপনার iPhone এ একটি QR code স্ক্যান করুন।',
+  'devices.emptyState': 'এই Marvi সেশনে সংযোগ করতে আপনার iPhone এ একটি QR code স্ক্যান করুন।',
   'devices.devicePairedTitle': 'ডিভাইস পেয়ার করা',
   'devices.devicePairedMessage': 'iPhone সফলভাবে সংযুক্ত হয়েছে৷',
   'devices.deviceRevokedTitle': 'ডিভাইস প্রত্যাহার করা হয়েছে',
@@ -1122,8 +1122,7 @@ const messages: TranslationMap = {
   'devices.loadFailed': 'ডিভাইসগুলি লোড করতে ব্যর্থ হয়েছে: {message}',
   'devices.pairModal.title': 'পেয়ার iPhone',
   'devices.pairModal.loading': 'পেয়ারিং কোড তৈরি করা হচ্ছে...',
-  'devices.pairModal.instructions':
-    'আপনার iPhone-এ OpenHuman অ্যাপ খুলুন এবং এই কোডটি স্ক্যান করুন।',
+  'devices.pairModal.instructions': 'আপনার iPhone-এ Marvi অ্যাপ খুলুন এবং এই কোডটি স্ক্যান করুন।',
   'devices.pairModal.expiresIn': 'কোডের মেয়াদ ~{count} মিনিটে শেষ হবে',
   'devices.pairModal.expiresInPlural': 'কোডের মেয়াদ ~{count} মিনিটে শেষ হবে',
   'devices.pairModal.showDetails': 'বিবরণ দেখান',
@@ -1367,7 +1366,7 @@ const messages: TranslationMap = {
   'mcp.connectAuth.schemeRaw': 'কোনোটি নয়',
   'mcp.connectAuth.reconnectFailed': 'শংসাপত্র সংরক্ষণ করা হয়েছে, কিন্তু সংযোগ ব্যর্থ হয়েছে।',
   'mcp.connectAuth.oauthHint':
-    'এই সার্ভারটি OAuth ব্যবহার করে। OpenHuman-কে অনুমোদন দিতে আপনার ব্রাউজারের মাধ্যমে সাইন ইন করুন।',
+    'এই সার্ভারটি OAuth ব্যবহার করে। Marvi-কে অনুমোদন দিতে আপনার ব্রাউজারের মাধ্যমে সাইন ইন করুন।',
   'mcp.connectAuth.signIn': 'ব্রাউজার দিয়ে সাইন ইন করুন',
   'mcp.connectAuth.oauthWaiting': 'সাইন-ইনের জন্য অপেক্ষা করা হচ্ছে…',
   'mcp.connectAuth.oauthOrToken':
@@ -1384,7 +1383,7 @@ const messages: TranslationMap = {
   'autonomy.title': 'এজেন্ট স্বায়ত্তশাসন',
   'autonomy.maxActionsLabel': 'প্রতি ঘণ্টায় সর্বাধিক অ্যাকশন',
   'autonomy.maxActionsHelp':
-    'একজন এজেন্ট প্রতি ঘণ্টায় সর্বোচ্চ কতটি টুল অ্যাকশন চালাতে পারবে। নতুন মান আপনার পরবর্তী চ্যাটে প্রযোজ্য হবে। Cron জব এবং চ্যানেল লিসেনার OpenHuman পুনরায় চালু না করা পর্যন্ত বর্তমান সীমা বজায় রাখবে।',
+    'একজন এজেন্ট প্রতি ঘণ্টায় সর্বোচ্চ কতটি টুল অ্যাকশন চালাতে পারবে। নতুন মান আপনার পরবর্তী চ্যাটে প্রযোজ্য হবে। Cron জব এবং চ্যানেল লিসেনার Marvi পুনরায় চালু না করা পর্যন্ত বর্তমান সীমা বজায় রাখবে।',
   'autonomy.statusSaving': 'সংরক্ষণ করা হচ্ছে...',
   'autonomy.statusSaved': 'সংরক্ষিত।',
   'autonomy.statusFailed': 'ব্যর্থ হয়েছে',
@@ -1433,14 +1432,14 @@ const messages: TranslationMap = {
   'settings.billing.movedToWeb': 'বিলিং ওয়েবে সরানো হয়েছে',
   'settings.billing.openDashboard': 'বিলিং ড্যাশবোর্ড খুলুন',
   'settings.billing.movedToWebDesc':
-    'সাবস্ক্রিপশন পরিবর্তন, পেমেন্ট পদ্ধতি, ক্রেডিট এবং ইনভয়েস এখন ওয়েবে TinyHumans-এ পরিচালনা করা হয়।',
+    'সাবস্ক্রিপশন পরিবর্তন, পেমেন্ট পদ্ধতি, ক্রেডিট এবং ইনভয়েস এখন ওয়েবে Marvi-এ পরিচালনা করা হয়।',
   'settings.billing.backToSettings': 'সেটিংসে ফিরুন',
   'settings.billing.openingBrowser': 'ব্রাউজার খোলা হচ্ছে...',
   'settings.billing.browserNotOpen': 'ব্রাউজার না খুললে উপরের বাটন ব্যবহার করুন।',
   'settings.billing.browserOpenFailed':
     'ব্রাউজার স্বয়ংক্রিয়ভাবে খোলা যায়নি। উপরের বাটন ব্যবহার করুন।',
   'settings.tools.chooseCapabilities':
-    'OpenHuman আপনার হয়ে কোন ক্যাপাবিলিটিগুলো ব্যবহার করতে পারবে তা বেছে নিন।',
+    'Marvi আপনার হয়ে কোন ক্যাপাবিলিটিগুলো ব্যবহার করতে পারবে তা বেছে নিন।',
   'settings.tools.saveChanges': 'পরিবর্তন সংরক্ষণ করুন',
   'settings.tools.preferencesSaved': 'পছন্দ সংরক্ষিত',
   'settings.tools.saveFailed': 'পছন্দ সংরক্ষণ ব্যর্থ। আবার চেষ্টা করুন।',
@@ -1702,8 +1701,8 @@ const messages: TranslationMap = {
   'voice.providers.piperPreset.alanMedium': 'GB · অ্যালান (পুরুষ)',
   'voice.providers.piperPreset.jennyDiocoMedium': 'GB · জেনি ডিওকো (মহিলা)',
   'voice.providers.piperPreset.northernEnglishMaleMedium': 'GB · উত্তর ইংরেজি (পুরুষ)',
-  'voice.providers.chip.cloud': 'OpenHuman (পরিচালিত)',
-  'voice.providers.chip.cloudAria': 'OpenHuman পরিচালিত প্রোভাইডার সর্বদা সক্রিয়',
+  'voice.providers.chip.cloud': 'Marvi (পরিচালিত)',
+  'voice.providers.chip.cloudAria': 'Marvi পরিচালিত প্রোভাইডার সর্বদা সক্রিয়',
   'voice.providers.chip.whisper': 'Whisper (স্থানীয়)',
   'voice.providers.chip.enableWhisper': 'স্থানীয় Whisper STT সক্রিয় করুন',
   'voice.providers.chip.disableWhisper': 'স্থানীয় Whisper STT নিষ্ক্রিয় করুন',
@@ -1752,7 +1751,7 @@ const messages: TranslationMap = {
   'voice.externalProviders.add': 'Add',
   'pttSettings.title': 'চাপ দিয়ে কথা বলুন',
   'pttSettings.description':
-    'অন্য একটি অ্যাপে থাকার সময় OpenHuman-এর সাথে কথা বলতে একটি কী চেপে ধরে রাখুন। কী ছেড়ে দিলে রেকর্ডিং পাঠানো হয়; «উত্তর পড়ে শোনাও» চালু থাকলে OpenHuman উত্তরটি জোরে পড়ে শোনায়।',
+    'অন্য একটি অ্যাপে থাকার সময় Marvi-এর সাথে কথা বলতে একটি কী চেপে ধরে রাখুন। কী ছেড়ে দিলে রেকর্ডিং পাঠানো হয়; «উত্তর পড়ে শোনাও» চালু থাকলে Marvi উত্তরটি জোরে পড়ে শোনায়।',
   'pttSettings.shortcutLabel': 'হটকি',
   'pttSettings.shortcutPlaceholder': 'একটি কী চাপুন (যেমন F13)',
   'pttSettings.shortcutUnsetHint':
@@ -1765,11 +1764,11 @@ const messages: TranslationMap = {
     'একটি সাধারণ কী বেছে নিন (যেমন F13) — শুধু মডিফায়ার নিয়ে গঠিত শর্টকাট চাপ দিয়ে কথা বলুনের জন্য কাজ করে না।',
   'pttSettings.errorEmpty': 'বাঁধার জন্য একটি কী বেছে নিন।',
   'pttSettings.errorAccessibility':
-    'এই শর্টকাটের জন্য macOS-এর অ্যাক্সেসিবিলিটি অনুমতি দরকার। System Settings → Privacy & Security → Accessibility খুলুন এবং OpenHuman চালু করুন।',
+    'এই শর্টকাটের জন্য macOS-এর অ্যাক্সেসিবিলিটি অনুমতি দরকার। System Settings → Privacy & Security → Accessibility খুলুন এবং Marvi চালু করুন।',
   'pttSettings.errorShortcutInUse':
     'অন্য একটি অ্যাপ ইতিমধ্যে এই শর্টকাট ব্যবহার করছে। ভিন্ন একটি বেছে নিন।',
   'pttSettings.errorUnsupportedWayland':
-    'Wayland সেশন এখনও OpenHuman-এ গ্লোবাল শর্টকাট সমর্থন করে না — একটি X11 সেশনে চলে যান অথবা অ্যাপের ভেতরের ডিকটেশন টগল ব্যবহার করুন।',
+    'Wayland সেশন এখনও Marvi-এ গ্লোবাল শর্টকাট সমর্থন করে না — একটি X11 সেশনে চলে যান অথবা অ্যাপের ভেতরের ডিকটেশন টগল ব্যবহার করুন।',
   'pttSettings.exclusiveFullscreenHint':
     'এক্সক্লুসিভ ফুলস্ক্রিন গেমে ওভারলে রেন্ডার হবে না — আপনি শুধু সাউন্ড সংকেতটি শুনতে পাবেন। ওভারলে দেখতে বর্ডারলেস ফুলস্ক্রিনে যান।',
   'pttOverlay.listening': 'শুনছে…',
@@ -2012,7 +2011,7 @@ const messages: TranslationMap = {
   'chat.attachment.unsupportedType':
     'অসমর্থিত ফাইল প্রকার। একটি ছবি (PNG, JPEG, WebP, GIF, BMP) অথবা একটি PDF, TXT, বা Markdown ফাইল ব্যবহার করুন।',
   'chat.attachment.imageNotSupported':
-    'এই মডেলটি ছবি পড়তে পারে না। আপনার ছবি সংযুক্ত করতে আপনি OpenHuman যুক্তি স্তর ব্যবহার করতে পারেন।',
+    'এই মডেলটি ছবি পড়তে পারে না। আপনার ছবি সংযুক্ত করতে আপনি Marvi যুক্তি স্তর ব্যবহার করতে পারেন।',
   'chat.attachment.readFailed': 'ফাইল পড়া যায়নি',
   'memory.searchAria': 'মেমোরি খুঁজুন',
   'memory.searchPlaceholder': 'মেমোরি এন্ট্রি খুঁজুন...',
@@ -2379,9 +2378,9 @@ const messages: TranslationMap = {
   'bootCheck.chooseCoreMode': 'একটি রানটাইম বেছে নিন',
   'bootCheck.connectToCore': 'আপনার রানটাইমে সংযুক্ত হন',
   'bootCheck.desktopDescription':
-    'OpenHuman চিন্তা করতে একটি রানটাইম প্রয়োজন। এটি কোথায় থাকবে তা বেছে নিন।',
+    'Marvi চিন্তা করতে একটি রানটাইম প্রয়োজন। এটি কোথায় থাকবে তা বেছে নিন।',
   'bootCheck.webDescription':
-    'ওয়েবে, OpenHuman আপনার নিয়ন্ত্রণে একটি রানটাইমে সংযুক্ত হয়। নিচে এর URL ও অথ টোকেন দিন, অথবা সরাসরি আপনার মেশিনে চালাতে ডেস্কটপ অ্যাপ নিন।',
+    'ওয়েবে, Marvi আপনার নিয়ন্ত্রণে একটি রানটাইমে সংযুক্ত হয়। নিচে এর URL ও অথ টোকেন দিন, অথবা সরাসরি আপনার মেশিনে চালাতে ডেস্কটপ অ্যাপ নিন।',
   'bootCheck.preferDesktop': 'সব নিজের ডিভাইসে রাখতে চান?',
   'bootCheck.downloadDesktop': 'ডেস্কটপ অ্যাপ নিন',
   'bootCheck.localRecommended': 'লোকালি চালান (প্রস্তাবিত)',
@@ -2407,7 +2406,7 @@ const messages: TranslationMap = {
   'bootCheck.quit': 'প্রস্থান',
   'bootCheck.legacyDetected': 'লেগ্যাসি ব্যাকগ্রাউন্ড রানটাইম শনাক্ত হয়েছে',
   'bootCheck.legacyDescription':
-    'এই ডিভাইসে আলাদাভাবে ইনস্টল করা একটি OpenHuman ডেমন ইতিমধ্যে চলছে। বিল্ট-ইন রানটাইম নিয়ন্ত্রণ নেওয়ার আগে এটি সরাতে হবে।',
+    'এই ডিভাইসে আলাদাভাবে ইনস্টল করা একটি Marvi ডেমন ইতিমধ্যে চলছে। বিল্ট-ইন রানটাইম নিয়ন্ত্রণ নেওয়ার আগে এটি সরাতে হবে।',
   'bootCheck.removing': 'সরানো হচ্ছে…',
   'bootCheck.removeContinue': 'সরান ও চালিয়ে যান',
   'bootCheck.localNeedsRestart': 'লোকাল রানটাইম রিস্টার্ট প্রয়োজন',
@@ -2429,7 +2428,7 @@ const messages: TranslationMap = {
   'bootCheck.actionFailed': 'কিছু একটা ভুল হয়েছে। আবার চেষ্টা করুন।',
   'bootCheck.portConflictTitle': 'অ্যাপ ইঞ্জিন চালু করা যায়নি',
   'bootCheck.portConflictBody':
-    'অন্য একটি প্রক্রিয়া OpenHuman-এর প্রয়োজনীয় নেটওয়ার্ক পোর্ট ব্যবহার করছে। আমরা স্বয়ংক্রিয়ভাবে এটি ঠিক করার চেষ্টা করব।',
+    'অন্য একটি প্রক্রিয়া Marvi-এর প্রয়োজনীয় নেটওয়ার্ক পোর্ট ব্যবহার করছে। আমরা স্বয়ংক্রিয়ভাবে এটি ঠিক করার চেষ্টা করব।',
   'bootCheck.portConflictFixButton': 'স্বয়ংক্রিয়ভাবে ঠিক করুন',
   'bootCheck.portConflictFixing': 'ঠিক করা হচ্ছে…',
   'bootCheck.portConflictFixFailed':
@@ -2484,7 +2483,7 @@ const messages: TranslationMap = {
   'composio.reconnect': 'পুনঃসংযোগ',
   'composio.expiredAuthorization': '{name} অনুমোদনের মেয়াদ শেষ',
   'composio.expiredDescription':
-    'পুনরায় সংযোগ করতে PH__0 টুল পুনরায় সংযুক্ত করুন। আপনি OAuth অ্যাক্সেস রিফ্রেশ না করা পর্যন্ত OpenHuman এই ইন্টিগ্রেশনটি অনুপলব্ধ রাখবে৷',
+    'পুনরায় সংযোগ করতে PH__0 টুল পুনরায় সংযুক্ত করুন। আপনি OAuth অ্যাক্সেস রিফ্রেশ না করা পর্যন্ত Marvi এই ইন্টিগ্রেশনটি অনুপলব্ধ রাখবে৷',
   'composio.envVarOverrides': 'সেট থাকলে, এই সেটিং ওভাররাইড করে।',
   'composio.previewBadge': 'পূর্বরূপ',
   'composio.previewTooltip':
@@ -2535,7 +2534,7 @@ const messages: TranslationMap = {
   'accounts.webviewHost.timeoutHint': 'টাইমআউট হিন্ট',
   'app.connectionBadge.composio': 'Composio',
   'app.connectionBadge.messaging': 'মেসেজিং',
-  'app.connectionIndicator.connected': 'OpenHuman AI-এ সংযুক্ত 🚀',
+  'app.connectionIndicator.connected': 'Marvi AI-এ সংযুক্ত 🚀',
   'app.connectionIndicator.connecting': 'সংযোগ হচ্ছে',
   'app.connectionIndicator.coreOffline': 'কোর অফলাইন',
   'app.connectionIndicator.disconnected': 'সংযোগ বিচ্ছিন্ন',
@@ -2583,7 +2582,7 @@ const messages: TranslationMap = {
   'app.openhumanLink.notifications.send': 'পরীক্ষা বিজ্ঞপ্তি পাঠান',
   'app.openhumanLink.notifications.sendFailed': 'পাঠানো যায়নি: {error}',
   'app.openhumanLink.notifications.sent':
-    'টেস্ট নোটিফিকেশন পাঠানো হয়েছে। যদি না পেয়ে থাকেন, System Settings → Notifications → OpenHuman-এ যান, Allow Notifications চালু করুন, এবং Banner Style-কে Persistent-এ সেট করুন।',
+    'টেস্ট নোটিফিকেশন পাঠানো হয়েছে। যদি না পেয়ে থাকেন, System Settings → Notifications → Marvi-এ যান, Allow Notifications চালু করুন, এবং Banner Style-কে Persistent-এ সেট করুন।',
   'app.openhumanLink.skipForNow': 'এখনের জন্য এড়িয়ে যান',
   'app.openhumanLink.telegramUnavailable': 'Telegram পাওয়া যাচ্ছে না',
   'app.openhumanLink.title.accounts': 'আপনার অ্যাপ সংযুক্ত করুন',
@@ -2596,7 +2595,7 @@ const messages: TranslationMap = {
   'app.persistRehydration.heading': 'শিরোনাম',
   'app.persistRehydration.resetCta': 'রিসেট হচ্ছে…',
   'app.persistRehydration.resetting': 'রিসেট হচ্ছে…',
-  'app.routeLoading.initializing': 'OpenHuman শুরু হচ্ছে...',
+  'app.routeLoading.initializing': 'Marvi শুরু হচ্ছে...',
   'app.update.currentlyOn': '{version}',
   'app.update.errorFallback': 'আপডেটের সময় কিছু একটা ভুল হয়েছে।',
   'app.update.header.default': 'আপডেট',
@@ -2650,7 +2649,7 @@ const messages: TranslationMap = {
   'chat.approval.fallback': 'এজেন্ট এমন কাজ করতে চায় যা আপনার অনুমোদন প্রয়োজন.',
   'chat.approval.title': 'অনুমোদন প্রয়োজন',
   'chat.approval.tool': 'টুল:',
-  'channels.authMode.managed_dm': 'OpenHuman দিয়ে লগইন করুন',
+  'channels.authMode.managed_dm': 'Marvi দিয়ে লগইন করুন',
   'channels.authMode.oauth': 'OAuth সাইন-ইন করুন',
   'channels.authMode.bot_token': 'আপনার নিজের বট টোকেন ব্যবহার করুন',
   'channels.authMode.api_key': 'আপনার নিজস্ব API কী ব্যবহার করুন',
@@ -2662,16 +2661,16 @@ const messages: TranslationMap = {
   'channels.discord.description': 'Discord এর মাধ্যমে বার্তা পাঠান এবং গ্রহণ করুন।',
   'channels.discord.authMode.bot_token.description': 'আপনার নিজস্ব Discord বট টোকেন প্রদান করুন।',
   'channels.discord.authMode.oauth.description':
-    'OAuth এর মাধ্যমে আপনার Discord সার্ভারে OpenHuman বট ইনস্টল করুন।',
+    'OAuth এর মাধ্যমে আপনার Discord সার্ভারে Marvi বট ইনস্টল করুন।',
   'channels.discord.authMode.managed_dm.description':
-    'আপনার ব্যক্তিগত Discord অ্যাকাউন্টটি OpenHuman বটের সাথে লিঙ্ক করুন।',
+    'আপনার ব্যক্তিগত Discord অ্যাকাউন্টটি Marvi বটের সাথে লিঙ্ক করুন।',
   'channels.discord.fields.bot_token.label': 'বট টোকেন',
   'channels.discord.fields.bot_token.placeholder': 'আপনার Discord বট টোকেন',
   'channels.discord.fields.guild_id.label': 'সার্ভার (গিল্ড) আইডি',
   'channels.discord.fields.guild_id.placeholder': 'ঐচ্ছিক: একটি নির্দিষ্ট সার্ভারে সীমাবদ্ধ',
   'channels.telegram.displayName': 'Telegram',
   'channels.telegram.description': 'Telegram এর মাধ্যমে বার্তা পাঠান এবং গ্রহণ করুন।',
-  'channels.telegram.authMode.managed_dm.description': 'সরাসরি OpenHuman Telegram বটকে মেসেজ করুন।',
+  'channels.telegram.authMode.managed_dm.description': 'সরাসরি Marvi Telegram বটকে মেসেজ করুন।',
   'channels.telegram.authMode.bot_token.description':
     '@BotFather থেকে আপনার নিজস্ব Telegram বট টোকেন প্রদান করুন।',
   'channels.telegram.fields.bot_token.label': 'বট টোকেন',
@@ -2725,16 +2724,16 @@ const messages: TranslationMap = {
   'iosPair.error.connectionFailed':
     'সংযোগ ব্যর্থ হয়েছে। নিশ্চিত করুন ডেস্কটপ অ্যাপটি চলছে এবং আবার চেষ্টা করুন।',
   'iosPair.error.invalidQr':
-    'অবৈধ QR কোড। নিশ্চিত করুন আপনি একটি OpenHuman পেয়ারিং কোড স্ক্যান করছেন।',
+    'অবৈধ QR কোড। নিশ্চিত করুন আপনি একটি Marvi পেয়ারিং কোড স্ক্যান করছেন।',
   'iosPair.error.unreachableDesktop':
     'ডেস্কটপে পৌঁছানো যায়নি। নিশ্চিত করুন উভয় ডিভাইস অনলাইনে আছে এবং আবার চেষ্টা করুন।',
   'iosPair.expired': 'QR code মেয়াদ শেষ হয়েছে। কোডটি পুনরায় তৈরি করতে ডেস্কটপকে বলুন।',
   'iosPair.instructions':
-    'আপনার ডেস্কটপে OpenHuman খুলুন, Settings > Devices-এ যান, এবং QR কোড দেখাতে "Pair phone" ট্যাপ করুন।',
+    'আপনার ডেস্কটপে Marvi খুলুন, Settings > Devices-এ যান, এবং QR কোড দেখাতে "Pair phone" ট্যাপ করুন।',
   'iosPair.retryScan': 'পুনরায় স্ক্যান করার চেষ্টা করুন',
   'iosPair.scanQrCode': 'স্ক্যান QR code',
   'iosPair.scannerOpening': 'স্ক্যানার খোলা হচ্ছে...',
-  'iosPair.step.openDesktop': 'ডেস্কটপে OpenHuman খুলুন',
+  'iosPair.step.openDesktop': 'ডেস্কটপে Marvi খুলুন',
   'iosPair.step.openSettings': 'সেটিংস > ডিভাইসগুলিতে যান',
   'iosPair.step.showQr': 'QR',
   'iosPair.title': 'আপনার ডেস্কটপের সাথে পেয়ার করুন',
@@ -2769,7 +2768,7 @@ const messages: TranslationMap = {
   'composio.connect.permissionsDefault': 'পড়া + লেখা ডিফল্টে সক্রিয়',
   'composio.connect.permissionsNote': 'প্রকাশ করতে পারে',
   'composio.connect.permissionsNoteSuffix':
-    'OpenHuman-এর নিজস্ব এজেন্ট অনুমতি নিচে read, write, এবং admin টগল হিসেবে নিয়ন্ত্রিত।',
+    'Marvi-এর নিজস্ব এজেন্ট অনুমতি নিচে read, write, এবং admin টগল হিসেবে নিয়ন্ত্রিত।',
   'composio.connect.reopenBrowser': 'ব্রাউজার আবার খুলুন',
   'composio.connect.requestingUrl': 'সংযোগ URL অনুরোধ হচ্ছে…',
   'composio.connect.requiredFieldEmpty': 'এই ফিল্ডটি আবশ্যক।',
@@ -2870,7 +2869,7 @@ const messages: TranslationMap = {
   'daemon.serviceBlockingGate.retryFailed':
     'আবার চেষ্টা ব্যর্থ। সর্বশেষ অ্যাপ বিল্ড ডাউনলোড করে আবার চেষ্টা করুন।',
   'daemon.serviceBlockingGate.retrying': 'আবার চেষ্টা হচ্ছে...',
-  'daemon.serviceBlockingGate.title': 'OpenHuman কোর পাওয়া যাচ্ছে না',
+  'daemon.serviceBlockingGate.title': 'Marvi কোর পাওয়া যাচ্ছে না',
   'home.banners.discordSubtitle': 'Discord সাবটাইটেল',
   'home.banners.discordTitle': 'আমাদের Discord-এ যোগ দিন',
   'home.banners.earlyBirdDismiss': 'আর্লি বার্ড ব্যানার বাদ দিন',
@@ -2907,7 +2906,7 @@ const messages: TranslationMap = {
   'intelligence.diagram.skillInstallCommand': 'npx skills add yizhiyanhua-ai/fireworks-tech-graph',
   'intelligence.diagram.promptExample':
     'ডার্ক টার্মিনাল স্টাইলে বর্তমান swarm-এর একটি আর্কিটেকচার ডায়াগ্রাম তৈরি করুন',
-  'intelligence.diagram.imageAlt': 'সর্বশেষ তৈরি OpenHuman আর্কিটেকচার ডায়াগ্রাম',
+  'intelligence.diagram.imageAlt': 'সর্বশেষ তৈরি Marvi আর্কিটেকচার ডায়াগ্রাম',
   'intelligence.diagram.refreshesEvery': 'প্রতি {seconds}s-এ রিফ্রেশ হয়',
   'intelligence.memoryText.entityTypePrefix': 'এনটিটি ধরন',
   'intelligence.screenDebug.active': 'সক্রিয়',
@@ -3137,7 +3136,7 @@ const messages: TranslationMap = {
   'openhuman.team_list_teams': 'টিম তালিকা',
   'overlay.ariaAttention': 'মনোযোগের বার্তা',
   'overlay.ariaCompanion': 'কম্প্যানিয়ন সক্রিয়',
-  'overlay.ariaOrb': 'OpenHuman ওভারলে',
+  'overlay.ariaOrb': 'Marvi ওভারলে',
   'overlay.ariaVoiceActive': 'ভয়েস ইনপুট সক্রিয়',
   'overlay.companion.error': 'ত্রুটি',
   'overlay.companion.listening': 'শুনছে…',
@@ -3414,7 +3413,7 @@ const messages: TranslationMap = {
   'settings.ai.noSpendRows': 'কোনো খরচ সারি লোড করা হয়নি।',
   'settings.ai.topHours': 'সেরা ঘন্টা',
   'settings.ai.noHourlySpend': 'এখনও কোন ঘন্টা খরচ নেই.',
-  'settings.ai.openhumanDefault': 'OpenHuman (ডিফল্ট)',
+  'settings.ai.openhumanDefault': 'Marvi (ডিফল্ট)',
   'settings.ai.localModelResolved': 'Ollama · {model}',
   'settings.ai.customRoutingForWorkload': '{label} এর জন্য কাস্টম রাউটিং',
   'settings.ai.loadingModels': 'মডেল লোড হচ্ছে...',
@@ -3473,7 +3472,7 @@ const messages: TranslationMap = {
   'settings.ai.composioSyncScans': 'Composio সিঙ্ক স্ক্যান',
   'settings.ai.totalBackgroundApiReadBudget': 'মোট bg API পঠিত বাজেট',
   'settings.ai.memoryWorkerPolls': 'মেমরি কর্মী পোল',
-  'settings.ai.defaultProviderName': 'OpenHuman',
+  'settings.ai.defaultProviderName': 'Marvi',
   'settings.ai.routing.managed': 'পরিচালিত',
   'settings.ai.routing.managedDesc':
     'xq0xqx সমস্ত প্রকার মেঘে রান করা হবে, কর্মের জন্য সেরা মডেল নির্বাচন করুন, খরচের জন্য ব্যবহারযোগ্য ডিফল্ট মান নির্বাচন করুন।',
@@ -3667,16 +3666,16 @@ const messages: TranslationMap = {
   'settings.composio.confirmSwitch': 'আমি বুঝেছি, Direct-এ স্যুইচ করুন',
   'settings.composio.confirmTitle': '⚠️ Direct মোডে স্যুইচ হচ্ছে',
   'settings.composio.confirmWarning':
-    'OpenHuman-এর মাধ্যমে লিঙ্ক করা আপনার বিদ্যমান ইন্টিগ্রেশনগুলি (Gmail, Slack, GitHub ইত্যাদি) দৃশ্যমান হবে না — সেগুলি OpenHuman-পরিচালিত Composio টেন্যান্টে থাকে।',
+    'Marvi-এর মাধ্যমে লিঙ্ক করা আপনার বিদ্যমান ইন্টিগ্রেশনগুলি (Gmail, Slack, GitHub ইত্যাদি) দৃশ্যমান হবে না — সেগুলি Marvi-পরিচালিত Composio টেন্যান্টে থাকে।',
   'settings.composio.intro':
     'Composio ২৫০+ বহিরাগত অ্যাপকে টুল হিসেবে ইন্টিগ্রেট করে যা আপনার এজেন্ট কল করতে পারে। এই টুল কলগুলি কীভাবে রুট হবে তা নির্বাচন করুন।',
   'settings.composio.title': 'Composio',
   'settings.composio.modeDirect': 'ডাইরেক্ট (নিজের API কী আনুন)',
   'settings.composio.modeDirectDesc':
     'কলগুলি সরাসরি backend.composio.dev-এ যায়। সার্বভৌম / অফলাইন-বান্ধব। টুল এক্সিকিউশন সিঙ্ক্রোনাসভাবে কাজ করে; রিয়েল-টাইম ট্রিগার webhooks এখনও direct মোডে রুট করা হয় না (ফলো-আপ ইস্যু)।',
-  'settings.composio.modeManaged': 'ম্যানেজড (OpenHuman আপনার হয়ে পরিচালনা করে)',
+  'settings.composio.modeManaged': 'ম্যানেজড (Marvi আপনার হয়ে পরিচালনা করে)',
   'settings.composio.modeManagedDesc':
-    'OpenHuman আমাদের ব্যাকএন্ডের মাধ্যমে টুল কল প্রক্সি করে (প্রস্তাবিত)। অথ ব্রোকার করা হয়; আপনি কখনও Composio API key পেস্ট করেন না। Webhooks সম্পূর্ণরূপে রুট করা।',
+    'Marvi আমাদের ব্যাকএন্ডের মাধ্যমে টুল কল প্রক্সি করে (প্রস্তাবিত)। অথ ব্রোকার করা হয়; আপনি কখনও Composio API key পেস্ট করেন না। Webhooks সম্পূর্ণরূপে রুট করা।',
   'settings.composio.routingMode': 'রুটিং মোড',
   'settings.composio.saveErrorNoKey': 'সংরক্ষণ ব্যর্থ। Direct মোডের জন্য একটি API key প্রয়োজন।',
   'settings.composio.saving': 'সংরক্ষণ হচ্ছে…',
@@ -3906,7 +3905,7 @@ const messages: TranslationMap = {
   'settings.localModel.status.ollamaDiagnostics': 'Ollama ডায়াগনস্টিক্স',
   'settings.localModel.status.ollamaNotInstalled': 'Ollama রানটাইম অনুপলব্ধ',
   'settings.localModel.status.ollamaNotInstalledDesc':
-    'OpenHuman এখন Ollama-কে একটি বাহ্যিক ইনফারেন্স রানটাইম হিসেবে গণ্য করে। আপনার নিজের Ollama সার্ভার শুরু করুন, যে মডেলগুলি চান টানুন, এবং ওয়ার্কলোড রাউটিং সেদিকে নির্দেশ করুন।',
+    'Marvi এখন Ollama-কে একটি বাহ্যিক ইনফারেন্স রানটাইম হিসেবে গণ্য করে। আপনার নিজের Ollama সার্ভার শুরু করুন, যে মডেলগুলি চান টানুন, এবং ওয়ার্কলোড রাউটিং সেদিকে নির্দেশ করুন।',
   'settings.localModel.status.progress': 'অগ্রগতি',
   'settings.localModel.status.provider': 'প্রোভাইডার',
   'settings.localModel.status.retryBootstrap': 'বুটস্ট্র্যাপ আবার চেষ্টা করুন',
@@ -3935,7 +3934,7 @@ const messages: TranslationMap = {
     'Telegram/Discord অথেন্টিকেশন মোড এবং ডিফল্ট চ্যানেল রাউটিং কনফিগার করুন',
   'settings.developerMenu.tools.title': 'টুলস',
   'settings.developerMenu.tools.desc':
-    'OpenHuman আপনার পক্ষ থেকে যে সক্ষমতাগুলি ব্যবহার করতে পারে সেগুলি চালু বা বন্ধ করুন',
+    'Marvi আপনার পক্ষ থেকে যে সক্ষমতাগুলি ব্যবহার করতে পারে সেগুলি চালু বা বন্ধ করুন',
   'settings.developerMenu.agentChat.title': 'এজেন্ট চ্যাট',
   'settings.developerMenu.agentChat.desc':
     'মডেল এবং টেম্পারেচার ওভাররাইডসহ এজেন্ট কথোপকথন পরীক্ষা করুন',
@@ -4112,7 +4111,7 @@ const messages: TranslationMap = {
     'Composio ইন্টিগ্রেশন ট্রিগারের জন্য AI ট্রায়াজ সেটিংস কনফিগার করুন',
   'settings.developerMenu.mcpServer.title': 'MCP লাইব্রেরি অনুপলব্ধ',
   'settings.developerMenu.mcpServer.desc':
-    'বাহ্যিক MCP ক্লায়েন্টগুলিকে OpenHuman-এ সংযুক্ত করতে কনফিগার করুন',
+    'বাহ্যিক MCP ক্লায়েন্টগুলিকে Marvi-এ সংযুক্ত করতে কনফিগার করুন',
   'settings.developerMenu.autonomy.title': 'এজেন্ট স্বায়ত্তশাসন',
   'settings.developerMenu.autonomy.desc': 'টুল অ্যাকশনের রেট সীমা এবং নিরাপত্তা থ্রেশহোল্ড',
   'settings.developerMenu.autocomplete.title': 'স্বয়ংসম্পূর্ণ',
@@ -4130,7 +4129,7 @@ const messages: TranslationMap = {
   'settings.mcpServer.copied': 'কপি করা হয়েছে!',
   'settings.mcpServer.openConfigFile': 'কনফিগ ফাইল খুলুন',
   'settings.mcpServer.binaryPathNotFound':
-    'OpenHuman বাইনারি পাওয়া যায়নি। উৎস থেকে চললে, এর সাথে তৈরি করুন: cargo build --bin openhuman-core',
+    'Marvi বাইনারি পাওয়া যায়নি। উৎস থেকে চললে, এর সাথে তৈরি করুন: cargo build --bin openhuman-core',
   'settings.mcpServer.openConfigError': 'কনফিগার ফাইল খুলতে ব্যর্থ',
   'settings.mcpServer.clientClaudeDesktop': 'Claude Desktop',
   'settings.mcpServer.clientCursor': 'কার্সার',
@@ -4328,7 +4327,7 @@ const messages: TranslationMap = {
   'settings.mascot.characterPreview': 'পূর্বরূপ',
   'settings.mascot.characterStates': 'স্টেটস',
   'settings.mascot.characterVisemes': 'তুষারপাত',
-  'settings.mascot.colorAria': 'OpenHuman রঙ',
+  'settings.mascot.colorAria': 'Marvi রঙ',
   'settings.mascot.colorDesc': 'রঙের বিবরণ',
   'settings.mascot.colorHeading': 'রঙের শিরোনাম',
   'settings.mascot.colorBlack': 'কালো',
@@ -4338,15 +4337,15 @@ const messages: TranslationMap = {
   'settings.mascot.primaryColor': 'প্রধান রং',
   'settings.mascot.secondaryColor': 'দ্বিতীয় রং',
   'settings.mascot.colorYellow': 'হলুদ',
-  'settings.mascot.libraryUnavailable': 'OpenHuman লাইব্রেরি অনুপলব্ধ',
-  'settings.mascot.title': 'OpenHuman',
-  'settings.mascot.loadingLibrary': 'OpenHuman লাইব্রেরি লোড হচ্ছে…',
+  'settings.mascot.libraryUnavailable': 'Marvi লাইব্রেরি অনুপলব্ধ',
+  'settings.mascot.title': 'Marvi',
+  'settings.mascot.loadingLibrary': 'Marvi লাইব্রেরি লোড হচ্ছে…',
   'settings.mascot.loadDetailError': 'মাসকট লোড করা যায়নি৷',
   'settings.mascot.loadLibraryError': 'মাসকট লাইব্রেরি লোড করা যায়নি।',
-  'settings.mascot.localDefault': 'লোকাল OpenHuman (ডিফল্ট)',
+  'settings.mascot.localDefault': 'লোকাল Marvi (ডিফল্ট)',
   'settings.mascot.menuTitle': 'মাসকট',
   'settings.mascot.menuDesc': 'অ্যাপ জুড়ে ব্যবহৃত মাসকটের রঙ বেছে নিন',
-  'settings.mascot.noCharacters': 'কোনো OpenHuman ক্যারেক্টার এখনও উপলব্ধ নেই',
+  'settings.mascot.noCharacters': 'কোনো Marvi ক্যারেক্টার এখনও উপলব্ধ নেই',
   'settings.mascot.noColorVariants': 'কোনো রঙের ভেরিয়েন্ট নেই',
   'settings.mascot.voice.current': 'বর্তমান',
   'settings.mascot.voice.customDesc':
@@ -4399,7 +4398,7 @@ const messages: TranslationMap = {
     'যৌক্তিক ডিফল্ট — প্রতিটি রানে অতিরিক্ত টোকেন না পুড়িয়ে ভাল ধারাবাহিকতা।',
   'settings.memoryWindow.balanced.label': 'সুষম',
   'settings.memoryWindow.description':
-    'প্রতিটি নতুন এজেন্ট রানে OpenHuman কতটা মনে রাখা প্রসঙ্গ ইনজেক্ট করে। বড় উইন্ডো অতীত কথোপকথন সম্পর্কে বেশি সচেতন মনে হয় কিন্তু প্রতিটি রানে বেশি টোকেন ব্যবহার করে — এবং বেশি খরচ হয়।',
+    'প্রতিটি নতুন এজেন্ট রানে Marvi কতটা মনে রাখা প্রসঙ্গ ইনজেক্ট করে। বড় উইন্ডো অতীত কথোপকথন সম্পর্কে বেশি সচেতন মনে হয় কিন্তু প্রতিটি রানে বেশি টোকেন ব্যবহার করে — এবং বেশি খরচ হয়।',
   'settings.memoryWindow.extended.badge': 'আরও প্রসঙ্গ',
   'settings.memoryWindow.extended.hint':
     'প্রতিটি রানে আরও দীর্ঘমেয়াদী মেমরি ইনজেক্ট করা হয়। প্রতি টার্নে উচ্চ টোকেন খরচ।',
@@ -4604,17 +4603,17 @@ const messages: TranslationMap = {
   'skills.install.urlPlaceholder': 'https://raw.githubusercontent.com/owner/repo/main/SKILL.md',
   'skills.meetingBots.bannerDesc': 'ব্যানার বিবরণ',
   'skills.meetingBots.bannerTitle': 'ব্যানার শিরোনাম',
-  'skills.meetingBots.busyTitle': 'OpenHuman ব্যস্ত',
+  'skills.meetingBots.busyTitle': 'Marvi ব্যস্ত',
   'skills.meetingBots.comingSoon': 'শীঘ্রই আসছে',
-  'skills.meetingBots.couldNotStartTitle': 'OpenHuman শুরু করা যায়নি',
+  'skills.meetingBots.couldNotStartTitle': 'Marvi শুরু করা যায়নি',
   'skills.meetingBots.displayName': 'প্রদর্শন নাম',
-  'skills.meetingBots.failedToStart': 'OpenHuman শুরু করতে ব্যর্থ।',
+  'skills.meetingBots.failedToStart': 'Marvi শুরু করতে ব্যর্থ।',
   'skills.meetingBots.joiningMessage': 'কয়েক সেকেন্ডের মধ্যে অংশগ্রহণকারী হিসেবে দেখা যাবে।',
-  'skills.meetingBots.joiningTitle': 'OpenHuman মিটিংয়ে যোগ দিচ্ছে',
+  'skills.meetingBots.joiningTitle': 'Marvi মিটিংয়ে যোগ দিচ্ছে',
   'skills.meetingBots.meetingLink': 'মিটিং লিংক',
-  'skills.meetingBots.modalAriaLabel': 'OpenHuman-কে একটি মিটিংয়ে পাঠান',
+  'skills.meetingBots.modalAriaLabel': 'Marvi-কে একটি মিটিংয়ে পাঠান',
   'skills.meetingBots.modalDesc': 'মোডাল বিবরণ',
-  'skills.meetingBots.modalTitle': 'OpenHuman-কে একটি মিটিংয়ে পাঠান',
+  'skills.meetingBots.modalTitle': 'Marvi-কে একটি মিটিংয়ে পাঠান',
   'skills.meetingBots.newBadge': 'নতুন ব্যাজ',
   'skills.meetingBots.platformComingSoon': '{label} সমর্থন শীঘ্রই আসছে।',
   'skills.meetingBots.platformHints.gmeet': 'meet.google.com/abc-defg-hij',
@@ -4643,7 +4642,7 @@ const messages: TranslationMap = {
   'skills.meetingBots.respondToParticipantDesc':
     'মিটিং থেকে আপনার সঠিক প্রদর্শন নাম লিখুন। বট কেবল তখনই সাড়া দেয় যখন আপনি তার নাম বলেন (ওয়েক ফ্রেজ)।',
   'skills.meetingBots.wakePhrase': 'ওয়েক ফ্রেজ',
-  'skills.meetingBots.wakePhraseHint': 'Hey OpenHuman',
+  'skills.meetingBots.wakePhraseHint': 'Hey Marvi',
   'skills.meetingBots.wakePhraseDesc': 'বট সাড়া দেওয়ার আগে অংশগ্রহণকারীকে এটি বলতে হবে।',
   'skills.meetingBots.activeMode': 'আমি ডাকলে উত্তর দেবে',
   'skills.meetingBots.activeModeDesc':
@@ -4796,7 +4795,7 @@ const messages: TranslationMap = {
   'chat.parentThread': 'মূল থ্রেড',
   'chat.removeReaction': '{emoji}',
   'settings.composio.loading': 'লোড হচ্ছে…',
-  'settings.mascot.noCharactersAvailable': 'কোনো OpenHuman ক্যারেক্টার এখনও উপলব্ধ নেই',
+  'settings.mascot.noCharactersAvailable': 'কোনো Marvi ক্যারেক্টার এখনও উপলব্ধ নেই',
   'skills.uninstall.confirmTitle': '{name} আনইনস্টল করবেন?',
   'conversations.taskKanban.blocked': 'ব্লকড',
   'conversations.taskKanban.done': 'সম্পন্ন',
@@ -4819,7 +4818,7 @@ const messages: TranslationMap = {
   'settings.composio.notYetRouted': 'এখনও রুট করা হয়নি',
   'settings.localModel.download.manageExternal': 'আপনার বাহ্যিক রানটাইমে এই মডেলটি পরিচালনা করুন।',
   'settings.localModel.status.manageOllamaExternal':
-    'OpenHuman-এর বাইরে Ollama প্রক্রিয়া এবং মডেল পুল পরিচালনা করুন, তারপর ডায়াগনস্টিক পুনরায় চালান।',
+    'Marvi-এর বাইরে Ollama প্রক্রিয়া এবং মডেল পুল পরিচালনা করুন, তারপর ডায়াগনস্টিক পুনরায় চালান।',
   'settings.localModel.status.ollamaDocs': 'Ollama ডকস',
   'settings.localModel.status.thenRetry':
     'সেটআপ নির্দেশনার জন্য, তারপর আপনার রানটাইম পৌঁছানো গেলে পুনরায় চেষ্টা করুন।',
@@ -5305,7 +5304,7 @@ const messages: TranslationMap = {
   // Keyring consent & security
   'keyring.consent.title': 'নিরাপদ সঞ্চয়স্থান অনুপলব্ধ',
   'keyring.consent.description':
-    'আপনার অপারেটিং সিস্টেমের কিচেন অ্যাক্সেসযোগ্য নয়। OpenHuman-এর পরিবর্তে স্থানীয় এনক্রিপ্টেড সঞ্চয়স্থান ব্যবহার করে গোপনীয়তা সংরক্ষণ করতে আপনার অনুমতি প্রয়োজন।',
+    'আপনার অপারেটিং সিস্টেমের কিচেন অ্যাক্সেসযোগ্য নয়। Marvi-এর পরিবর্তে স্থানীয় এনক্রিপ্টেড সঞ্চয়স্থান ব্যবহার করে গোপনীয়তা সংরক্ষণ করতে আপনার অনুমতি প্রয়োজন।',
   'keyring.consent.reasonPrefix': 'কারণ:',
   'keyring.consent.showDetails': 'এটার মানে কী?',
   'keyring.consent.hideDetails': 'বিবরণ লুকান',
@@ -5345,7 +5344,7 @@ const messages: TranslationMap = {
   'memory.health.remediation.budget_exhausted':
     'মেমরি এমবেডিং পরিচালিত বাজেটে পৌঁছেছে। স্থানীয় Ollama এমবেডিং সেট আপ করুন (সেটিংস → AI → এমবেডিংস) অথবা মেমরি তৈরি চালিয়ে যেতে আপনার নিজস্ব এমবেডিং API কী যোগ করুন।',
   'memory.health.remediation.auth_missing':
-    'কোনও এমবেডিং শংসাপত্র পাওয়া যায়নি। OpenHuman-এ লগ ইন করুন, অথবা সেটিংস → AI → এমবেডিংস-এ স্থানীয় Ollama এমবেডিং সেট আপ করুন।',
+    'কোনও এমবেডিং শংসাপত্র পাওয়া যায়নি। Marvi-এ লগ ইন করুন, অথবা সেটিংস → AI → এমবেডিংস-এ স্থানীয় Ollama এমবেডিং সেট আপ করুন।',
   'memory.health.remediation.auth_invalid':
     'আপনার এমবেডিং শংসাপত্র প্রত্যাখ্যাত হয়েছে। পুনরায় প্রমাণীকরণ করুন, অথবা সেটিংস → AI → এমবেডিংস-এ স্থানীয় Ollama এমবেডিং-এ স্যুইচ করুন।',
   'memory.health.remediation.embeddings_unconfigured':
@@ -5435,11 +5434,11 @@ const messages: TranslationMap = {
   'onboarding.custom.vault.subtitle':
     'নিশ্চিত করুন মেমোরি নোট কোথায় লেখা হয়, উৎস ডেটা কীভাবে পড়া হয় এবং আপনার ভল্ট পাইপলাইন সুস্থ কিনা।',
   'onboarding.custom.vault.defaultDesc':
-    'OpenHuman-পরিচালিত মেমোরির ডিফল্ট ব্যবহার করুন। ভল্ট পাথ এবং সিঙ্ক স্বাস্থ্য পরে পর্যালোচনা করা যাবে।',
+    'Marvi-পরিচালিত মেমোরির ডিফল্ট ব্যবহার করুন। ভল্ট পাথ এবং সিঙ্ক স্বাস্থ্য পরে পর্যালোচনা করা যাবে।',
   'onboarding.custom.vault.configureDesc':
     'ভল্টের মালিকানা পর্যালোচনা করুন, স্বাস্থ্য পরীক্ষা চালান এবং এখনই মেমোরি নিয়ন্ত্রণ সামঞ্জস্য করুন।',
   'onboarding.custom.vault.localDisabledReason':
-    'পরিচালিত সেটআপের জন্য OpenHuman সাইন-ইন প্রয়োজন এবং লোকাল মোডে উপলব্ধ নয়।',
+    'পরিচালিত সেটআপের জন্য Marvi সাইন-ইন প্রয়োজন এবং লোকাল মোডে উপলব্ধ নয়।',
   'onboarding.custom.vault.exitError': 'অনবোর্ডিং শেষ করা যায়নি। আবার চেষ্টা করুন।',
   'vaultHealth.title': 'ভল্ট স্বাস্থ্য চেকলিস্ট',
   'vaultHealth.setupTitle': 'ভল্ট সেটআপ স্বাস্থ্য',
@@ -5459,9 +5458,9 @@ const messages: TranslationMap = {
   'vaultHealth.existsLabel': 'ওয়ার্কস্পেস ভল্ট পাথ বিদ্যমান',
   'vaultHealth.existsRecovery':
     'ভল্ট ফোল্ডার নেই। একটি সিঙ্ক শুরু করুন বা এই ফোল্ডারটি তৈরি করুন, তারপর এই চেকলিস্ট রিফ্রেশ করুন।',
-  'vaultHealth.writableLabel': 'ভল্ট OpenHuman দ্বারা লিখনযোগ্য',
+  'vaultHealth.writableLabel': 'ভল্ট Marvi দ্বারা লিখনযোগ্য',
   'vaultHealth.writableRecovery':
-    'OpenHuman এখনও এই ভল্টে লিখতে পারছে না। লেখার অনুমতি দিন এবং রিফ্রেশ করুন।',
+    'Marvi এখনও এই ভল্টে লিখতে পারছে না। লেখার অনুমতি দিন এবং রিফ্রেশ করুন।',
   'vaultHealth.obsidianLabel': 'ভল্ট Obsidian-এ নিবন্ধিত',
   'vaultHealth.obsidianRecovery':
     'Obsidian-এ এই পাথটির জন্য "ফোল্ডার ভল্ট হিসেবে খুলুন" বেছে নিন, তারপর এই চেকলিস্ট রিফ্রেশ করুন।',
@@ -5476,13 +5475,13 @@ const messages: TranslationMap = {
   'vaultHealth.timeDaysAgo': '{n} দিন আগে',
   'memoryData.howItWorks': 'মেমোরি স্টোরেজ কীভাবে কাজ করে',
   'memoryData.workspaceVault': 'ওয়ার্কস্পেস ভল্ট · লেখা',
-  'memoryData.workspaceVaultDesc': 'OpenHuman তৈরি মেমোরি নোট memory_tree/content-এ লেখে।',
+  'memoryData.workspaceVaultDesc': 'Marvi তৈরি মেমোরি নোট memory_tree/content-এ লেখে।',
   'memoryData.connectedSources': 'সংযুক্ত উৎস · পড়া',
   'memoryData.connectedSourcesDesc':
     'ফোল্ডার, মেইলবক্স, চ্যাট এবং রেপো মেমোরি ইন্ডেক্সিংয়ের জন্য আমদানি করা হয় — তাদের মূল ফাইল কখনো পুনরায় লেখা হয় না।',
   'memoryData.internalFiles': 'অভ্যন্তরীণ মেমোরি-ট্রি ফাইল',
   'memoryData.internalFilesDesc':
-    'ইন্ডেক্স, কিউ স্টেট এবং সারসংক্ষেপ OpenHuman দ্বারা পরিচালিত হয় যাতে রিকল ও সিঙ্ক সুস্থ থাকে।',
+    'ইন্ডেক্স, কিউ স্টেট এবং সারসংক্ষেপ Marvi দ্বারা পরিচালিত হয় যাতে রিকল ও সিঙ্ক সুস্থ থাকে।',
   'memoryData.windowError': 'মেমোরি উইন্ডো',
   'memoryData.windowUpdated': 'মেমোরি উইন্ডো আপডেট হয়েছে',
   'memoryData.windowUpdatedMsg': '{window}-এ সেট করা হয়েছে।',

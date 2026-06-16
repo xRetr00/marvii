@@ -112,9 +112,7 @@ const SearchPanel = ({ embedded = false }: { embedded?: boolean }) => {
       requiresKey: true,
     },
   ];
-  const visibleEngines = isLocalSession
-    ? ENGINES.filter(engine => engine.id !== 'managed')
-    : ENGINES;
+  const visibleEngines = ENGINES.filter(engine => engine.id !== 'managed');
 
   useEffect(() => {
     let cancelled = false;
@@ -142,7 +140,10 @@ const SearchPanel = ({ embedded = false }: { embedded?: boolean }) => {
     setMode(settings.allow_all ? 'all' : explicit.length > 0 ? 'custom' : 'block');
   }, [settings]);
 
-  const selectedEngine = (settings?.engine as SearchEngineId | undefined) ?? 'managed';
+  const selectedEngine =
+    settings?.engine === 'managed'
+      ? 'disabled'
+      : ((settings?.engine as SearchEngineId | undefined) ?? 'disabled');
 
   const persistEngine = async (next: SearchEngineId) => {
     if (!settings || status.kind === 'saving') return;
@@ -217,7 +218,7 @@ const SearchPanel = ({ embedded = false }: { embedded?: boolean }) => {
   const isConfigured = (engine: SearchEngineId): boolean => {
     if (!settings) return false;
     if (engine === 'disabled') return true;
-    if (engine === 'managed') return true;
+    if (engine === 'managed') return false;
     if (engine === 'parallel') return settings.parallel_configured;
     if (engine === 'brave') return settings.brave_configured;
     if (engine === 'querit') return settings.querit_configured;

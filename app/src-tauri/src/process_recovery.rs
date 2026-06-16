@@ -67,13 +67,13 @@ mod imp {
         let initial = match enumerate_openhuman_processes() {
             Ok(processes) => processes,
             Err(err) => {
-                log::warn!("[startup-recovery] failed to enumerate OpenHuman processes: {err}");
+                log::warn!("[startup-recovery] failed to enumerate Marvi processes: {err}");
                 return;
             }
         };
         let stale = filter_self_pid(&initial, std::process::id());
         if stale.is_empty() {
-            log::info!("[startup-recovery] no stale OpenHuman processes found");
+            log::info!("[startup-recovery] no stale Marvi processes found");
             return;
         }
 
@@ -81,12 +81,12 @@ mod imp {
         for process in &stale {
             match killer.term(process.pid) {
                 Ok(()) => log::warn!(
-                    "[startup-recovery] SIGTERM stale OpenHuman pid={} argv0={}",
+                    "[startup-recovery] SIGTERM stale Marvi pid={} argv0={}",
                     process.pid,
                     process.argv0
                 ),
                 Err(err) => log::warn!(
-                    "[startup-recovery] failed to SIGTERM stale OpenHuman pid={}: {err}",
+                    "[startup-recovery] failed to SIGTERM stale Marvi pid={}: {err}",
                     process.pid
                 ),
             }
@@ -179,13 +179,13 @@ mod imp {
                 Ok(()) => {
                     summary.kill += 1;
                     log::warn!(
-                        "[startup-recovery] SIGKILL stale OpenHuman pid={} argv0={}",
+                        "[startup-recovery] SIGKILL stale Marvi pid={} argv0={}",
                         process.pid,
                         process.argv0
                     );
                 }
                 Err(err) => log::warn!(
-                    "[startup-recovery] failed to SIGKILL stale OpenHuman pid={}: {err}",
+                    "[startup-recovery] failed to SIGKILL stale Marvi pid={}: {err}",
                     process.pid
                 ),
             }
@@ -436,7 +436,7 @@ mod linux_imp {
         }
 
         let self_pid = std::process::id();
-        log::debug!("[startup-recovery] linux: scanning /proc for stale OpenHuman processes (self_pid={self_pid})");
+        log::debug!("[startup-recovery] linux: scanning /proc for stale Marvi processes (self_pid={self_pid})");
 
         let stale = match enumerate_openhuman_processes() {
             Ok(procs) => procs,
@@ -447,18 +447,18 @@ mod linux_imp {
         };
 
         if stale.is_empty() {
-            log::info!("[startup-recovery] linux: no stale OpenHuman processes found");
+            log::info!("[startup-recovery] linux: no stale Marvi processes found");
             return;
         }
 
         log::info!(
-            "[startup-recovery] linux: found {} stale OpenHuman process(es), sending SIGTERM",
+            "[startup-recovery] linux: found {} stale Marvi process(es), sending SIGTERM",
             stale.len()
         );
         for proc in &stale {
             match kill_pid_term(proc.pid) {
                 Ok(()) => log::warn!(
-                    "[startup-recovery] linux: SIGTERM stale OpenHuman pid={} cmd={}",
+                    "[startup-recovery] linux: SIGTERM stale Marvi pid={} cmd={}",
                     proc.pid,
                     proc.argv0
                 ),
@@ -487,7 +487,7 @@ mod linux_imp {
                     Ok(()) => {
                         kill_count += 1;
                         log::warn!(
-                            "[startup-recovery] linux: SIGKILL stale OpenHuman pid={} cmd={}",
+                            "[startup-recovery] linux: SIGKILL stale Marvi pid={} cmd={}",
                             proc.pid,
                             proc.argv0
                         );
@@ -550,9 +550,7 @@ mod linux_imp {
             let ppid = read_ppid(pid).unwrap_or(0);
             let command = cmdline.join(" ");
 
-            log::debug!(
-                "[startup-recovery] linux: found OpenHuman process pid={pid} argv0={argv0}"
-            );
+            log::debug!("[startup-recovery] linux: found Marvi process pid={pid} argv0={argv0}");
             results.push(ProcessInfo {
                 pid,
                 ppid,
@@ -643,7 +641,7 @@ mod windows_imp {
 
         let self_pid = std::process::id();
         log::debug!(
-            "[startup-recovery] windows: scanning processes for stale OpenHuman (self_pid={self_pid})"
+            "[startup-recovery] windows: scanning processes for stale Marvi (self_pid={self_pid})"
         );
 
         let stale = match enumerate_openhuman_processes() {
@@ -655,18 +653,18 @@ mod windows_imp {
         };
 
         if stale.is_empty() {
-            log::info!("[startup-recovery] windows: no stale OpenHuman processes found");
+            log::info!("[startup-recovery] windows: no stale Marvi processes found");
             return;
         }
 
         log::info!(
-            "[startup-recovery] windows: found {} stale OpenHuman process(es), sending terminate",
+            "[startup-recovery] windows: found {} stale Marvi process(es), sending terminate",
             stale.len()
         );
         for proc in &stale {
             match kill_pid_term(proc.pid) {
                 Ok(()) => log::warn!(
-                    "[startup-recovery] windows: TERM stale OpenHuman pid={} exe={}",
+                    "[startup-recovery] windows: TERM stale Marvi pid={} exe={}",
                     proc.pid,
                     proc.argv0
                 ),
@@ -697,7 +695,7 @@ mod windows_imp {
                     Ok(()) => {
                         kill_count += 1;
                         log::warn!(
-                            "[startup-recovery] windows: force-killed stale OpenHuman pid={} exe={}",
+                            "[startup-recovery] windows: force-killed stale Marvi pid={} exe={}",
                             proc.pid,
                             proc.argv0
                         );
@@ -804,9 +802,7 @@ mod windows_imp {
                 continue;
             }
 
-            log::debug!(
-                "[startup-recovery] windows: found OpenHuman process pid={pid} argv0={argv0}"
-            );
+            log::debug!("[startup-recovery] windows: found Marvi process pid={pid} argv0={argv0}");
             results.push(ProcessInfo {
                 pid,
                 ppid,

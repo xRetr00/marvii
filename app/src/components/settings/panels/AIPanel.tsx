@@ -911,7 +911,7 @@ function summarizeSpendSample(transactions: CreditTransaction[]) {
 }
 
 function describeProvider(ref: ProviderRef, providers: BackgroundLoopProviderView[]): string {
-  if (ref.kind === 'openhuman') return 'Managed · OpenHuman';
+  if (ref.kind === 'openhuman') return 'Managed · Marvi';
   if (ref.kind === 'default') return 'Default route';
   if (ref.kind === 'local') return `Local ${ref.model}`;
   if (ref.kind === 'claude-code') return `Claude Code CLI ${ref.model || 'default model'}`;
@@ -3775,7 +3775,7 @@ function defaultEndpointFor(slug: string): string {
 
   switch (slug) {
     case 'openhuman':
-      return 'https://api.openhuman.ai/v1';
+      return '';
     // Cosmetic only — the claude-code factory branch never makes HTTP calls.
     case 'claude-code':
       return 'cli://claude-code';

@@ -243,7 +243,7 @@ pub fn spawn_diagnostics_poller<R: tauri::Runtime>(
                             track
                                 .get("label")
                                 .and_then(|x| x.as_str())
-                                .map(|label| label.contains("OpenHuman Mascot"))
+                                .map(|label| label.contains("Marvi Mascot"))
                                 .unwrap_or(false)
                         })
                     })

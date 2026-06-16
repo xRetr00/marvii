@@ -2,8 +2,6 @@ import createDebug from 'debug';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import OAuthProviderButton from '../components/oauth/OAuthProviderButton';
-import { oauthProviderConfigs } from '../components/oauth/providerConfigs';
 import Button from '../components/ui/Button';
 import { useT } from '../lib/i18n/I18nContext';
 import { useCoreState } from '../providers/CoreStateProvider';
@@ -15,9 +13,7 @@ import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { resolveTheme, setThemeMode, type ThemeMode } from '../store/themeSlice';
 import { clearAllAppData } from '../utils/clearAllAppData';
 import { clearStoredCoreMode, clearStoredCoreToken, storeRpcUrl } from '../utils/configPersistence';
-import { PRIVACY_POLICY_URL, TERMS_OF_USE_URL } from '../utils/links';
 import { createLocalSessionToken, LOCAL_SESSION_USER } from '../utils/localSession';
-import { openUrl } from '../utils/openUrl';
 
 const log = createDebug('app:welcome');
 
@@ -126,11 +122,7 @@ const Welcome = () => {
             </button>
           </div>
           <div className="flex justify-center mb-6">
-            <img
-              src={isDark ? '/brand/OpenhumanLogo-white.svg' : '/brand/OpenhumanLogo-Black.svg'}
-              alt={t('welcome.logoAlt')}
-              className="h-20 w-20"
-            />
+            <img src="/brand/MarviLogo.svg" alt={t('welcome.logoAlt')} className="h-20 w-20" />
           </div>
 
           <h1 className="text-2xl font-bold text-stone-900 dark:text-neutral-100 text-center mb-2">
@@ -186,45 +178,16 @@ const Welcome = () => {
             </div>
           ) : (
             <>
-              {/* Real OAuth: click → system browser → backend → deep link back to app. */}
-              <div className="flex items-center justify-center gap-3">
-                {oauthProviderConfigs
-                  .filter(provider => provider.showOnWelcome)
-                  .map(provider => (
-                    <OAuthProviderButton
-                      key={provider.id}
-                      provider={provider}
-                      className="!rounded-full !px-4 !py-2"
-                    />
-                  ))}
-              </div>
-              <p className="mt-5 text-center text-[11px] leading-5 text-stone-500 dark:text-neutral-500">
-                {t('welcome.termsIntro')}{' '}
-                <a
-                  href={TERMS_OF_USE_URL}
-                  target="_blank"
-                  rel="noreferrer"
-                  onClick={event => {
-                    event.preventDefault();
-                    void openUrl(TERMS_OF_USE_URL);
-                  }}
-                  className="font-medium text-stone-700 underline underline-offset-2 hover:text-stone-900 dark:text-neutral-300 dark:hover:text-neutral-100">
-                  {t('welcome.termsOfUse')}
-                </a>{' '}
-                {t('welcome.termsJoiner')}{' '}
-                <a
-                  href={PRIVACY_POLICY_URL}
-                  target="_blank"
-                  rel="noreferrer"
-                  onClick={event => {
-                    event.preventDefault();
-                    void openUrl(PRIVACY_POLICY_URL);
-                  }}
-                  className="font-medium text-stone-700 underline underline-offset-2 hover:text-stone-900 dark:text-neutral-300 dark:hover:text-neutral-100">
-                  {t('welcome.privacyPolicy')}
-                </a>
-                {t('welcome.termsOutro')}
-              </p>
+              <Button
+                variant="primary"
+                size="md"
+                onClick={handleLocalLogin}
+                disabled={isLocalSigningIn}
+                className="w-full py-3">
+                {isLocalSigningIn
+                  ? t('welcome.localSessionStarting')
+                  : t('welcome.continueLocallyExperimental')}
+              </Button>
             </>
           )}
         </div>
@@ -236,16 +199,6 @@ const Welcome = () => {
             onClick={handleSelectRuntime}
             className="w-full py-3">
             {t('welcome.selectRuntime')}
-          </Button>
-          <Button
-            variant="secondary"
-            size="md"
-            onClick={handleLocalLogin}
-            disabled={isLocalSigningIn}
-            className="w-full py-3">
-            {isLocalSigningIn
-              ? t('welcome.localSessionStarting')
-              : t('welcome.continueLocallyExperimental')}
           </Button>
           {localLoginError ? (
             <p className="text-[11px] leading-4 text-center font-medium text-red-700">

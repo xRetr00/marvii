@@ -300,7 +300,7 @@ jobs:
               repo,
               tag_name: tag,
               target_commitish: target,
-              name: `OpenHuman v${version}`,
+              name: `Marvi v${version}`,
               body,
               draft: true,
               prerelease: false,
@@ -517,7 +517,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ needs.prepare-build.outputs.tag }}
           VERSION: ${{ needs.prepare-build.outputs.version }}
-          REPO: tinyhumansai/openhuman
+          REPO: xRetr00/marvii
         run: bash scripts/release/publish-updater-manifest.sh
 
   # =========================================================================
@@ -584,16 +584,16 @@ jobs:
             });
             const names = assets.map((a) => a.name);
             const requiredPatterns = [
-              /OpenHuman_.*_aarch64\.dmg$/,
-              /OpenHuman_.*_x64\.dmg$/,
-              /(OpenHuman_.*_x64-setup\.exe$|OpenHuman_.*_x64.*\.msi$)/,
+              /(Marvi|OpenHuman)_.*_aarch64\.dmg$/,
+              /(Marvi|OpenHuman)_.*_x64\.dmg$/,
+              /((Marvi|OpenHuman)_.*_x64-setup\.exe$|(Marvi|OpenHuman)_.*_x64.*\.msi$)/,
               // Linux desktop installer consumed by scripts/install.sh and
               // advertised in latest.json as linux-x86_64.
-              /OpenHuman_.*_amd64\.AppImage$/,
+              /(Marvi|OpenHuman)_.*_amd64\.AppImage$/,
               // Linux arm64 desktop installer consumed by scripts/install.sh
               // and advertised in latest.json as linux-aarch64.
-              /OpenHuman_.*_(arm64|aarch64)\.AppImage$/,
-              /OpenHuman_.*_(arm64|aarch64)\.deb$/,
+              /(Marvi|OpenHuman)_.*_(arm64|aarch64)\.AppImage$/,
+              /(Marvi|OpenHuman)_.*_(arm64|aarch64)\.deb$/,
               // Auto-updater manifest — without this, installed clients can't
               // discover new releases via plugins.updater.endpoints.
               /^latest\.json$/,

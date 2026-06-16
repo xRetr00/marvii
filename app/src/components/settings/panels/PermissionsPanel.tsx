@@ -320,7 +320,7 @@ const PermissionsPanel = () => {
                     <p
                       className="text-xs text-neutral-500 dark:text-neutral-400 font-mono"
                       data-testid="permissions-action-dir">
-                      {agentPaths?.action_dir ?? '~/OpenHuman/projects'}
+                      {agentPaths?.action_dir ?? '~/Marvi/projects'}
                     </p>
                     {!actionDirEnvLocked && (
                       <button

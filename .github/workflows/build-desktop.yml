@@ -469,9 +469,9 @@ jobs:
         run: |
           set +e
           for BIN in \
-            "app/src-tauri/target/${MATRIX_TARGET}/${PROFILE}/OpenHuman" \
-            "app/src-tauri/target/${MATRIX_TARGET}/${PROFILE}/bundle/appimage_deb/data/usr/bin/OpenHuman" \
-            "target/${MATRIX_TARGET}/${PROFILE}/OpenHuman"; do
+            "app/src-tauri/target/${MATRIX_TARGET}/${PROFILE}/Marvi" \
+            "app/src-tauri/target/${MATRIX_TARGET}/${PROFILE}/bundle/appimage_deb/data/usr/bin/Marvi" \
+            "target/${MATRIX_TARGET}/${PROFILE}/Marvi"; do
             if [ -x "$BIN" ]; then
               echo "==> ldd $BIN"
               ldd "$BIN" || true
@@ -622,7 +622,7 @@ jobs:
           fi
           echo "Uploading:"
           printf '  %s\n' "${UPLOAD[@]}"
-          gh release upload "$TAG" "${UPLOAD[@]}" --repo tinyhumansai/openhuman --clobber
+          gh release upload "$TAG" "${UPLOAD[@]}" --repo xRetr00/marvii --clobber
 
       # ---- macOS sign / notarize / repackage --------------------------------
       - name: Locate macOS .app bundle
@@ -636,19 +636,19 @@ jobs:
           set -euo pipefail
           APP_PATH=""
           for candidate in \
-            "app/src-tauri/target/${MATRIX_TARGET}/${PROFILE}/bundle/macos/OpenHuman.app" \
-            "target/${MATRIX_TARGET}/${PROFILE}/bundle/macos/OpenHuman.app"; do
+            "app/src-tauri/target/${MATRIX_TARGET}/${PROFILE}/bundle/macos/Marvi.app" \
+            "target/${MATRIX_TARGET}/${PROFILE}/bundle/macos/Marvi.app"; do
             if [ -d "$candidate" ]; then
               APP_PATH="$candidate"
               break
             fi
           done
           if [ -z "$APP_PATH" ]; then
-            APP_PATH="$(find . -path "*/${PROFILE}/bundle/macos/OpenHuman.app" -type d 2>/dev/null | head -1)"
+            APP_PATH="$(find . -path "*/${PROFILE}/bundle/macos/Marvi.app" -type d 2>/dev/null | head -1)"
           fi
           if [ -z "$APP_PATH" ]; then
-            echo "ERROR: Could not find OpenHuman.app bundle anywhere"
-            find . -name 'OpenHuman.app' -type d 2>/dev/null || true
+            echo "ERROR: Could not find Marvi.app bundle anywhere"
+            find . -name 'Marvi.app' -type d 2>/dev/null || true
             exit 1
           fi
           BUNDLE_DIR="$(dirname "$(dirname "$APP_PATH")")"

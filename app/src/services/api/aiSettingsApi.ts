@@ -404,7 +404,7 @@ function modelRegistriesEqual(a: ModelRegistryEntry[], b: ModelRegistryEntry[]):
  */
 export async function setCloudProviderKey(slug: string, apiKey: string): Promise<void> {
   if (slug === 'openhuman') {
-    throw new Error('OpenHuman uses the session JWT — keys are not configurable here.');
+    throw new Error('Marvi uses the session JWT — keys are not configurable here.');
   }
   // Store under both new-style key `provider:<slug>` and legacy bare `<slug>`
   // so old code paths that look up by bare slug continue to work.

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# OpenHuman Installer (macOS/Linux)
+# Marvi Installer (macOS/Linux)
 # Usage:
-#   curl -fsSL https://raw.githubusercontent.com/tinyhumansai/openhuman/main/scripts/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/xRetr00/marvii/main/scripts/install.sh | bash
 
 set -euo pipefail
 
@@ -14,7 +14,7 @@ for _arg in "$@"; do
 done
 
 INSTALLER_VERSION="1.0.0"
-REPO="tinyhumansai/openhuman"
+REPO="xRetr00/marvii"
 LATEST_JSON_URL="https://github.com/${REPO}/releases/latest/download/latest.json"
 LATEST_RELEASE_API_URL="https://api.github.com/repos/${REPO}/releases/latest"
 
@@ -43,7 +43,7 @@ log_err() { echo -e "${RED}x${NC} $*" >&2; }
 
 usage() {
   cat <<'EOF'
-OpenHuman Installer
+Marvi Installer
 
 Usage: install.sh [OPTIONS]
 
@@ -55,7 +55,7 @@ Options:
   --verbose         Enable verbose output
 
 Examples:
-  curl -fsSL https://raw.githubusercontent.com/tinyhumansai/openhuman/main/scripts/install.sh | bash
+  curl -fsSL https://raw.githubusercontent.com/xRetr00/marvii/main/scripts/install.sh | bash
   curl -fsSL ... | bash -s -- --dry-run
 EOF
 }
@@ -125,7 +125,7 @@ case "${OS_RAW}" in
   Linux) OS="linux" ;;
   CYGWIN*|MINGW*|MSYS*)
     log_err "Windows detected. Use PowerShell installer:"
-    echo "  irm https://raw.githubusercontent.com/tinyhumansai/openhuman/main/scripts/install.ps1 | iex"
+    echo "  irm https://raw.githubusercontent.com/xRetr00/marvii/main/scripts/install.ps1 | iex"
     exit 1
     ;;
   *)
@@ -525,7 +525,7 @@ ensure_local_bin_path() {
   if ! grep -q '.local/bin' "${config_file}"; then
     {
       echo ""
-      echo '# OpenHuman installer - ensure local user binaries are on PATH'
+      echo '# Marvi installer - ensure local user binaries are on PATH'
       echo 'export PATH="$HOME/.local/bin:$PATH"'
     } >> "${config_file}"
     log_ok "Added ~/.local/bin to ${config_file}"
@@ -534,28 +534,28 @@ ensure_local_bin_path() {
 
 install_macos() {
   local apps_dir="${HOME}/Applications"
-  local app_path="${apps_dir}/OpenHuman.app"
+  local app_path="${apps_dir}/Marvi.app"
   mkdir -p "${apps_dir}"
 
   if [[ "${ASSET_NAME}" =~ \.app\.tar\.gz$ ]]; then
-    log_info "Installing OpenHuman.app into ${apps_dir}"
+    log_info "Installing Marvi.app into ${apps_dir}"
     if [ "${DRY_RUN}" = true ]; then
       echo "DRY RUN: tar -xzf ${DOWNLOAD_PATH} -C ${TMP_DIR}"
       echo "DRY RUN: replace ${app_path}"
     else
       tar -xzf "${DOWNLOAD_PATH}" -C "${TMP_DIR}"
-      if [ ! -d "${TMP_DIR}/OpenHuman.app" ]; then
-        log_err "Archive did not contain OpenHuman.app"
+      if [ ! -d "${TMP_DIR}/Marvi.app" ]; then
+        log_err "Archive did not contain Marvi.app"
         exit 1
       fi
       rm -rf "${app_path}"
-      cp -R "${TMP_DIR}/OpenHuman.app" "${app_path}"
+      cp -R "${TMP_DIR}/Marvi.app" "${app_path}"
     fi
   elif [[ "${ASSET_NAME}" =~ \.dmg$ ]]; then
-    log_info "Mounting DMG and copying OpenHuman.app"
+    log_info "Mounting DMG and copying Marvi.app"
     if [ "${DRY_RUN}" = true ]; then
       echo "DRY RUN: hdiutil attach ${DOWNLOAD_PATH}"
-      echo "DRY RUN: copy OpenHuman.app to ${app_path}"
+      echo "DRY RUN: copy Marvi.app to ${app_path}"
     else
       if ! command -v hdiutil >/dev/null 2>&1; then
         log_err "hdiutil not available, cannot install from DMG."
@@ -563,13 +563,13 @@ install_macos() {
       fi
       mount_output="$(hdiutil attach "${DOWNLOAD_PATH}" -nobrowse)"
       mount_point="$(echo "${mount_output}" | awk '/\/Volumes\// {print $NF; exit}')"
-      if [ -z "${mount_point}" ] || [ ! -d "${mount_point}/OpenHuman.app" ]; then
-        log_err "Could not find OpenHuman.app in mounted DMG."
+      if [ -z "${mount_point}" ] || [ ! -d "${mount_point}/Marvi.app" ]; then
+        log_err "Could not find Marvi.app in mounted DMG."
         echo "${mount_output}"
         exit 1
       fi
       rm -rf "${app_path}"
-      cp -R "${mount_point}/OpenHuman.app" "${app_path}"
+      cp -R "${mount_point}/Marvi.app" "${app_path}"
       hdiutil detach "${mount_point}" >/dev/null
     fi
   else
@@ -579,7 +579,7 @@ install_macos() {
 
   log_ok "Installed at ${app_path}"
   echo ""
-  echo "OpenHuman is ready."
+  echo "Marvi is ready."
   echo "Launch: open \"${app_path}\""
   echo "Uninstall: rm -rf \"${app_path}\""
 }
@@ -612,8 +612,8 @@ install_linux() {
     cat > "${desktop_file}" <<EOF
 [Desktop Entry]
 Type=Application
-Name=OpenHuman
-Comment=OpenHuman desktop assistant
+Name=Marvi
+Comment=Marvi desktop assistant
 Exec=${app_path}
 TryExec=${app_path}
 Icon=${bin_dir}/openhuman.png
@@ -624,7 +624,7 @@ EOF
 
   log_ok "Installed binary at ${app_path}"
   echo ""
-  echo "OpenHuman is ready."
+  echo "Marvi is ready."
   echo "Launch: ${app_path}"
   echo "If the AppImage prints 'Interpreter not found!' or unshare/uid_map errors,"
   echo "try the .deb package from https://github.com/${REPO}/releases/latest"

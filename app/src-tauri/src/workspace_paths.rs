@@ -77,7 +77,7 @@ pub async fn resolve_workspace_absolute_path(path: String) -> Result<String, Str
 async fn active_workspace_root() -> Result<PathBuf, String> {
     let config = openhuman_core::openhuman::config::Config::load_or_init()
         .await
-        .map_err(|err| workspace_path_error(format!("failed to load OpenHuman config: {err}")))?;
+        .map_err(|err| workspace_path_error(format!("failed to load Marvi config: {err}")))?;
     fs::create_dir_all(&config.workspace_dir).map_err(|err| {
         workspace_path_error_with_debug(
             format!("failed to create workspace directory: {err}"),

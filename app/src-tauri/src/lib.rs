@@ -130,7 +130,7 @@ fn process_diagnostics_list_owned() -> Result<Vec<process_recovery::ProcessInfo>
     match process_recovery::enumerate_openhuman_processes() {
         Ok(processes) => {
             log::info!(
-                "[startup-recovery] diagnostics listed {} owned OpenHuman processes",
+                "[startup-recovery] diagnostics listed {} owned Marvi processes",
                 processes.len()
             );
             Ok(processes)
@@ -323,13 +323,13 @@ async fn start_core_process(
     state.inner().ensure_running().await?;
     if let Some(notice) = state.inner().take_last_port_fallback_notice() {
         let body = format!(
-            "OpenHuman is using port {} because {} was busy",
+            "Marvi is using port {} because {} was busy",
             notice.chosen_port, notice.preferred_port
         );
         if let Err(err) = app
             .notification()
             .builder()
-            .title("OpenHuman")
+            .title("Marvi")
             .body(&body)
             .show()
         {
@@ -1361,7 +1361,7 @@ fn macos_app_menu(app: &AppHandle<AppRuntime>) -> tauri::Result<Menu<AppRuntime>
     let quit = MenuItem::with_id(
         app,
         APP_QUIT_MENU_ID,
-        "Quit OpenHuman",
+        "Quit Marvi",
         true,
         Some("CmdOrCtrl+Q"),
     )?;
@@ -1369,7 +1369,7 @@ fn macos_app_menu(app: &AppHandle<AppRuntime>) -> tauri::Result<Menu<AppRuntime>
     let app_sep_2 = PredefinedMenuItem::separator(app)?;
     let app_menu = Submenu::with_items(
         app,
-        "OpenHuman",
+        "Marvi",
         true,
         &[
             &about,
@@ -1427,13 +1427,7 @@ fn setup_tray(app: &AppHandle<AppRuntime>) -> tauri::Result<()> {
 fn setup_tray(app: &AppHandle<AppRuntime>) -> tauri::Result<()> {
     log::info!("[tray] setting up tray icon");
 
-    let show_item = MenuItem::with_id(
-        app,
-        "tray_show_window",
-        "Open OpenHuman",
-        true,
-        None::<&str>,
-    )?;
+    let show_item = MenuItem::with_id(app, "tray_show_window", "Open Marvi", true, None::<&str>)?;
     let quit_item = MenuItem::with_id(app, "tray_quit", "Quit", true, None::<&str>)?;
     // The floating mascot has a native NSPanel + WKWebView host, so the
     // tray entry only does anything on macOS. Don't surface a menu item
@@ -1714,7 +1708,7 @@ fn shutdown_app_sync(app_handle: &AppHandle<AppRuntime>, exit_code: i32) {
 }
 
 #[cfg(target_os = "linux")]
-const WSL_X11_DESKTOP_WARNING: &str = "[startup] likely unsupported desktop environment: WSL with classic X11 forwarding detected (DISPLAY is set, but WAYLAND_DISPLAY/WSLg markers are absent). OpenHuman's Tauri/CEF desktop flow is fragile in this setup; use native Windows development or Windows 11 WSLg for desktop GUI work.";
+const WSL_X11_DESKTOP_WARNING: &str = "[startup] likely unsupported desktop environment: WSL with classic X11 forwarding detected (DISPLAY is set, but WAYLAND_DISPLAY/WSLg markers are absent). Marvi's Tauri/CEF desktop flow is fragile in this setup; use native Windows development or Windows 11 WSLg for desktop GUI work.";
 
 #[cfg(any(target_os = "linux", test))]
 fn should_warn_for_wsl_x11_desktop(
@@ -1799,7 +1793,7 @@ fn check_linux_display_server() {
         return;
     }
     let msg = "[openhuman] no display server found (DISPLAY and WAYLAND_DISPLAY are both unset).\n\
-               OpenHuman requires an X11 or Wayland display to run.\n\
+               Marvi requires an X11 or Wayland display to run.\n\
                On WSL2: install WSLg or configure X11 forwarding from Windows.\n\
                Set DISPLAY (e.g. export DISPLAY=:0) or WAYLAND_DISPLAY before launching.";
     log::error!(
@@ -2651,7 +2645,7 @@ pub fn run() {
         log::warn!(
             "[single-instance] D-Bus session bus unreachable (DBUS_SESSION_BUS_ADDRESS={:?}, \
              XDG_RUNTIME_DIR={:?}); skipping tauri-plugin-single-instance to avoid \
-             OPENHUMAN-TAURI-TM panic. Multiple OpenHuman instances will not be deduplicated.",
+             OPENHUMAN-TAURI-TM panic. Multiple Marvi instances will not be deduplicated.",
             std::env::var("DBUS_SESSION_BUS_ADDRESS").ok(),
             std::env::var("XDG_RUNTIME_DIR").ok()
         );
@@ -3382,7 +3376,7 @@ pub fn run() {
                         let args = meet_call::OpenWindowArgs {
                             request_id: request_id.clone(),
                             meet_url: meet_url.clone(),
-                            display_name: "OpenHuman Dev".to_string(),
+                            display_name: "Marvi Dev".to_string(),
                             // Dev-auto launch has no real user identity — the
                             // wake gate will fail-closed (no wakes fire) which
                             // is the safe posture for an automated harness.

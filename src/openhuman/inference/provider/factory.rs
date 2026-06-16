@@ -7,9 +7,8 @@
 //! ## Provider-string grammar
 //!
 //! ```text
-//! "openhuman"                    → OpenHumanBackendProvider; model = config.default_model
-//! "cloud" / missing              → primary_cloud; legacy custom inference_url wins when
-//!                                  primary still points at OpenHuman after migration
+//! "openhuman"                    → disabled in local-first builds
+//! "cloud" / missing              → primary_cloud, legacy custom inference_url, or local Ollama
 //! "ollama:<model>[@<temp>]"      → local Ollama at config.local_ai.base_url
 //! "lmstudio:<model>[@<temp>]"    → local LM Studio
 //! "mlx:<model>[@<temp>]"         → local MLX-compatible server
@@ -469,7 +468,9 @@ pub fn create_chat_provider_from_string(
     }
 
     if p == PROVIDER_OPENHUMAN {
-        return make_openhuman_backend(role, config);
+        anyhow::bail!(
+            "[chat-factory] hosted OpenHuman backend routing is disabled in this build; configure a local or BYO provider for role '{role}'"
+        );
     }
 
     // ── Session gate ──────────────────────────────────────────────────
@@ -827,7 +828,7 @@ fn verify_session_active(config: &Config) -> anyhow::Result<()> {
         .filter(|s| !s.trim().is_empty())
         .is_some();
     if !has_session {
-        anyhow::bail!("SESSION_EXPIRED: no backend session — sign in to use OpenHuman")
+        anyhow::bail!("SESSION_EXPIRED: no local session is active")
     }
     Ok(())
 }
@@ -872,9 +873,24 @@ fn resolve_primary_cloud_provider_string(config: &Config) -> String {
             );
             BYOK_INCOMPLETE_SENTINEL.to_string()
         } else {
-            PROVIDER_OPENHUMAN.to_string()
+            local_default_provider_string(config)
         }
     })
+}
+
+fn local_default_provider_string(config: &Config) -> String {
+    let model = config.local_ai.chat_model_id.trim();
+    let model = if model.is_empty() {
+        config.local_ai.model_id.trim()
+    } else {
+        model
+    };
+    let model = if model.is_empty() {
+        "gemma3:1b-it-qat"
+    } else {
+        model
+    };
+    format!("{OLLAMA_PROVIDER_PREFIX}{model}")
 }
 
 /// Extract the host portion of an inference URL for safe logging.
@@ -975,7 +991,7 @@ fn cloud_entry_provider_string(
     config: &Config,
 ) -> String {
     if is_openhuman_cloud_entry(entry) {
-        return PROVIDER_OPENHUMAN.to_string();
+        return local_default_provider_string(config);
     }
 
     let model = entry
@@ -1328,13 +1344,9 @@ fn make_cloud_provider_by_slug(
             Ok((p, effective_model))
         }
         AuthStyle::OpenhumanJwt => {
-            // Route to the OpenHuman backend — ignore the entry's endpoint
-            // and model; use the backend provider with the configured default.
-            log::debug!(
-                "[providers][chat-factory] slug='{}' has auth_style=OpenhumanJwt → routing to openhuman backend",
-                slug
-            );
-            make_openhuman_backend(role, config)
+            anyhow::bail!(
+                "[chat-factory] hosted OpenHuman backend routing is disabled in this build; provider slug '{slug}' cannot use openhuman_jwt auth"
+            )
         }
         AuthStyle::None => {
             let p = make_openai_compatible_provider_with_config(

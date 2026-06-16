@@ -342,7 +342,7 @@ mod tests {
     #[test]
     fn collect_deep_link_urls_filters_args() {
         let urls = collect_deep_link_urls_from_args([
-            "OpenHuman.exe",
+            "Marvi.exe",
             "openhuman://auth?token=secret&key=auth",
             "--flag",
             "https://example.test",

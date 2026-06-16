@@ -22,12 +22,6 @@ pub struct BuiltinCloudProvider {
 
 pub const BUILTIN_CLOUD_PROVIDERS: &[BuiltinCloudProvider] = &[
     BuiltinCloudProvider {
-        slug: "openhuman",
-        label: "OpenHuman",
-        endpoint: "https://api.openhuman.ai/v1",
-        auth_style: AuthStyle::OpenhumanJwt,
-    },
-    BuiltinCloudProvider {
         slug: "openai",
         label: "OpenAI",
         endpoint: "https://api.openai.com/v1",

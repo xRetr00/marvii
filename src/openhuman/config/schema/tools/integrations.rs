@@ -4,15 +4,11 @@ use super::super::defaults;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-/// Composio integration routing mode for the main backend-proxied flow.
+/// Composio integration routing mode.
 ///
-/// `"backend"` (default) — every Composio call (toolkits, connections,
-/// authorize, tools, execute, triggers, …) is proxied through the
-/// OpenHuman backend (`api.tinyhumans.ai/agent-integrations/composio/*`).
-/// The backend owns the Composio API key, allowlist, billing/margin, and
-/// HMAC-verified trigger webhooks fanned out over socket.io.
+/// `"backend"` — legacy hosted mode. Disabled by default in this build.
 ///
-/// `"direct"` — the core hits `https://backend.composio.dev/api/v{2,3}`
+/// `"direct"` (default) — the core hits `https://backend.composio.dev/api/v{2,3}`
 /// directly with the user's own Composio API key (BYO). Tool execution is
 /// synchronous and works fully sovereign. Real-time **trigger webhooks**
 /// (the async push surface that the backend currently mediates via
@@ -23,7 +19,7 @@ pub const COMPOSIO_MODE_BACKEND: &str = "backend";
 pub const COMPOSIO_MODE_DIRECT: &str = "direct";
 
 fn default_composio_mode() -> String {
-    COMPOSIO_MODE_BACKEND.into()
+    COMPOSIO_MODE_DIRECT.into()
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
@@ -46,8 +42,8 @@ pub struct ComposioConfig {
     pub triage_disabled_toolkits: Vec<String>,
 
     /// Routing mode for the main Composio integration flow. One of
-    /// [`COMPOSIO_MODE_BACKEND`] (default — proxied through the OpenHuman
-    /// backend) or [`COMPOSIO_MODE_DIRECT`] (BYO API key, calls
+    /// [`COMPOSIO_MODE_BACKEND`] (legacy hosted backend) or
+    /// [`COMPOSIO_MODE_DIRECT`] (default — BYO API key, calls
     /// `backend.composio.dev` directly).
     ///
     /// The user-provided API key for direct mode is *not* stored in the
@@ -114,25 +110,20 @@ pub struct ComputerControlConfig {
     pub ax_interact_mutations: bool,
 }
 
-// ── Agent integration tools (backend-proxied) ───────────────────────
+// ── Agent integration tools ─────────────────────────────────────────
 
-/// Routing mode for an integration that supports a backend-managed
+/// Routing mode for an integration that historically supported a backend-managed
 /// default and an optional BYO ("bring your own API key") override.
 pub const INTEGRATION_MODE_MANAGED: &str = "managed";
 pub const INTEGRATION_MODE_BYO: &str = "byo";
 
 fn default_integration_mode() -> String {
-    INTEGRATION_MODE_MANAGED.into()
+    INTEGRATION_MODE_BYO.into()
 }
 
 /// Per-integration toggle.
 ///
-/// Defaults to **OpenHuman-managed** routing: the OpenHuman backend
-/// owns the upstream API key, billing, and rate limits — the user only
-/// has to flip `enabled` to make the tools available.
-///
-/// Users who hold their own provider account can switch `mode` to
-/// `"byo"` and supply `api_key`. In that case tools register **iff**
+/// Defaults to BYO routing. Tools register **iff**
 /// the integration is `enabled = true` **and** `api_key` is a non-empty
 /// trimmed string — see [`IntegrationToggle::is_active`]. This mirrors
 /// the rule the Settings UI surfaces to the user ("loaded iff API key
@@ -142,8 +133,8 @@ fn default_integration_mode() -> String {
 pub struct IntegrationToggle {
     #[serde(default = "defaults::default_true")]
     pub enabled: bool,
-    /// Routing mode. One of [`INTEGRATION_MODE_MANAGED`] (default — the
-    /// OpenHuman backend proxies the call) or [`INTEGRATION_MODE_BYO`]
+    /// Routing mode. One of [`INTEGRATION_MODE_MANAGED`] (legacy hosted
+    /// backend mode) or [`INTEGRATION_MODE_BYO`] (default — BYO key)
     /// (the user's own API key is required and tools refuse to
     /// register without it).
     #[serde(default = "default_integration_mode")]
@@ -156,8 +147,8 @@ pub struct IntegrationToggle {
 
 impl IntegrationToggle {
     /// Returns true when the integration should be wired up at tool-
-    /// registration time. Managed mode requires only `enabled`; BYO
-    /// mode requires both `enabled` and a non-empty `api_key`.
+    /// registration time. BYO mode requires both `enabled` and a
+    /// non-empty `api_key`; legacy managed mode is disabled in this build.
     pub fn is_active(&self) -> bool {
         if !self.enabled {
             return false;
@@ -168,7 +159,7 @@ impl IntegrationToggle {
                 .as_deref()
                 .map(|s| !s.trim().is_empty())
                 .unwrap_or(false),
-            _ => true,
+            _ => false,
         }
     }
 }
@@ -348,13 +339,13 @@ mod integration_toggle_tests {
     use super::*;
 
     #[test]
-    fn managed_mode_active_when_enabled_without_key() {
+    fn managed_mode_inactive_even_when_enabled() {
         let toggle = IntegrationToggle {
             enabled: true,
             mode: INTEGRATION_MODE_MANAGED.into(),
             api_key: None,
         };
-        assert!(toggle.is_active());
+        assert!(!toggle.is_active());
     }
 
     #[test]
@@ -394,10 +385,10 @@ mod integration_toggle_tests {
     }
 
     #[test]
-    fn default_is_managed_and_active() {
+    fn default_is_byo_and_inactive_without_key() {
         let toggle = IntegrationToggle::default();
-        assert_eq!(toggle.mode, INTEGRATION_MODE_MANAGED);
+        assert_eq!(toggle.mode, INTEGRATION_MODE_BYO);
         assert!(toggle.api_key.is_none());
-        assert!(toggle.is_active());
+        assert!(!toggle.is_active());
     }
 }

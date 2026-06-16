@@ -330,7 +330,7 @@ mod tests {
     fn extract_deep_link_urls_filters_correctly() {
         // We can't mutate std::env::args(), so test the filtering logic directly.
         let args = vec![
-            "OpenHuman".to_string(),
+            "Marvi".to_string(),
             "openhuman://auth?token=abc".to_string(),
             "--some-flag".to_string(),
             "openhuman://other".to_string(),
