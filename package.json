@@ -43,6 +43,7 @@
     "deep-work": "bash scripts/deep-work/cli.sh",
     "review": "bash scripts/shortcuts/review/cli.sh",
     "work": "bash scripts/shortcuts/work/cli.sh",
+    "upstream:sync": "bash scripts/shortcuts/upstream-sync.sh",
     "agent-batch": "node scripts/agent-batch/cli.mjs",
     "agent-batch:test": "node --test scripts/agent-batch/__tests__/lib.test.mjs scripts/agent-batch/__tests__/cli.test.mjs",
     "debug": "bash scripts/debug/cli.sh",

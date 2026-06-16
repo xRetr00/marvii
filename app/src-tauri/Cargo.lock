@@ -3,7 +3,7 @@
 version = 4
 
 [[package]]
-name = "OpenHuman"
+name = "Marvi"
 version = "0.57.41"
 dependencies = [
  "anyhow",

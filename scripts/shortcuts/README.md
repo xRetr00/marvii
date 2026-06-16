@@ -10,6 +10,7 @@ its own README and prompt templates.
 | `review/`      | `pnpm review`        | Sync a PR locally and drive review / fix / coverage / merge via an LLM CLI.  |
 | `work/`        | `pnpm work`          | Pick up a GitHub issue, cut a branch, hand off to an LLM CLI.                |
 | `ws-reset.sh`  | `pnpm reset`         | Hard-reset local `main` to `upstream/main` and refresh submodules.           |
+| `upstream-sync.sh` | `pnpm upstream:sync` | Merge OpenHuman `origin/main` into Marvi `main` with dry-run defaults.      |
 
 All shortcuts share `review/lib.sh` for repo resolution, PR sync, and the
 colored `pass/fail/warn/info` helpers.
