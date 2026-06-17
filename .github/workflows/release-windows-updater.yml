@@ -1,0 +1,118 @@
+name: Release Windows Updater
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag to create or update, for example v0.57.41-marvi.1
+        required: true
+        type: string
+      version:
+        description: Version advertised in latest.json, for example 0.57.42
+        required: true
+        type: string
+      ref:
+        description: Git ref to build
+        required: false
+        default: main
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-windows-updater-${{ inputs.tag }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build and publish Windows updater
+    runs-on: windows-latest
+    timeout-minutes: 90
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.ref }}
+          submodules: recursive
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24.x
+          package-manager-cache: false
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@1.93.0
+
+      - name: Install dependencies
+        shell: bash
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Windows Tauri bundle
+        shell: bash
+        working-directory: app
+        env:
+          VITE_OPENHUMAN_APP_ENV: production
+          OPENHUMAN_APP_ENV: production
+        run: |
+          cargo tauri build --target x86_64-pc-windows-msvc -- --bin Marvi
+
+      - name: Sign Windows updater asset
+        shell: bash
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY || secrets.UPDATER_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD || secrets.UPDATER_PRIVATE_KEY_PASSWORD }}
+        run: |
+          if [ -z "${TAURI_SIGNING_PRIVATE_KEY:-}" ]; then
+            echo "Missing TAURI_SIGNING_PRIVATE_KEY secret"
+            exit 1
+          fi
+          shopt -s nullglob
+          files=(app/src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis/*-setup.exe)
+          if [ "${#files[@]}" -ne 1 ]; then
+            echo "Expected exactly one NSIS setup exe, found ${#files[@]}"
+            printf '  %s\n' "${files[@]}"
+            exit 1
+          fi
+          cargo tauri signer sign "${files[0]}"
+
+      - name: Create or update release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release edit "$TAG" --repo "$GITHUB_REPOSITORY" --draft=false --prerelease=false
+          else
+            gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --target "${GITHUB_SHA}" --title "Marvi $TAG" --notes "Windows updater release for Marvi." --draft=false --prerelease=false
+          fi
+
+      - name: Upload Windows updater assets
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          shopt -s nullglob
+          files=(app/src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis/*-setup.exe app/src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis/*-setup.exe.sig)
+          if [ "${#files[@]}" -eq 0 ]; then
+            echo "No NSIS updater assets found"
+            find app/src-tauri/target -maxdepth 8 -type f
+            exit 1
+          fi
+          gh release upload "$TAG" "${files[@]}" --repo "$GITHUB_REPOSITORY" --clobber
+
+      - name: Publish latest.json
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ inputs.tag }}
+          VERSION: ${{ inputs.version }}
+          REPO: ${{ github.repository }}
+        run: bash scripts/release/publish-windows-updater-manifest.sh
