@@ -8,11 +8,9 @@ import PrivacyPanel from '../PrivacyPanel';
 vi.mock('../../../../utils/tauriCommands/aboutApp', () => ({ listCapabilities: vi.fn() }));
 
 const setMeetAutoOrchestratorHandoffMock = vi.fn();
-const setAnalyticsEnabledMock = vi.fn();
 vi.mock('../../../../providers/CoreStateProvider', () => ({
   useCoreState: () => ({
     snapshot: { analyticsEnabled: false, meetAutoOrchestratorHandoff: false },
-    setAnalyticsEnabled: (v: boolean) => setAnalyticsEnabledMock(v),
     setMeetAutoOrchestratorHandoff: (v: boolean) => setMeetAutoOrchestratorHandoffMock(v),
   }),
 }));
@@ -62,20 +60,12 @@ describe('PrivacyPanel', () => {
     vi.clearAllMocks();
   });
 
-  it('flips the analytics toggle when clicked (#1698)', async () => {
+  it('does not render the removed analytics telemetry toggle', async () => {
     vi.mocked(listCapabilities).mockResolvedValue([]);
     renderWithProviders(<PrivacyPanel />);
 
-    // Analytics toggle is the first role="switch" on the page (before meet-handoff).
-    const toggles = await screen.findAllByRole('switch');
-    const toggle = toggles[0];
-    expect(toggle.getAttribute('aria-checked')).toBe('false');
-
-    fireEvent.click(toggle);
-
-    await waitFor(() => {
-      expect(setAnalyticsEnabledMock).toHaveBeenCalledWith(true);
-    });
+    await waitFor(() => expect(listCapabilities).toHaveBeenCalled());
+    expect(screen.queryByTestId('privacy-analytics-toggle')).toBeNull();
   });
 
   it('renders annotated capabilities returned by about_app.list', async () => {
@@ -102,7 +92,7 @@ describe('PrivacyPanel', () => {
     expect(screen.queryByTestId('privacy-row-conversation.create')).toBeNull();
   });
 
-  it('shows graceful fallback when the RPC fails and keeps analytics toggle visible', async () => {
+  it('shows graceful fallback when the RPC fails and keeps local privacy controls visible', async () => {
     vi.mocked(listCapabilities).mockRejectedValue(new Error('boom'));
     renderWithProviders(<PrivacyPanel />);
 
@@ -110,8 +100,7 @@ describe('PrivacyPanel', () => {
       expect(screen.getByTestId('privacy-load-error')).toBeTruthy();
     });
     expect(screen.queryByTestId('privacy-capability-list')).toBeNull();
-    // Analytics + meet-handoff toggles still rendered
-    expect(screen.getAllByRole('switch').length).toBeGreaterThanOrEqual(2);
+    expect(screen.getByTestId('privacy-meet-handoff-toggle')).toBeInTheDocument();
   });
 
   it('flips the meet auto-handoff toggle from OFF to ON when clicked (#1299)', async () => {

@@ -10,11 +10,9 @@ import Accounts from './pages/Accounts';
 import Brain from './pages/Brain';
 import AgentInsightsPreview from './pages/dev/AgentInsightsPreview';
 import Home from './pages/Home';
-import Invites from './pages/Invites';
 import Notifications from './pages/Notifications';
 import Onboarding from './pages/onboarding/Onboarding';
 import { PttOverlayPage } from './pages/PttOverlayPage';
-import Rewards from './pages/Rewards';
 import Settings from './pages/Settings';
 import Skills from './pages/Skills';
 import WebCallbackPage from './pages/WebCallbackPage';
@@ -144,14 +142,7 @@ const AppRoutes = () => {
           redirects to the unified Connections page on the Messaging tab. */}
       <Route path="/channels" element={<Navigate to="/connections?tab=messaging" replace />} />
 
-      <Route
-        path="/invites"
-        element={
-          <ProtectedRoute requireAuth={true}>
-            <Invites />
-          </ProtectedRoute>
-        }
-      />
+      <Route path="/invites" element={<Navigate to="/settings/account" replace />} />
 
       <Route
         path="/notifications"
@@ -167,14 +158,7 @@ const AppRoutes = () => {
           any surviving deep links land somewhere sensible. */}
       <Route path="/routines" element={<Navigate to="/settings/automations" replace />} />
 
-      <Route
-        path="/rewards"
-        element={
-          <ProtectedRoute requireAuth={true}>
-            <Rewards />
-          </ProtectedRoute>
-        }
-      />
+      <Route path="/rewards" element={<Navigate to="/settings/account" replace />} />
 
       <Route path="/workflows" element={<Navigate to="/settings/automations" replace />} />
 

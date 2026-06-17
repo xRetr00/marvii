@@ -29,6 +29,22 @@ import { useSettingsNavigation } from '../hooks/useSettingsNavigation';
 
 const LOG_LIMIT = 100;
 
+interface WebhookDebugRpcEnvelope<T> {
+  result?: T | { result?: T };
+}
+
+function unwrapWebhookDebugResult<T extends object>(
+  envelope: WebhookDebugRpcEnvelope<T> | T | null | undefined
+): Partial<T> {
+  if (!envelope || typeof envelope !== 'object') return {};
+  const maybeEnvelope = envelope as WebhookDebugRpcEnvelope<T>;
+  const firstResult = maybeEnvelope.result;
+  if (firstResult && typeof firstResult === 'object' && 'result' in firstResult) {
+    return (firstResult as { result?: T }).result ?? {};
+  }
+  return firstResult ? (firstResult as Partial<T>) : (envelope as T);
+}
+
 function formatDateTime(timestamp: number): string {
   if (!timestamp) return '-';
   return new Date(timestamp).toLocaleString();
@@ -71,12 +87,20 @@ const WebhooksDebugPanel = () => {
         openhumanWebhooksListRegistrations(),
         openhumanWebhooksListLogs(LOG_LIMIT),
       ]);
-      setRegistrations(registrationsResponse.result.result.registrations);
-      setLogs(logsResponse.result.result.logs);
+      const registrationPayload = unwrapWebhookDebugResult<{
+        registrations: WebhookDebugRegistration[];
+      }>(registrationsResponse);
+      const logPayload = unwrapWebhookDebugResult<{ logs: WebhookDebugLogEntry[] }>(logsResponse);
+      const nextRegistrations = Array.isArray(registrationPayload.registrations)
+        ? registrationPayload.registrations
+        : [];
+      const nextLogs = Array.isArray(logPayload.logs) ? logPayload.logs : [];
+      setRegistrations(nextRegistrations);
+      setLogs(nextLogs);
       setSelectedCorrelationId(current =>
-        current && logsResponse.result.result.logs.some(log => log.correlation_id === current)
+        current && nextLogs.some(log => log.correlation_id === current)
           ? current
-          : (logsResponse.result.result.logs[0]?.correlation_id ?? null)
+          : (nextLogs[0]?.correlation_id ?? null)
       );
     } catch (loadError) {
       setError(

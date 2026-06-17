@@ -25,6 +25,8 @@
 import { parseBubbleSegments } from '../../pages/conversations/utils/format';
 import { OPENHUMAN_LINK_EVENT } from '../OpenhumanLinkModal';
 
+const HIDDEN_LINK_PATHS = new Set(['community/discord', 'community/discord-report']);
+
 function NotificationLinkPill({ path, label }: { path: string; label: string }) {
   return (
     <button
@@ -50,7 +52,9 @@ function NotificationLinkPill({ path, label }: { path: string; label: string }) 
 }
 
 export default function NotificationBody({ body }: { body: string }) {
-  const segments = parseBubbleSegments(body);
+  const segments = parseBubbleSegments(body).filter(
+    seg => seg.kind !== 'link' || !HIDDEN_LINK_PATHS.has(seg.path)
+  );
   return (
     <>
       {segments.map((seg, i) =>

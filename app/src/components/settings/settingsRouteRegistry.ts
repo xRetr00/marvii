@@ -160,6 +160,15 @@ export const SETTINGS_ROUTE_REGISTRY: SettingsRegistryEntry[] = [
     navOrder: 0,
   },
   {
+    id: 'account',
+    titleKey: 'settings.account.profile',
+    descriptionKey: 'settings.account.profileDesc',
+    section: 'home',
+    searchKeywords: ['profile', 'local account', 'identity', 'name', 'avatar'],
+    navGroup: 'general',
+    navOrder: 1,
+  },
+  {
     // devices: real pairing panel (the old "Coming Soon" stub was removed).
     id: 'devices',
     titleKey: 'settings.account.devices',

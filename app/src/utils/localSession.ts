@@ -3,8 +3,8 @@ export const LOCAL_SESSION_USER_ID = 'local';
 export const LOCAL_SESSION_USER = {
   _id: LOCAL_SESSION_USER_ID,
   id: LOCAL_SESSION_USER_ID,
-  name: 'Local User',
-  email: 'local@openhuman.local',
+  name: 'Marvi Local',
+  email: 'local@marvi.local',
 };
 
 function base64UrlEncode(value: object): string {

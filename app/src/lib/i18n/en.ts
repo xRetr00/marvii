@@ -95,7 +95,7 @@ const en: TranslationMap = {
   'settings.advanced': 'Advanced',
   'settings.dangerZone': 'Danger Zone',
   'settings.account': 'Account',
-  'settings.accountDesc': 'Recovery phrase, team, connections, and privacy',
+  'settings.accountDesc': 'Local profile and privacy',
 
   // Settings layman groups (Phase 4 IA revamp)
   'settings.groups.account': 'Account',
@@ -198,7 +198,7 @@ const en: TranslationMap = {
 
   // Settings: Account — IA revamp group items (SettingsHome.tsx)
   'settings.account.profile': 'Profile',
-  'settings.account.profileDesc': 'Name, email, and avatar',
+  'settings.account.profileDesc': 'Local name, avatar, and profile details',
   'settings.account.devices': 'Devices',
   'settings.account.devicesDesc': 'Pair and manage mobile devices',
   'settings.account.teamMembers': 'Team & members',
@@ -1233,16 +1233,16 @@ const en: TranslationMap = {
   'privacy.sentTo': 'Sent to',
   'privacy.leavesDevice': 'Leaves device',
   'privacy.staysLocal': 'Stays local',
-  'privacy.anonymizedAnalytics': 'Product Analytics',
-  'privacy.shareAnonymizedData': 'Share Product Analytics and Diagnostics',
+  'privacy.anonymizedAnalytics': 'Local Diagnostics',
+  'privacy.shareAnonymizedData': 'Keep Diagnostics Local',
   'privacy.shareAnonymizedDataDesc':
-    'Help improve Marvi by sharing privacy-limited crash reports and usage events, including a stable account ID and app version metadata. Messages, wallet keys, API keys, and session tokens are never collected.',
+    'Marvi stores diagnostics locally on this device. Usage events, crash reports, wallet keys, API keys, session tokens, and message contents are not sent to the old hosted backend.',
   'privacy.meetingFollowUps': 'Meeting follow-ups',
   'privacy.autoHandoffMeet': 'Auto-handoff Google Meet transcripts to the orchestrator',
   'privacy.autoHandoffMeetDesc':
     "When a Google Meet call ends, Marvi's orchestrator can read the transcript and may take actions like drafting messages, scheduling follow-ups, or posting summaries to your connected Slack workspace. Off by default.",
   'privacy.analyticsDisclaimer':
-    'When enabled, Product Analytics and Diagnostics may include privacy-limited crash reports and usage events, a stable account ID, and app version metadata. Messages, wallet keys, API keys, and session tokens are never collected. You can change this setting at any time.',
+    'Marvi keeps diagnostics local on this device. Messages, wallet keys, API keys, session tokens, usage events, and crash reports are not sent to the old hosted backend.',
 
   // Settings: About
   'settings.about.version': 'Version',
@@ -3091,15 +3091,15 @@ const en: TranslationMap = {
     'Credit offers can vary by promotion and account eligibility.',
   'app.openhumanLink.defaultBody':
     "Not ready in the popup yet. Open the full settings page when you're done.",
-  'app.openhumanLink.discord.intro': 'Join the Marvi community on Discord.',
-  'app.openhumanLink.discord.openInvite': 'Open invite link',
-  'app.openhumanLink.discord.perk1': 'Early access to new features',
-  'app.openhumanLink.discord.perk2': 'Connect with other Marvi users',
-  'app.openhumanLink.discord.perk3': 'Share feedback directly with the team',
-  'app.openhumanLink.discord.perk4': 'Community help and support',
+  'app.openhumanLink.discord.intro': 'This community link is unavailable in the local-only build.',
+  'app.openhumanLink.discord.openInvite': 'Unavailable',
+  'app.openhumanLink.discord.perk1': 'Local-only build',
+  'app.openhumanLink.discord.perk2': 'No hosted community redirect',
+  'app.openhumanLink.discord.perk3': 'No old backend dependency',
+  'app.openhumanLink.discord.perk4': 'No external invite action',
   'app.openhumanLink.discordReport.intro':
-    'Sorry — something broke on our end. We try to log these automatically, but sharing the details on Discord helps us fix it faster.',
-  'app.openhumanLink.discordReport.openDiscord': 'Open Discord',
+    'Sorry - something broke. Marvi keeps the error local; check the Event log for details.',
+  'app.openhumanLink.discordReport.openDiscord': 'Unavailable',
   'app.openhumanLink.done': 'Done',
   'app.openhumanLink.loadingChannelSetup': 'Loading channel setup',
   'app.openhumanLink.maybeLater': 'Maybe later',
@@ -3745,8 +3745,7 @@ const en: TranslationMap = {
   'pages.settings.account.recoveryPhraseDesc': 'View and back up your account recovery phrase',
   'pages.settings.account.team': 'Team',
   'pages.settings.account.teamDesc': 'Manage team members and permissions',
-  'pages.settings.accountSection.description':
-    'Recovery phrase, team, connections, and privacy settings.',
+  'pages.settings.accountSection.description': 'Local profile, privacy, and device settings.',
   'pages.settings.accountSection.title': 'Account',
   'pages.settings.ai.llm': 'LLM',
   'pages.settings.ai.llmDesc': 'Language model provider and routing',
@@ -4723,7 +4722,7 @@ const en: TranslationMap = {
   'settings.mcpServer.copied': 'Copied!',
   'settings.mcpServer.openConfigFile': 'Open Config File',
   'settings.mcpServer.binaryPathNotFound':
-    'Marvi binary not found. If running from source, build with: build the Marvi core binary',
+    'Marvi binary not found. If running from source, build the Marvi core binary first.',
   'settings.mcpServer.openConfigError': 'Failed to open config file',
   'settings.mcpServer.clientClaudeDesktop': 'Claude Desktop',
   'settings.mcpServer.clientCursor': 'Cursor',
@@ -5045,7 +5044,7 @@ const en: TranslationMap = {
   'settings.desktopAgent.title': 'Desktop Agent',
   'settings.desktopAgent.beta':
     'Beta — the desktop agent is experimental and may not always work as expected.',
-  'settings.desktopAgent.wakeWordHint': 'Say “Hey Tiny” before your command to wake the agent.',
+  'settings.desktopAgent.wakeWordHint': 'Say “Hey Marvi” before your command to wake the agent.',
   'settings.desktopAgent.description': 'Check and grant the permissions the desktop agent needs.',
   'settings.desktopAgent.microphone': 'Microphone',
   'settings.desktopAgent.grant': 'Grant',

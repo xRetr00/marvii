@@ -5,6 +5,7 @@ import WorkflowsTab from '../components/intelligence/WorkflowsTab';
 import SettingsIndexRedirect from '../components/settings/layout/SettingsIndexRedirect';
 import SettingsLayout from '../components/settings/layout/SettingsLayout';
 import AboutPanel from '../components/settings/panels/AboutPanel';
+import AccountPanel from '../components/settings/panels/AccountPanel';
 import AgentAccessPanel from '../components/settings/panels/AgentAccessPanel';
 import AgentActivityPanel from '../components/settings/panels/AgentActivityPanel';
 import AgentBoxPanel from '../components/settings/panels/AgentBoxPanel';
@@ -78,7 +79,7 @@ const Settings = () => {
           <Route index element={<SettingsIndexRedirect />} />
 
           {/* ── General ─────────────────────────────────────────────── */}
-          <Route path="account" element={<Navigate to="/settings/appearance" replace />} />
+          <Route path="account" element={wrapSettingsPage(<AccountPanel />)} />
           <Route path="team" element={<Navigate to="/settings/appearance" replace />} />
           <Route
             path="team/manage/:teamId"

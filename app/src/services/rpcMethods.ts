@@ -59,6 +59,8 @@ export const CORE_RPC_METHODS = {
   embeddingsTestConnection: 'openhuman.embeddings_test_connection',
   mcpClientsInstalledList: 'openhuman.mcp_clients_installed_list',
   mcpClientsToolCall: 'openhuman.mcp_clients_tool_call',
+  agentboxStatus: 'openhuman.agentbox_status',
+  toolRegistryDiagnostics: 'openhuman.tool_registry_diagnostics',
   healthSnapshot: 'openhuman.health_snapshot',
   healthSystemInfo: 'openhuman.health_system_info',
 } as const;
@@ -73,6 +75,8 @@ export const LEGACY_METHOD_ALIASES: Record<string, CoreRpcMethod> = {
   'openhuman.mcp_list': CORE_RPC_METHODS.mcpClientsInstalledList,
   'openhuman.mcp_servers_list': CORE_RPC_METHODS.mcpClientsInstalledList,
   'openhuman.tool_registry_call': CORE_RPC_METHODS.mcpClientsToolCall,
+  'agentbox.status': CORE_RPC_METHODS.agentboxStatus,
+  'tool_registry.diagnostics': CORE_RPC_METHODS.toolRegistryDiagnostics,
   'openhuman.get_analytics_settings': CORE_RPC_METHODS.configGetAnalyticsSettings,
   'openhuman.get_composio_trigger_settings': CORE_RPC_METHODS.configGetComposioTriggerSettings,
   'openhuman.get_dashboard_settings': CORE_RPC_METHODS.configGetDashboardSettings,

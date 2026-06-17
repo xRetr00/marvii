@@ -89,13 +89,26 @@ function renderPage(items: NotificationItem[]) {
 describe('Notifications page row wrapper', () => {
   it('renders <openhuman-link> body via the shared NotificationBody', () => {
     renderPage([
-      makeItem('n-1', '<openhuman-link path="community/discord">Discord</openhuman-link>'),
+      makeItem(
+        'n-1',
+        '<openhuman-link path="settings/notifications">Notifications</openhuman-link>'
+      ),
     ]);
 
     const bodyEl = screen.getByTestId('notification-item-body');
     // Pill rendered (so the body uses the shared component), raw tag absent.
-    expect(within(bodyEl).getByRole('button', { name: /Discord/i })).toBeInTheDocument();
+    expect(within(bodyEl).getByRole('button', { name: /Notifications/i })).toBeInTheDocument();
     expect(bodyEl.textContent ?? '').not.toContain('<openhuman-link');
+  });
+
+  it('hides old Discord community links in notification bodies', () => {
+    renderPage([
+      makeItem('n-1', '<openhuman-link path="community/discord">Discord</openhuman-link>'),
+    ]);
+
+    const bodyEl = screen.getByTestId('notification-item-body');
+    expect(bodyEl).not.toHaveTextContent(/Discord/);
+    expect(within(bodyEl).queryByRole('button', { name: /Discord/i })).toBeNull();
   });
 
   it('activates a row via Enter and Space keys', () => {
@@ -128,11 +141,14 @@ describe('Notifications page row wrapper', () => {
   // the row. CodeRabbit catch on PR #2339.
   it('does NOT activate a row when keydown bubbles from the inner pill', () => {
     const { store } = renderPage([
-      makeItem('n-1', '<openhuman-link path="community/discord">Discord</openhuman-link>'),
+      makeItem(
+        'n-1',
+        '<openhuman-link path="settings/notifications">Notifications</openhuman-link>'
+      ),
     ]);
 
     const bodyEl = screen.getByTestId('notification-item-body');
-    const pill = within(bodyEl).getByRole('button', { name: /Discord/i });
+    const pill = within(bodyEl).getByRole('button', { name: /Notifications/i });
     fireEvent.keyDown(pill, { key: 'Enter' });
     fireEvent.keyDown(pill, { key: ' ' });
     expect(navigate).not.toHaveBeenCalled();

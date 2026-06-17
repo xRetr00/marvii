@@ -4133,7 +4133,7 @@ const messages: TranslationMap = {
   'settings.mcpServer.copied': 'কপি করা হয়েছে!',
   'settings.mcpServer.openConfigFile': 'কনফিগ ফাইল খুলুন',
   'settings.mcpServer.binaryPathNotFound':
-    'Marvi বাইনারি পাওয়া যায়নি। উৎস থেকে চললে, এর সাথে তৈরি করুন: build the Marvi core binary',
+    'Marvi binary not found. If running from source, build the Marvi core binary first.',
   'settings.mcpServer.openConfigError': 'কনফিগার ফাইল খুলতে ব্যর্থ',
   'settings.mcpServer.clientClaudeDesktop': 'Claude Desktop',
   'settings.mcpServer.clientCursor': 'কার্সার',

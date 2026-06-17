@@ -111,6 +111,18 @@ describe('rpcMethods catalog', () => {
     });
   });
 
+  describe('local diagnostics alias resolution', () => {
+    test('agentbox.status resolves to the registered core method', () => {
+      expect(normalizeRpcMethod('agentbox.status')).toBe(CORE_RPC_METHODS.agentboxStatus);
+    });
+
+    test('tool_registry.diagnostics resolves to the registered core method', () => {
+      expect(normalizeRpcMethod('tool_registry.diagnostics')).toBe(
+        CORE_RPC_METHODS.toolRegistryDiagnostics
+      );
+    });
+  });
+
   test('catalog canonical methods exist in core schema registry (drift guard)', () => {
     const schemaSources = [
       fs.readFileSync(
@@ -142,6 +154,14 @@ describe('rpcMethods catalog', () => {
         'utf8'
       ),
       fs.readFileSync(
+        path.resolve(__dirname, '../../../../src/openhuman/agentbox/schemas.rs'),
+        'utf8'
+      ),
+      fs.readFileSync(
+        path.resolve(__dirname, '../../../../src/openhuman/tool_registry/schemas.rs'),
+        'utf8'
+      ),
+      fs.readFileSync(
         path.resolve(__dirname, '../../../../src/openhuman/health/schemas.rs'),
         'utf8'
       ),
@@ -161,9 +181,13 @@ describe('rpcMethods catalog', () => {
               ? 'providers'
               : methodRoot.startsWith('mcp_clients_')
                 ? 'mcp_clients'
-                : methodRoot.startsWith('health_')
-                  ? 'health'
-                  : 'config';
+                : methodRoot.startsWith('agentbox_')
+                  ? 'agentbox'
+                  : methodRoot.startsWith('tool_registry_')
+                    ? 'tool_registry'
+                    : methodRoot.startsWith('health_')
+                      ? 'health'
+                      : 'config';
       const fnName = methodRoot.slice(`${namespace}_`.length);
       expect(schemaSources).toContain(`namespace: "${namespace}"`);
       expect(schemaSources).toContain(`function: "${fnName}"`);

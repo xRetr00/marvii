@@ -27,4 +27,26 @@ describe('Marvi local-only guard', () => {
     expect(source).not.toContain('Billing');
     expect(source).not.toContain('Rewards');
   });
+
+  test('desktop routes do not import hosted rewards or invites pages', () => {
+    const source = readRepoFile('src/AppRoutes.tsx');
+
+    expect(source).not.toContain("from './pages/Rewards'");
+    expect(source).not.toContain("from './pages/Invites'");
+    expect(source).toContain(
+      'path="/rewards" element={<Navigate to="/settings/account" replace />}'
+    );
+    expect(source).toContain(
+      'path="/invites" element={<Navigate to="/settings/account" replace />}'
+    );
+  });
+
+  test('outbound telemetry stays disabled and old Discord community links stay blocked', () => {
+    const analytics = readRepoFile('src/services/analytics.ts');
+    const linkModal = readRepoFile('src/components/OpenhumanLinkModal.tsx');
+
+    expect(analytics).toContain('const MARVI_OUTBOUND_TELEMETRY_ENABLED = false');
+    expect(linkModal).not.toContain("'community/discord'");
+    expect(linkModal).not.toContain("'community/discord-report'");
+  });
 });

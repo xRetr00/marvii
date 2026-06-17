@@ -4211,7 +4211,7 @@ const messages: TranslationMap = {
   'settings.mcpServer.copied': '¡Copiado!',
   'settings.mcpServer.openConfigFile': 'Abrir archivo de configuración',
   'settings.mcpServer.binaryPathNotFound':
-    'Marvi binario no encontrado. Si se ejecuta desde el código fuente, compila con: build the Marvi core binary',
+    'Marvi binary not found. If running from source, build the Marvi core binary first.',
   'settings.mcpServer.openConfigError': 'No se pudo abrir el archivo de configuración',
   'settings.mcpServer.clientClaudeDesktop': 'Escritorio Claude',
   'settings.mcpServer.clientCursor': 'Cursor',

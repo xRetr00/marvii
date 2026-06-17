@@ -244,6 +244,16 @@ describe('WebhooksDebugPanel — rendering & interaction (uncovered lines)', () 
     expect(screen.getByText('http://mock-backend/webhook/uuid-abc-123')).toBeInTheDocument();
   });
 
+  it('accepts flat local-core webhook debug responses', async () => {
+    mockListRegs.mockResolvedValue({ registrations: [makeReg()] });
+    mockListLogs.mockResolvedValue({ logs: [makeLog()] });
+    const { default: WebhooksDebugPanel } = await import('../WebhooksDebugPanel');
+    render(<WebhooksDebugPanel />);
+
+    await waitFor(() => expect(screen.getByText('My Webhook')).toBeInTheDocument());
+    expect(screen.getAllByText('POST /hook/alpha').length).toBeGreaterThanOrEqual(1);
+  });
+
   it('uses tunnel_uuid when tunnel_name is empty (line 231)', async () => {
     mockListRegs.mockResolvedValue({
       result: {

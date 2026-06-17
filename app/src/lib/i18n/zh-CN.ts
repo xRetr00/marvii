@@ -3928,7 +3928,7 @@ const messages: TranslationMap = {
   'settings.mcpServer.copied': '已复制！',
   'settings.mcpServer.openConfigFile': '打开配置文件',
   'settings.mcpServer.binaryPathNotFound':
-    '未找到 Marvi 二进制文件。如果使用源码运行，请执行：build the Marvi core binary',
+    'Marvi binary not found. If running from source, build the Marvi core binary first.',
   'settings.mcpServer.openConfigError': '打开配置文件失败',
   'settings.mcpServer.clientClaudeDesktop': '克劳德桌面',
   'settings.mcpServer.clientCursor': '光标',

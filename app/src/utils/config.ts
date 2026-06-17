@@ -98,18 +98,18 @@ export const CHAT_ATTACHMENTS_ENABLED = import.meta.env.VITE_CHAT_ATTACHMENTS ==
 
 export const SKILLS_GITHUB_REPO = import.meta.env.VITE_SKILLS_GITHUB_REPO || '';
 
-/** Google Analytics 4 Measurement ID. Leave blank to disable GA. */
+/** Legacy Google Analytics 4 Measurement ID. Marvi desktop keeps outbound telemetry disabled. */
 export const GA_MEASUREMENT_ID = import.meta.env.VITE_GA_MEASUREMENT_ID as string | undefined;
 
 /** When true, allow GA in dev builds (for local debugging). Set `VITE_GA_FORCE_DEV=true` in `.env.local`. */
 export const GA_FORCE_DEV = import.meta.env.VITE_GA_FORCE_DEV === 'true';
 
-/** OpenPanel project client id. Leave blank to disable OpenPanel analytics. */
+/** Legacy OpenPanel project client id. Marvi desktop keeps outbound telemetry disabled. */
 export const OPENPANEL_CLIENT_ID = (
   (import.meta.env.VITE_OPENPANEL_CLIENT_ID as string | undefined) ?? ''
 ).trim();
 
-/** OpenPanel API base URL. */
+/** Legacy OpenPanel API base URL. */
 export const OPENPANEL_API_URL = (
   (import.meta.env.VITE_OPENPANEL_API_URL as string | undefined) ?? ''
 ).trim();

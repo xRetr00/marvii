@@ -22,8 +22,8 @@ export const WHAT_LEAVES_ITEMS: PrivacyLeaveItem[] = [
   },
   {
     id: 'sentry',
-    title: 'Crash Reports & Usage Data (opt-out)',
-    body: 'Anonymous crash reports (via Sentry) and anonymous usage analytics — page views and feature engagement (via Google Analytics) — help us fix bugs and improve the product. No personal data, messages, or credentials are ever included. Toggle anytime in Settings → Privacy & Security.',
+    title: 'Product analytics and telemetry',
+    body: 'Marvi does not send product analytics, page views, interaction telemetry, or crash reports to the old hosted backend. Local logs stay on this device unless you choose to share them.',
   },
 ];
 

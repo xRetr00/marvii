@@ -4147,7 +4147,7 @@ const messages: TranslationMap = {
   'settings.mcpServer.copied': 'Tersalin!',
   'settings.mcpServer.openConfigFile': 'Buka File Konfigurasi',
   'settings.mcpServer.binaryPathNotFound':
-    'Binary Marvi tidak ditemukan. Jika menjalankan dari source, build dengan: build the Marvi core binary',
+    'Marvi binary not found. If running from source, build the Marvi core binary first.',
   'settings.mcpServer.openConfigError': 'Gagal membuka file konfigurasi',
   'settings.mcpServer.clientClaudeDesktop': 'Claude Desktop',
   'settings.mcpServer.clientCursor': 'Kursor',

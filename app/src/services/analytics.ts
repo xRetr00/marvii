@@ -1,8 +1,11 @@
 /**
  * Analytics & Sentry service
  *
- * Initializes Sentry for error reporting and OpenPanel for privacy-limited
- * usage tracking. Both are gated on user analytics consent.
+ * Legacy analytics adapter.
+ *
+ * Marvi desktop currently keeps outbound product telemetry disabled. The
+ * public functions below are retained so existing callers do not break, but
+ * they return before initializing hosted analytics vendors.
  *
  * Sentry privacy guarantees enforced in `beforeSend`:
  *   - No breadcrumbs, requests, extras, or arbitrary contexts (only OS /
@@ -37,7 +40,7 @@ import {
 import { CoreRpcError } from './coreRpcClient';
 
 // ---------------------------------------------------------------------------
-// Google Analytics 4 typings — raw gtag.js API
+// Legacy Google Analytics 4 typings — raw gtag.js API
 // ---------------------------------------------------------------------------
 
 type GtagCommand = 'config' | 'event' | 'set' | 'js';
@@ -67,6 +70,7 @@ let gaInitialized = false;
 let opInitialized = false;
 let analyticsConsentSynced = false;
 let uiInteractionTrackingStarted = false;
+const MARVI_OUTBOUND_TELEMETRY_ENABLED = false;
 
 type AnalyticsParams = Record<string, string | number | boolean>;
 
@@ -85,7 +89,7 @@ const pendingAnalyticsEvents: PendingAnalyticsEvent[] = [];
 let analyticsEnabled = false;
 
 /**
- * Allowlist of event names that may be sent to OpenPanel.
+ * Legacy allowlist of event names from the upstream telemetry adapter.
  *
  * Keeping an explicit allowlist prevents accidentally forwarding internal
  * debug names or future ad-hoc calls that could carry sensitive information.
@@ -129,6 +133,7 @@ function isCoreRpcTimeoutError(err: unknown): boolean {
 }
 
 export function initSentry(): void {
+  if (!MARVI_OUTBOUND_TELEMETRY_ENABLED) return;
   if (!SENTRY_DSN) return;
 
   Sentry.init({
@@ -261,6 +266,13 @@ export function initSentry(): void {
  * `trackEvent` respect the new consent state without reinitializing GA.
  */
 export function syncAnalyticsConsent(enabled: boolean): void {
+  if (!MARVI_OUTBOUND_TELEMETRY_ENABLED) {
+    analyticsEnabled = false;
+    analyticsConsentSynced = true;
+    pendingAnalyticsEvents.length = 0;
+    void enabled;
+    return;
+  }
   const client = Sentry.getClient();
   if (client && !enabled) {
     void Sentry.flush(2000);
@@ -280,7 +292,7 @@ export function syncAnalyticsConsent(enabled: boolean): void {
 }
 
 // ---------------------------------------------------------------------------
-// Analytics — public API (GA4 + OpenPanel, both fire on every call)
+// Analytics — public API retained as local-only no-ops
 // ---------------------------------------------------------------------------
 
 function initGoogleAnalytics(): void {
@@ -323,10 +335,11 @@ function initializeAnalyticsProviders(): void {
 }
 
 /**
- * Initialize all analytics providers (GA4 + OpenPanel).
+ * Initialize analytics providers.
  * Idempotent — each provider initializes at most once.
  */
 export function initGA(): void {
+  if (!MARVI_OUTBOUND_TELEMETRY_ENABLED) return;
   analyticsEnabled = isAnalyticsEnabled();
   if (analyticsEnabled) {
     initializeAnalyticsProviders();
@@ -338,6 +351,10 @@ export function initGA(): void {
  * Send a privacy-limited page view to all initialized providers.
  */
 export function trackPageView(path: string): void {
+  if (!MARVI_OUTBOUND_TELEMETRY_ENABLED) {
+    void path;
+    return;
+  }
   const pagePath = normalizeAnalyticsPagePath(path);
   if (!analyticsEnabled) {
     queuePendingAnalyticsEvent({
@@ -369,6 +386,11 @@ export function trackPageView(path: string): void {
  * are dropped and a console warning is emitted.
  */
 export function trackEvent(eventName: string, params?: AnalyticsParams): void {
+  if (!MARVI_OUTBOUND_TELEMETRY_ENABLED) {
+    void eventName;
+    void params;
+    return;
+  }
   if (!ALLOWED_EVENTS.has(eventName)) {
     console.warn(
       `[analytics] trackEvent dropped — '${eventName}' is not in ALLOWED_EVENTS allowlist`
@@ -393,6 +415,7 @@ export function trackEvent(eventName: string, params?: AnalyticsParams): void {
 }
 
 export function startUiInteractionTracking(): () => void {
+  if (!MARVI_OUTBOUND_TELEMETRY_ENABLED) return () => undefined;
   if (uiInteractionTrackingStarted || typeof document === 'undefined') return () => undefined;
   uiInteractionTrackingStarted = true;
 
@@ -665,6 +688,7 @@ function currentDocumentReferrer(): string {
  * Sentry is disabled in this build).
  */
 export async function triggerSentryTestEvent(): Promise<string | undefined> {
+  if (!MARVI_OUTBOUND_TELEMETRY_ENABLED) return undefined;
   // Fail-fast outside staging. The UI button is only rendered when
   // `APP_ENVIRONMENT === 'staging'`, but this guard exists as defense in
   // depth so a programmatic caller (a stray import, a future refactor)

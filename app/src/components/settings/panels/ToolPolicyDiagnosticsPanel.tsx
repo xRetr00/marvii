@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { useT } from '../../../lib/i18n/I18nContext';
 import { callCoreRpc } from '../../../services/coreRpcClient';
+import { CORE_RPC_METHODS } from '../../../services/rpcMethods';
 import PanelPage from '../../layout/PanelPage';
 import SettingsBackButton from '../components/SettingsBackButton';
 import { SettingsStatusLine } from '../controls';
@@ -59,7 +60,7 @@ const ToolPolicyDiagnosticsPanel = () => {
     (async () => {
       try {
         const diagnostics = await callCoreRpc<ToolPolicyDiagnostics>({
-          method: 'tool_registry.diagnostics',
+          method: CORE_RPC_METHODS.toolRegistryDiagnostics,
           params: {},
           timeoutMs: 10_000,
         });

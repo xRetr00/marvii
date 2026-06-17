@@ -51,8 +51,7 @@ function kindLabel(kind: PrivacyDataKind, t: (key: string) => string): string {
 
 const PrivacyPanel = () => {
   const { navigateBack } = useSettingsNavigation();
-  const { snapshot, setAnalyticsEnabled, setMeetAutoOrchestratorHandoff } = useCoreState();
-  const analyticsEnabled = snapshot.analyticsEnabled;
+  const { snapshot, setMeetAutoOrchestratorHandoff } = useCoreState();
   const meetAutoHandoff = snapshot.meetAutoOrchestratorHandoff;
   const { t } = useT();
 
@@ -81,15 +80,6 @@ const PrivacyPanel = () => {
       cancelled = true;
     };
   }, []);
-
-  const handleToggleAnalytics = async () => {
-    const newValue = !analyticsEnabled;
-    try {
-      await setAnalyticsEnabled(newValue);
-    } catch (error) {
-      console.warn('[privacy] failed to persist analytics setting:', error);
-    }
-  };
 
   const handleToggleMeetAutoHandoff = async () => {
     const newValue = !meetAutoHandoff;
@@ -160,25 +150,6 @@ const PrivacyPanel = () => {
               ))}
             </ul>
           )}
-        </SettingsSection>
-
-        {/* Analytics Section */}
-        <SettingsSection title={t('privacy.anonymizedAnalytics')}>
-          <SettingsRow
-            htmlFor="switch-analytics"
-            label={t('privacy.shareAnonymizedData')}
-            description={t('privacy.shareAnonymizedDataDesc')}
-            control={
-              <SettingsSwitch
-                id="switch-analytics"
-                checked={analyticsEnabled}
-                onCheckedChange={() => {
-                  void handleToggleAnalytics();
-                }}
-                data-testid="privacy-analytics-toggle"
-              />
-            }
-          />
         </SettingsSection>
 
         {/* Meeting Follow-ups Section (#1299) */}

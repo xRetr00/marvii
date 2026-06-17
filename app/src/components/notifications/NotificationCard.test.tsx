@@ -38,14 +38,15 @@ function renderCard(body: string) {
 
 describe('NotificationCard <openhuman-link> rendering', () => {
   it('renders an <openhuman-link> tag as a pill (no raw tag leaks)', () => {
-    const body = '<openhuman-link path="community/discord">Report on Discord</openhuman-link>';
+    const body =
+      '<openhuman-link path="settings/notifications">Open notification settings</openhuman-link>';
     renderCard(body);
 
     const bodyEl = screen.getByTestId('notification-card-body');
     // The pill is a <button> with the label as accessible name. The outer
     // notification card is also a <button> wrapping everything, so we scope
     // the query to the body element.
-    const pill = within(bodyEl).getByRole('button', { name: /Report on Discord/i });
+    const pill = within(bodyEl).getByRole('button', { name: /Open notification settings/i });
     expect(pill).toBeInTheDocument();
 
     // Critically: the raw tag text must NOT appear anywhere in the rendered DOM.
@@ -123,13 +124,26 @@ describe('NotificationCard <openhuman-link> rendering', () => {
   });
 
   it('renders mixed text + link segments in order', () => {
+    const body =
+      'Before <openhuman-link path="settings/notifications">Notifications</openhuman-link> after';
+    renderCard(body);
+
+    const bodyEl = screen.getByTestId('notification-card-body');
+    expect(bodyEl).toHaveTextContent(/Before/);
+    expect(bodyEl).toHaveTextContent(/after/);
+    expect(within(bodyEl).getByRole('button', { name: /Notifications/i })).toBeInTheDocument();
+    expect(bodyEl.textContent ?? '').not.toContain('<openhuman-link');
+  });
+
+  it('hides old Discord community links from backend-authored notification bodies', () => {
     const body = 'Before <openhuman-link path="community/discord">Discord</openhuman-link> after';
     renderCard(body);
 
     const bodyEl = screen.getByTestId('notification-card-body');
     expect(bodyEl).toHaveTextContent(/Before/);
     expect(bodyEl).toHaveTextContent(/after/);
-    expect(within(bodyEl).getByRole('button', { name: /Discord/i })).toBeInTheDocument();
+    expect(bodyEl).not.toHaveTextContent(/Discord/);
+    expect(within(bodyEl).queryByRole('button', { name: /Discord/i })).toBeNull();
     expect(bodyEl.textContent ?? '').not.toContain('<openhuman-link');
   });
 
@@ -163,11 +177,11 @@ describe('NotificationCard <openhuman-link> rendering', () => {
   // the keydown would bubble up and trigger `handleBodyClick` accidentally.
   it('does NOT activate the card when keydown bubbles from the inner pill', () => {
     const onMarkRead = vi.fn();
-    const body = '<openhuman-link path="community/discord">Discord</openhuman-link>';
+    const body = '<openhuman-link path="settings/notifications">Notifications</openhuman-link>';
     render(<NotificationCard notification={makeNotification(body)} onMarkRead={onMarkRead} />);
 
     const bodyEl = screen.getByTestId('notification-card-body');
-    const pill = within(bodyEl).getByRole('button', { name: /Discord/i });
+    const pill = within(bodyEl).getByRole('button', { name: /Notifications/i });
     fireEvent.keyDown(pill, { key: 'Enter' });
     fireEvent.keyDown(pill, { key: ' ' });
     expect(onMarkRead).not.toHaveBeenCalled();

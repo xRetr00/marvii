@@ -209,7 +209,7 @@ const OAuthProviderButton = ({
     browserOpenedRef.current = false;
 
     try {
-      // Fail-fast pre-flight: hitting `api.tinyhumans.ai/health` before opening
+      // Fail-fast pre-flight: check hosted availability before opening
       // the browser lets us catch Cloudflare 504s / DNS outages immediately
       // (issue #1985) instead of sending the user into a system browser that
       // lands on a gateway-error page with no path back into the app.

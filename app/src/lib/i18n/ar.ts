@@ -4050,7 +4050,7 @@ const messages: TranslationMap = {
   'settings.mcpServer.copied': 'تم النسخ!',
   'settings.mcpServer.openConfigFile': 'فتح ملف التكوين',
   'settings.mcpServer.binaryPathNotFound':
-    'Marvi لم يتم العثور على الثنائي. في حالة التشغيل من المصدر، قم بالإنشاء باستخدام: build the Marvi core binary',
+    'Marvi binary not found. If running from source, build the Marvi core binary first.',
   'settings.mcpServer.openConfigError': 'فشل في فتح ملف التكوين',
   'settings.mcpServer.clientClaudeDesktop': 'Claude Desktop',
   'settings.mcpServer.clientCursor': 'المؤشر',

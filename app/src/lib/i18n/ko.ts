@@ -4092,7 +4092,7 @@ const messages: TranslationMap = {
   'settings.mcpServer.copied': '복사되었습니다!',
   'settings.mcpServer.openConfigFile': '구성 파일 열기',
   'settings.mcpServer.binaryPathNotFound':
-    'Marvi 바이너리를 찾을 수 없습니다. 소스에서 실행하는 경우 다음을 사용하여 빌드하세요: build the Marvi core binary',
+    'Marvi binary not found. If running from source, build the Marvi core binary first.',
   'settings.mcpServer.openConfigError': '구성 파일을 열지 못했습니다.',
   'settings.mcpServer.clientClaudeDesktop': 'Claude Desktop',
   'settings.mcpServer.clientCursor': '커서',
