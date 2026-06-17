@@ -52,6 +52,10 @@ jobs:
         shell: bash
         run: pnpm install --frozen-lockfile
 
+      - name: Install vendored Tauri CLI
+        shell: bash
+        run: cargo install --locked --path app/src-tauri/vendor/tauri-cef/crates/tauri-cli
+
       - name: Build Windows Tauri bundle
         shell: bash
         working-directory: app
