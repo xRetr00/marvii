@@ -7,8 +7,8 @@
 # upstream-owned.
 set -euo pipefail
 
-: "${TAG:?TAG required (e.g. v0.57.42-marvi.1)}"
-: "${VERSION:?VERSION required (e.g. 0.57.42)}"
+: "${TAG:?TAG required (e.g. v0.57.43-marvi.1)}"
+: "${VERSION:?VERSION required (e.g. 0.57.43)}"
 : "${REPO:?REPO required (e.g. xRetr00/marvii)}"
 : "${GITHUB_TOKEN:?GITHUB_TOKEN required}"
 
