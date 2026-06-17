@@ -450,7 +450,7 @@ describe('Conversations — attachment feature', () => {
 
     // Advisory points users at the vision-capable managed tier.
     await waitFor(() => {
-      expect(screen.getByText(/OpenHuman Reasoning tier/i)).toBeInTheDocument();
+      expect(screen.getByText(/Marvi Reasoning tier/i)).toBeInTheDocument();
     });
     // The image is not attached, and the profile is left untouched.
     expect(screen.queryByText('no-vision.png')).not.toBeInTheDocument();

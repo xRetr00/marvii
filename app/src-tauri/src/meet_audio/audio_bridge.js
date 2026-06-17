@@ -1,4 +1,4 @@
-// OpenHuman audio bridge for the embedded Google Meet webview.
+// Marvi audio bridge for the embedded Google Meet webview.
 //
 // Installed via CDP `Page.addScriptToEvaluateOnNewDocument` from the
 // Tauri shell (`app/src-tauri/src/meet_audio/inject.rs`) so it runs at
@@ -32,11 +32,11 @@
 
 (function () {
   if (window.__openhumanAudioBridgeInstalled) {
-    console.log("[openhuman-audio-bridge] already installed; skipping");
+    console.log("[marvi-audio-bridge] already installed; skipping");
     return;
   }
   window.__openhumanAudioBridgeInstalled = true;
-  console.log("[openhuman-audio-bridge] install begin");
+  console.log("[marvi-audio-bridge] install begin");
 
   var SAMPLE_RATE = 16000;
   var ctx;
@@ -46,7 +46,7 @@
   function ensureContext() {
     if (ctx) {
       console.log(
-        "[openhuman-audio-bridge] reuse AudioContext state=" + ctx.state
+        "[marvi-audio-bridge] reuse AudioContext state=" + ctx.state
       );
       return ctx;
     }
@@ -60,7 +60,7 @@
       // back to the default (the bridge will resample implicitly via
       // each AudioBuffer's declared rate).
       console.warn(
-        "[openhuman-audio-bridge] AudioContext sampleRate hint rejected; falling back to default rate err=" +
+        "[marvi-audio-bridge] AudioContext sampleRate hint rejected; falling back to default rate err=" +
           e
       );
       ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -68,7 +68,7 @@
     dest = ctx.createMediaStreamDestination();
     nextStartTime = ctx.currentTime;
     console.log(
-      "[openhuman-audio-bridge] AudioContext created requested_rate=" +
+      "[marvi-audio-bridge] AudioContext created requested_rate=" +
         requestedRate +
         " actual_rate=" +
         ctx.sampleRate +
@@ -163,7 +163,7 @@
       window.__openhumanFeedCounter = (window.__openhumanFeedCounter || 0) + 1;
       if (window.__openhumanFeedCounter % 50 === 1) {
         console.log(
-          "[openhuman-audio-bridge] feed sampled chunk_dur=" +
+          "[marvi-audio-bridge] feed sampled chunk_dur=" +
             buffer.duration.toFixed(3) +
             "s queue_ahead=" +
             (nextStartTime - ctx.currentTime).toFixed(3) +
@@ -173,7 +173,7 @@
       }
       return buffer.duration;
     } catch (e) {
-      console.warn("[openhuman-audio-bridge] feed failed:", e);
+      console.warn("[marvi-audio-bridge] feed failed:", e);
       return 0;
     }
   };
@@ -198,7 +198,7 @@
     typeof navigator.mediaDevices.getUserMedia !== "function"
   ) {
     console.warn(
-      "[openhuman-audio-bridge] navigator.mediaDevices.getUserMedia missing; interception disabled"
+      "[marvi-audio-bridge] navigator.mediaDevices.getUserMedia missing; interception disabled"
     );
     return;
   }
@@ -221,14 +221,14 @@
   navigator.mediaDevices.getUserMedia = function (constraints) {
     if (!constraints || !constraints.audio) {
       console.log(
-        "[openhuman-audio-bridge] getUserMedia passthrough (no audio)"
+        "[marvi-audio-bridge] getUserMedia passthrough (no audio)"
       );
       return origGum(constraints);
     }
 
     if (!constraints.video) {
       console.log(
-        "[openhuman-audio-bridge] getUserMedia intercepted audio-only"
+        "[marvi-audio-bridge] getUserMedia intercepted audio-only"
       );
       return Promise.resolve(freshAudioStream());
     }
@@ -236,7 +236,7 @@
     // (fake-camera-backed) getUserMedia and splice in fresh clones of
     // our audio tracks.
     console.log(
-      "[openhuman-audio-bridge] getUserMedia intercepted audio+video; splicing audio onto fake-camera stream"
+      "[marvi-audio-bridge] getUserMedia intercepted audio+video; splicing audio onto fake-camera stream"
     );
     return origGum({ video: constraints.video }).then(function (realStream) {
       try {
@@ -257,7 +257,7 @@
   // Best-effort: also patch the legacy `getUserMedia` aliases some
   // older Meet code paths still call into.
   if (typeof navigator.getUserMedia === "function") {
-    console.log("[openhuman-audio-bridge] patching legacy navigator.getUserMedia");
+    console.log("[marvi-audio-bridge] patching legacy navigator.getUserMedia");
     var origLegacy = navigator.getUserMedia.bind(navigator);
     navigator.getUserMedia = function (constraints, success, failure) {
       navigator.mediaDevices
@@ -269,5 +269,5 @@
         });
     };
   }
-  console.log("[openhuman-audio-bridge] install complete");
+  console.log("[marvi-audio-bridge] install complete");
 })();

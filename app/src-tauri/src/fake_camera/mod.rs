@@ -1,6 +1,6 @@
 //! Mascot-as-webcam pipeline.
 //!
-//! Once at app startup we rasterize the OpenHuman mascot SVG into a
+//! Once at app startup we rasterize the Marvi mascot SVG into a
 //! 640×480 RGBA bitmap, convert it to YUV420, and write a single-frame
 //! YUV4MPEG2 (Y4M) file to the per-user data directory. The file is
 //! cached across launches keyed by source-SVG hash so subsequent boots

@@ -357,7 +357,7 @@ const messages: TranslationMap = {
   'skills.channels': 'Pesan',
   'skills.explorer.emptyCta': 'Instal dari URL',
   'skills.explorer.emptyDescription':
-    'Instal paket SKILL.md atau letakkan folder bergaya Hermes di ~/.openhuman/skills.',
+    'Instal paket SKILL.md atau letakkan folder bergaya Hermes di the Marvi skills folder.',
   'skills.explorer.emptyTitle': 'Tidak ada skill ditemukan',
   'skills.explorer.installFromUrl': 'Instal dari URL',
   'skills.explorer.newSkill': 'Skill baru',
@@ -1438,7 +1438,7 @@ const messages: TranslationMap = {
   'settings.billing.movedToWeb': 'Tagihan dipindahkan ke web',
   'settings.billing.openDashboard': 'Buka dashboard tagihan',
   'settings.billing.movedToWebDesc':
-    'Perubahan langganan, metode pembayaran, kredit, dan invoice kini dikelola di web TinyHumans.',
+    'Perubahan langganan, metode pembayaran, kredit, dan invoice kini dikelola di web Marvi.',
   'settings.billing.backToSettings': 'Kembali ke pengaturan',
   'settings.billing.openingBrowser': 'Membuka browser Anda...',
   'settings.billing.browserNotOpen': 'Jika browser tidak terbuka, gunakan tombol di atas.',
@@ -2461,7 +2461,7 @@ const messages: TranslationMap = {
   'welcome.continueLocally': 'Lanjutkan secara lokal',
   'welcome.continueLocallyExperimental': 'Lanjutkan Secara Lokal (Eksperimental)',
   'welcome.localSessionStarting': 'Memulai sesi lokal...',
-  'welcome.localSessionDesc': 'Menggunakan profil lokal offline dan melewati TinyHumans OAuth.',
+  'welcome.localSessionDesc': 'Menggunakan profil lokal offline dan melewati Marvi OAuth.',
   'chat.agentChatDesc': 'Buka sesi chat langsung dengan agen.',
   'chat.modelPlaceholder': 'gpt-4o',
   'channels.activeRouteValue': '{channel} lewat {authMode}',
@@ -3335,7 +3335,7 @@ const messages: TranslationMap = {
   'settings.ai.claudeCode.fullAccessOff':
     'Hanya terima suntingan — menerapkan suntingan berkas secara otomatis, membatasi perintah & jaringan.',
   'settings.ai.claudeCode.sandboxNoteMac':
-    'Di macOS, ~/.openhuman tetap dilindungi oleh sandbox di kedua mode.',
+    'Di macOS, the local Marvi profile tetap dilindungi oleh sandbox di kedua mode.',
   'settings.ai.claudeCode.sandboxNoteOther':
     'Akses penuh tidak dibatasi di platform ini — aktifkan hanya jika Anda mempercayai ruang kerja.',
   'settings.ai.claudeCode.enableToCheck': 'Aktifkan Claude Code untuk memeriksa status masuk.',
@@ -4135,7 +4135,7 @@ const messages: TranslationMap = {
   'settings.mcpServer.title': 'Server MCP',
   'settings.mcpServer.toolsSectionTitle': 'Alat yang tersedia',
   'settings.mcpServer.toolsSectionDesc':
-    'Alat yang diekspos melalui server stdio MCP saat menjalankan openhuman-core mcp',
+    'Alat yang diekspos melalui server stdio MCP saat menjalankan Marvi core MCP',
   'settings.mcpServer.configSectionTitle': 'Konfigurasi Klien',
   'settings.mcpServer.configSectionDesc':
     'Pilih klien MCP Anda untuk membuat cuplikan konfigurasi yang tepat',
@@ -4143,7 +4143,7 @@ const messages: TranslationMap = {
   'settings.mcpServer.copied': 'Tersalin!',
   'settings.mcpServer.openConfigFile': 'Buka File Konfigurasi',
   'settings.mcpServer.binaryPathNotFound':
-    'Binary Marvi tidak ditemukan. Jika menjalankan dari source, build dengan: cargo build --bin openhuman-core',
+    'Binary Marvi tidak ditemukan. Jika menjalankan dari source, build dengan: build the Marvi core binary',
   'settings.mcpServer.openConfigError': 'Gagal membuka file konfigurasi',
   'settings.mcpServer.clientClaudeDesktop': 'Claude Desktop',
   'settings.mcpServer.clientCursor': 'Kursor',
@@ -4536,9 +4536,9 @@ const messages: TranslationMap = {
   'skills.create.name': 'Nama',
   'skills.create.namePlaceholder': 'mis. Jurnal Trading',
   'skills.create.scope': 'Cakupan',
-  'skills.create.scopeProjectHint': '/.openhuman/skills/',
+  'skills.create.scopeProjectHint': '/Marvi skills/',
   'skills.create.scopeUserHint':
-    'Ditulis ke ~/.openhuman/skills/<slug>/SKILL.md — tersedia di semua workspace.',
+    'Ditulis ke the Marvi skills folder — tersedia di semua workspace.',
   'skills.create.slugLabel': 'Label slug',
   'skills.create.subtitle': 'SKILL.md',
   'skills.create.tags': 'Tag',
@@ -4585,7 +4585,7 @@ const messages: TranslationMap = {
     'Hanya tautan `.md` langsung yang berfungsi. Untuk GitHub, tautan ke file (github.com/owner/repo/blob/.../SKILL.md) - akar pohon dan repo tidak diinstal.',
   'skills.install.errors.unsupportedUrlTitle': 'formulir URL tidak didukung',
   'skills.install.errors.writeFailedHint':
-    'Direktori keterampilan ruang kerja tidak dapat ditulis. Periksa izin sistem file untuk `<workspace>/.openhuman/skills/`.',
+    'Direktori keterampilan ruang kerja tidak dapat ditulis. Periksa izin sistem file untuk `the workspace Marvi skills folder`.',
   'skills.install.errors.writeFailedTitle': 'Tidak dapat menulis SKILL.md',
   'skills.install.fetchLog': 'Ambil log',
   'skills.install.fetchingPrefix': 'Mengambil',

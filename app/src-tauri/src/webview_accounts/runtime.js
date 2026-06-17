@@ -1,4 +1,4 @@
-// OpenHuman webview-accounts recipe runtime.
+// Marvi webview-accounts recipe runtime.
 // Injected via WebviewBuilder.initialization_script BEFORE page JS runs.
 // Exposes a small `window.__openhumanRecipe` API per-provider recipes use
 // to scrape the DOM and pipe state back to Rust.
@@ -104,7 +104,7 @@
   // the primary display (issue #713 AC2: "OS screen/window picker appears").
   //
   // The picker UI is injected DIRECTLY into the child webview's own DOM
-  // rather than rendered as a React modal in the main OpenHuman window.
+  // rather than rendered as a React modal in the main Marvi window.
   // Two reasons:
   //   (a) Works uniformly for every embedded provider — Meet, Slack
   //       Huddles, Discord, Zoom — without per-provider host-side glue.

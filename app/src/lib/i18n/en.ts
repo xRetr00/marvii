@@ -393,7 +393,7 @@ const en: TranslationMap = {
   'skills.channels': 'Messaging',
   'skills.explorer.emptyCta': 'Install from URL',
   'skills.explorer.emptyDescription':
-    'Install a SKILL.md package or place Hermes-style folders under ~/.openhuman/skills.',
+    'Install a SKILL.md package or place Hermes-style folders under the Marvi skills folder.',
   'skills.explorer.emptyTitle': 'No skills found',
   'skills.explorer.installFromUrl': 'Install from URL',
   'skills.explorer.newSkill': 'New skill',
@@ -870,7 +870,7 @@ const en: TranslationMap = {
   'rewards.referrals': 'Referrals',
   'rewards.coupons': 'Redeem',
   'rewards.localUnavailable':
-    'Local login does not earn rewards, coupons, or referral credit. To earn rewards, log out and continue by signing in with an Marvi account.',
+    'Local login does not earn rewards, coupons, or referral credit. To earn rewards, log out and continue by signing in with a Marvi account.',
   'rewards.localUnavailableCta': 'Open Account Settings',
   'rewards.credits': 'Credits',
   'rewards.referralCode': 'Your referral code',
@@ -1790,7 +1790,7 @@ const en: TranslationMap = {
   'settings.billing.movedToWeb': 'Billing moved to the web',
   'settings.billing.openDashboard': 'Open billing dashboard',
   'settings.billing.movedToWebDesc':
-    'Subscription changes, payment methods, credits, and invoices are now managed at TinyHumans on the web.',
+    'Subscription changes, payment methods, credits, and invoices are now managed at Marvi on the web.',
   'settings.billing.backToSettings': 'Back to settings',
   'settings.billing.openingBrowser': 'Opening your browser...',
   'settings.billing.browserNotOpen': 'If your browser did not open, use the button above.',
@@ -2962,7 +2962,7 @@ const en: TranslationMap = {
   'welcome.continueLocally': 'Continue locally',
   'welcome.continueLocallyExperimental': 'Continue Locally (Experimental)',
   'welcome.localSessionStarting': 'Starting local session...',
-  'welcome.localSessionDesc': 'Uses an offline local profile and skips TinyHumans OAuth.',
+  'welcome.localSessionDesc': 'Uses an offline local profile and skips Marvi OAuth.',
 
   // Chat: Agent chat panel description
   'chat.agentChatDesc': 'Open a direct chat session with the agent.',
@@ -3258,7 +3258,7 @@ const en: TranslationMap = {
   'iosPair.error.camera': 'Camera scan failed. Check camera permissions and try again.',
   'iosPair.error.connectionFailed':
     'Connection failed. Make sure the desktop app is running and try again.',
-  'iosPair.error.invalidQr': 'Invalid QR code. Make sure you are scanning an Marvi pairing code.',
+  'iosPair.error.invalidQr': 'Invalid QR code. Make sure you are scanning a Marvi pairing code.',
   'iosPair.error.unreachableDesktop':
     'Could not reach the desktop. Make sure both devices are online and try again.',
   'iosPair.expired': 'QR code expired. Ask the desktop to regenerate the code.',
@@ -3919,7 +3919,7 @@ const en: TranslationMap = {
   'settings.ai.claudeCode.fullAccessOff':
     'Accept edits only — auto-applies file edits, gates commands & network.',
   'settings.ai.claudeCode.sandboxNoteMac':
-    'On macOS, ~/.openhuman stays protected by the sandbox in either mode.',
+    'On macOS, the local Marvi profile stays protected by the sandbox in either mode.',
   'settings.ai.claudeCode.sandboxNoteOther':
     'Full access is unconfined on this platform — enable only if you trust the workspace.',
   'settings.ai.claudeCode.enableToCheck': 'Enable Claude Code to check sign-in.',
@@ -4711,7 +4711,7 @@ const en: TranslationMap = {
   'settings.mcpServer.title': 'MCP Server',
   'settings.mcpServer.toolsSectionTitle': 'Available Tools',
   'settings.mcpServer.toolsSectionDesc':
-    'Tools exposed via the MCP stdio server when running openhuman-core mcp',
+    'Tools exposed via the MCP stdio server when running Marvi core MCP',
   'settings.mcpServer.configSectionTitle': 'Client Configuration',
   'settings.mcpServer.configSectionDesc':
     'Select your MCP client to generate the correct configuration snippet',
@@ -4719,7 +4719,7 @@ const en: TranslationMap = {
   'settings.mcpServer.copied': 'Copied!',
   'settings.mcpServer.openConfigFile': 'Open Config File',
   'settings.mcpServer.binaryPathNotFound':
-    'Marvi binary not found. If running from source, build with: cargo build --bin openhuman-core',
+    'Marvi binary not found. If running from source, build with: build the Marvi core binary',
   'settings.mcpServer.openConfigError': 'Failed to open config file',
   'settings.mcpServer.clientClaudeDesktop': 'Claude Desktop',
   'settings.mcpServer.clientCursor': 'Cursor',
@@ -5117,9 +5117,9 @@ const en: TranslationMap = {
   'skills.create.name': 'Name',
   'skills.create.namePlaceholder': 'e.g. Trade Journal',
   'skills.create.scope': 'Scope',
-  'skills.create.scopeProjectHint': '/.openhuman/skills/',
+  'skills.create.scopeProjectHint': '/Marvi skills/',
   'skills.create.scopeUserHint':
-    'Written to ~/.openhuman/skills/<slug>/SKILL.md — available across all workspaces.',
+    'Written to the Marvi skills folder — available across all workspaces.',
   'skills.create.slugLabel': 'Slug',
   'skills.create.subtitle': 'SKILL.md',
   'skills.create.tags': 'Tags',
@@ -5169,7 +5169,7 @@ const en: TranslationMap = {
     'Only direct `.md` links work. For GitHub, link to a file (github.com/owner/repo/blob/.../SKILL.md) - tree and repo roots are not installed.',
   'skills.install.errors.unsupportedUrlTitle': 'URL form not supported',
   'skills.install.errors.writeFailedHint':
-    'The workspace skills directory was not writable. Check filesystem permissions for `<workspace>/.openhuman/skills/`.',
+    'The workspace skills directory was not writable. Check filesystem permissions for `the workspace Marvi skills folder`.',
   'skills.install.errors.writeFailedTitle': 'Could not write SKILL.md',
   'skills.install.fetchLog': 'Fetch log',
   'skills.install.fetchingPrefix': 'Fetching',

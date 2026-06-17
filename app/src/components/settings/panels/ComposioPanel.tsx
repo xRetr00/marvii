@@ -124,7 +124,7 @@ const ComposioPanel = ({ embedded = false, managedAuthEnabled }: ComposioPanelPr
   // Backend to Direct *with* a freshly-pasted key. We gate this exact
   // transition on a confirmation step because the consequences are not
   // obvious from the radio toggle alone — the user's previously-linked
-  // integrations (Gmail, Slack, GitHub, …) live in TinyHumans' Composio
+  // integrations (Gmail, Slack, GitHub, …) live in Marvi' Composio
   // tenant and will simply disappear from the integrations panel until
   // they re-link them through their personal app.composio.dev account.
   const isBackendToDirectTransition = (): boolean => {

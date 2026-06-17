@@ -38,14 +38,14 @@ describe('DiagramViewerTab', () => {
     renderWithProviders(<DiagramViewerTab />);
 
     const image = await screen.findByRole('img', {
-      name: 'Latest generated OpenHuman architecture diagram',
+      name: 'Latest generated Marvi architecture diagram',
     });
     expect(image).toHaveAttribute('src', expect.stringContaining('openhuman_refresh=0'));
 
     fireEvent.click(screen.getByRole('button', { name: 'Refresh diagram' }));
 
     expect(
-      screen.getByRole('img', { name: 'Latest generated OpenHuman architecture diagram' })
+      screen.getByRole('img', { name: 'Latest generated Marvi architecture diagram' })
     ).toHaveAttribute('src', expect.stringContaining('openhuman_refresh=1'));
   });
 
@@ -53,7 +53,7 @@ describe('DiagramViewerTab', () => {
     renderWithProviders(<DiagramViewerTab />);
 
     const image = await screen.findByRole('img', {
-      name: 'Latest generated OpenHuman architecture diagram',
+      name: 'Latest generated Marvi architecture diagram',
     });
     fireEvent.error(image);
 
@@ -67,7 +67,7 @@ describe('DiagramViewerTab', () => {
       )
     ).toBeInTheDocument();
     expect(
-      screen.queryByRole('img', { name: 'Latest generated OpenHuman architecture diagram' })
+      screen.queryByRole('img', { name: 'Latest generated Marvi architecture diagram' })
     ).not.toBeInTheDocument();
   });
 });

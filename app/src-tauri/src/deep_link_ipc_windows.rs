@@ -1,6 +1,6 @@
 //! Pre-CEF deep-link forwarding for Windows.
 //!
-//! `openhuman://` OAuth callbacks launch a second `OpenHuman.exe` with the
+//! `openhuman://` OAuth callbacks launch a second `Marvi.exe` with the
 //! URL in argv. The Windows pre-CEF mutex guard exits secondaries before Tauri's
 //! single-instance/deep-link plugins can run, so the URL must be forwarded here.
 

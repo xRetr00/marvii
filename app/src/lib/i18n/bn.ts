@@ -354,7 +354,7 @@ const messages: TranslationMap = {
   'skills.channels': 'মেসেজিং',
   'skills.explorer.emptyCta': 'URL থেকে ইনস্টল করুন',
   'skills.explorer.emptyDescription':
-    'একটি SKILL.md প্যাকেজ ইনস্টল করুন বা Hermes-ধাঁচের ফোল্ডার ~/.openhuman/skills-এ রাখুন।',
+    'একটি SKILL.md প্যাকেজ ইনস্টল করুন বা Hermes-ধাঁচের ফোল্ডার the Marvi skills folder-এ রাখুন।',
   'skills.explorer.emptyTitle': 'কোনো স্কিল পাওয়া যায়নি',
   'skills.explorer.installFromUrl': 'URL থেকে ইনস্টল করুন',
   'skills.explorer.newSkill': 'নতুন স্কিল',
@@ -3329,7 +3329,7 @@ const messages: TranslationMap = {
   'settings.ai.claudeCode.fullAccessOff':
     'শুধু সম্পাদনা গ্রহণ করুন — ফাইল সম্পাদনা স্বয়ংক্রিয়ভাবে প্রয়োগ করে, কমান্ড ও নেটওয়ার্ক নিয়ন্ত্রণ করে।',
   'settings.ai.claudeCode.sandboxNoteMac':
-    'macOS-এ, উভয় মোডেই ~/.openhuman স্যান্ডবক্স দ্বারা সুরক্ষিত থাকে।',
+    'macOS-এ, উভয় মোডেই the local Marvi profile স্যান্ডবক্স দ্বারা সুরক্ষিত থাকে।',
   'settings.ai.claudeCode.sandboxNoteOther':
     'এই প্ল্যাটফর্মে সম্পূর্ণ অ্যাক্সেস সীমাবদ্ধ নয় — ওয়ার্কস্পেসে আস্থা থাকলেই কেবল সক্রিয় করুন।',
   'settings.ai.claudeCode.enableToCheck': 'সাইন-ইন যাচাই করতে Claude Code সক্রিয় করুন।',
@@ -4121,7 +4121,7 @@ const messages: TranslationMap = {
   'settings.mcpServer.title':
     'MCP সার্ভারের সাথে সংযোগ করতে বহিরাগত __BR1__ ক্লায়েন্ট কনফিগার করুন',
   'settings.mcpServer.toolsSectionTitle': 'উপলভ্য টুল',
-  'settings.mcpServer.toolsSectionDesc': 'উপলভ্য টুলস stdio সার্ভার যখন openhuman-core mcp',
+  'settings.mcpServer.toolsSectionDesc': 'উপলভ্য টুলস stdio সার্ভার যখন Marvi core MCP',
   'settings.mcpServer.configSectionTitle': 'ক্লায়েন্ট কনফিগারেশন চালায়',
   'settings.mcpServer.configSectionDesc':
     'সঠিক কনফিগারেশন স্নিপেট তৈরি করতে আপনার MCP ক্লায়েন্ট নির্বাচন করুন',
@@ -4129,7 +4129,7 @@ const messages: TranslationMap = {
   'settings.mcpServer.copied': 'কপি করা হয়েছে!',
   'settings.mcpServer.openConfigFile': 'কনফিগ ফাইল খুলুন',
   'settings.mcpServer.binaryPathNotFound':
-    'Marvi বাইনারি পাওয়া যায়নি। উৎস থেকে চললে, এর সাথে তৈরি করুন: cargo build --bin openhuman-core',
+    'Marvi বাইনারি পাওয়া যায়নি। উৎস থেকে চললে, এর সাথে তৈরি করুন: build the Marvi core binary',
   'settings.mcpServer.openConfigError': 'কনফিগার ফাইল খুলতে ব্যর্থ',
   'settings.mcpServer.clientClaudeDesktop': 'Claude Desktop',
   'settings.mcpServer.clientCursor': 'কার্সার',
@@ -4521,9 +4521,8 @@ const messages: TranslationMap = {
   'skills.create.name': 'নাম',
   'skills.create.namePlaceholder': 'যেমন Trade Journal',
   'skills.create.scope': 'স্কোপ',
-  'skills.create.scopeProjectHint': '/.openhuman/skills/',
-  'skills.create.scopeUserHint':
-    '~/.openhuman/skills/<slug>/SKILL.md-এ লেখা — সব ওয়ার্কস্পেসে পাওয়া যায়।',
+  'skills.create.scopeProjectHint': '/Marvi skills/',
+  'skills.create.scopeUserHint': 'the Marvi skills folder-এ লেখা — সব ওয়ার্কস্পেসে পাওয়া যায়।',
   'skills.create.slugLabel': 'স্লাগ লেবেল',
   'skills.create.subtitle': 'SKILL.md',
   'skills.create.tags': 'ট্যাগ',
@@ -4570,7 +4569,7 @@ const messages: TranslationMap = {
     'শুধুমাত্র সরাসরি `.md` লিঙ্কগুলি কাজ করে৷ GitHub-এর জন্য, একটি ফাইলের সাথে লিঙ্ক করুন (github.com/owner/repo/blob/.../SKILL.md) - গাছ এবং রেপো রুট ইনস্টল করা নেই।',
   'skills.install.errors.unsupportedUrlTitle': 'URL ফর্ম সমর্থিত নয়',
   'skills.install.errors.writeFailedHint':
-    'ওয়ার্কস্পেস দক্ষতা ডিরেক্টরি লেখার যোগ্য ছিল না। `<workspace>/.openhuman/skills/`-এর জন্য ফাইল সিস্টেমের অনুমতি পরীক্ষা করুন।',
+    'ওয়ার্কস্পেস দক্ষতা ডিরেক্টরি লেখার যোগ্য ছিল না। `the workspace Marvi skills folder`-এর জন্য ফাইল সিস্টেমের অনুমতি পরীক্ষা করুন।',
   'skills.install.errors.writeFailedTitle': 'SKILL.md লেখা যায়নি',
   'skills.install.fetchLog': 'ফেচ লগ',
   'skills.install.fetchingPrefix': 'আনা হচ্ছে',

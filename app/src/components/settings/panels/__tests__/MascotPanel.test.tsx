@@ -82,7 +82,7 @@ describe('MascotPanel', () => {
 
   it('renders a radio swatch for each supported color', () => {
     renderPanel();
-    expect(screen.getByRole('radiogroup', { name: 'OpenHuman color' })).toBeInTheDocument();
+    expect(screen.getByRole('radiogroup', { name: 'Marvi color' })).toBeInTheDocument();
     for (const label of ['Yellow', 'Burgundy', 'Black', 'Navy', 'Custom']) {
       expect(screen.getByRole('radio', { name: label })).toBeInTheDocument();
     }
@@ -194,23 +194,19 @@ describe('MascotPanel — mascotSlice rehydrate guard', () => {
       renderPanel();
       expect(await screen.findByTestId('backend-mascot-yellow')).toBeInTheDocument();
       // Default-row (local) sentinel
-      expect(screen.getByText(/Local OpenHuman/)).toBeInTheDocument();
+      expect(screen.getByText(/Local Marvi/)).toBeInTheDocument();
     });
 
     it('shows a friendly empty state when the library is empty', async () => {
       fetchMascotListMock.mockResolvedValueOnce([]);
       renderPanel();
-      expect(
-        await screen.findByText(/No OpenHuman characters are available yet/i)
-      ).toBeInTheDocument();
+      expect(await screen.findByText(/No Marvi characters are available yet/i)).toBeInTheDocument();
     });
 
     it('shows an error when the library endpoint rejects', async () => {
       fetchMascotListMock.mockRejectedValueOnce(new Error('offline'));
       renderPanel();
-      expect(
-        await screen.findByText(/OpenHuman library unavailable: offline/i)
-      ).toBeInTheDocument();
+      expect(await screen.findByText(/Marvi library unavailable: offline/i)).toBeInTheDocument();
     });
 
     it('dispatches setSelectedMascotId when a backend mascot is picked', async () => {
@@ -238,7 +234,7 @@ describe('MascotPanel — mascotSlice rehydrate guard', () => {
       fetchMascotListMock.mockResolvedValueOnce([summary]);
       getCachedMascotDetailMock.mockResolvedValueOnce(detail);
       renderPanel(store);
-      const localRow = await screen.findByText(/Local OpenHuman/);
+      const localRow = await screen.findByText(/Local Marvi/);
       fireEvent.click(localRow);
       expect(store.getState().mascot.selectedMascotId).toBeNull();
     });

@@ -70,7 +70,7 @@ describe('ComposioPanel', () => {
     await waitFor(() => expect(screen.queryByText('Loading…')).toBeNull());
 
     const backendRadio = screen.getByLabelText(
-      'Managed (OpenHuman handles it for you)'
+      'Managed (Marvi handles it for you)'
     ) as HTMLInputElement;
     const directRadio = screen.getByLabelText(
       'Direct (bring your own API key)'
@@ -116,9 +116,7 @@ describe('ComposioPanel', () => {
     renderWithProviders(<Panel embedded />);
     await waitFor(() => expect(screen.queryByText('Loading…')).toBeNull());
 
-    expect(
-      screen.queryByLabelText('Managed (OpenHuman handles it for you)')
-    ).not.toBeInTheDocument();
+    expect(screen.queryByLabelText('Managed (Marvi handles it for you)')).not.toBeInTheDocument();
     expect(screen.queryByLabelText('Direct (bring your own API key)')).not.toBeInTheDocument();
     expect(screen.getByLabelText('Composio API key')).toBeInTheDocument();
     expect(screen.getByText(/Managed Composio auth is unavailable here/i)).toBeInTheDocument();
@@ -202,7 +200,7 @@ describe('ComposioPanel', () => {
     renderWithProviders(<Panel />);
     await waitFor(() => expect(screen.queryByText('Loading…')).toBeNull());
 
-    fireEvent.click(screen.getByLabelText('Managed (OpenHuman handles it for you)'));
+    fireEvent.click(screen.getByLabelText('Managed (Marvi handles it for you)'));
     fireEvent.click(screen.getByRole('button', { name: 'Save' }));
 
     // No dialog appeared — clearApiKey was invoked straight through.
@@ -263,7 +261,7 @@ describe('ComposioPanel', () => {
     renderWithProviders(<Panel />);
     await waitFor(() => expect(screen.queryByText('Loading…')).toBeNull());
 
-    fireEvent.click(screen.getByLabelText('Managed (OpenHuman handles it for you)'));
+    fireEvent.click(screen.getByLabelText('Managed (Marvi handles it for you)'));
     fireEvent.click(screen.getByRole('button', { name: 'Save' }));
 
     await waitFor(() => {
@@ -299,7 +297,7 @@ describe('ComposioPanel', () => {
     renderWithProviders(<Panel />);
     await waitFor(() => expect(screen.queryByText('Loading…')).toBeNull());
 
-    expect(screen.getByLabelText('Managed (OpenHuman handles it for you)')).toBeInTheDocument();
+    expect(screen.getByLabelText('Managed (Marvi handles it for you)')).toBeInTheDocument();
   });
 
   test('trigger-webhook gap is surfaced in the Direct mode description', async () => {

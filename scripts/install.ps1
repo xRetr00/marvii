@@ -12,7 +12,7 @@
 
   MSI installs use the Tauri WiX package (InstallScope perMachine). Per-user
   public properties (MSIINSTALLPERUSER / ALLUSERS=2) conflict with that layout
-  and commonly fail with exit 1603 — see tinyhumansai/openhuman#913.
+  and commonly fail with exit 1603 — see xRetr00/marvii issues.
 
   When the current session is not elevated, msiexec is started with -Verb RunAs
   so Windows shows UAC once (machine install to Program Files).
@@ -20,7 +20,7 @@
 
 # --- Script-scoped helpers (unit-tested; safe to dot-source this file) ---
 
-function Get-OpenHumanMsiexecInstallArgumentList {
+function Get-MarviMsiexecInstallArgumentList {
   <#
   .SYNOPSIS
     Argument list for Start-Process msiexec.exe (no per-user MSI overrides).
@@ -35,7 +35,7 @@ function Get-OpenHumanMsiexecInstallArgumentList {
   return @('/i', $MsiPath, '/qn', '/norestart')
 }
 
-function Test-OpenHumanWindowsProcessElevated {
+function Test-MarviWindowsProcessElevated {
   <#
   .SYNOPSIS
     True when the current process is running with an administrator token (Windows only).
@@ -48,7 +48,7 @@ function Test-OpenHumanWindowsProcessElevated {
   return $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 }
 
-function Select-OpenHumanWindowsAssetFromRelease {
+function Select-MarviWindowsAssetFromRelease {
   <#
   .SYNOPSIS
     Pick the Windows x64 MSI from a GitHub release object, else NSIS exe.
@@ -62,12 +62,12 @@ function Select-OpenHumanWindowsAssetFromRelease {
     return $null
   }
 
-  $msi = $assets | Where-Object { $_.name -match '(Marvi|OpenHuman)_.*x64.*\.msi$' } | Select-Object -First 1
+  $msi = $assets | Where-Object { $_.name -match 'Marvi_.*x64.*\.msi$' } | Select-Object -First 1
   if ($msi) {
     return $msi
   }
 
-  $exe = $assets | Where-Object { $_.name -match '(Marvi|OpenHuman)_.*x64.*\.exe$' } | Select-Object -First 1
+  $exe = $assets | Where-Object { $_.name -match 'Marvi_.*x64.*\.exe$' } | Select-Object -First 1
   if ($exe) {
     return $exe
   }
@@ -77,7 +77,7 @@ function Select-OpenHumanWindowsAssetFromRelease {
 
 # Wrap in a function so `param()` works when piped via `irm | iex`.
 # When piped, PowerShell cannot bind param() at the top-level scope.
-function Install-OpenHuman {
+function Install-Marvi {
   param(
     [switch]$Help,
     [switch]$Version,
@@ -157,7 +157,7 @@ Examples:
   try {
     $release = Invoke-RestMethod -Uri $LatestReleaseApiUrl -UseBasicParsing
     $releaseTag = ($release.tag_name -replace '^v', '')
-    $selected = Select-OpenHumanWindowsAssetFromRelease -Release $release
+    $selected = Select-MarviWindowsAssetFromRelease -Release $release
     if ($selected) {
       $assetName = $selected.name
       $assetUrl = $selected.browser_download_url
@@ -204,9 +204,9 @@ Examples:
 
   if ($DryRun) {
     if ($assetName -like "*.msi") {
-      $dryMsiArgs = Get-OpenHumanMsiexecInstallArgumentList -MsiPath $tmpFile
+      $dryMsiArgs = Get-MarviMsiexecInstallArgumentList -MsiPath $tmpFile
       Write-Output "DRY RUN: msiexec ArgumentList = $($dryMsiArgs | ConvertTo-Json -Compress)"
-      if (Test-OpenHumanWindowsProcessElevated) {
+      if (Test-MarviWindowsProcessElevated) {
         Write-Output "DRY RUN: (already elevated) Start-Process msiexec -Wait -ArgumentList <above>"
       } else {
         Write-Output "DRY RUN: (non-admin) Start-Process msiexec -Verb RunAs -Wait -ArgumentList <above>"
@@ -219,8 +219,8 @@ Examples:
 
   Write-Info "Installing Marvi"
   if ($assetName -like "*.msi") {
-    $msiArgs = Get-OpenHumanMsiexecInstallArgumentList -MsiPath $tmpFile
-    $elevated = Test-OpenHumanWindowsProcessElevated
+    $msiArgs = Get-MarviMsiexecInstallArgumentList -MsiPath $tmpFile
+    $elevated = Test-MarviWindowsProcessElevated
     if ($elevated) {
       $proc = Start-Process -FilePath "msiexec.exe" -ArgumentList $msiArgs -Wait -PassThru
     } else {
@@ -245,9 +245,7 @@ Examples:
 
   $expectedPaths = @(
     "$env:LOCALAPPDATA\Programs\Marvi\Marvi.exe",
-    "$env:ProgramFiles\Marvi\Marvi.exe",
-    "$env:LOCALAPPDATA\Programs\OpenHuman\OpenHuman.exe",
-    "$env:ProgramFiles\OpenHuman\OpenHuman.exe"
+    "$env:ProgramFiles\Marvi\Marvi.exe"
   )
   $launchPath = $expectedPaths | Where-Object { Test-Path $_ } | Select-Object -First 1
 
@@ -265,5 +263,5 @@ Examples:
 
 # Run when executed as a script; skip when dot-sourced (e.g. unit tests).
 if ($MyInvocation.InvocationName -ne '.') {
-  Install-OpenHuman @args
+  Install-Marvi @args
 }

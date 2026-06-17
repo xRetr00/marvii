@@ -8,7 +8,7 @@
  * names, categories, descriptions, and logos for rendering.
  *
  * Source of truth for the managed-auth list:
- * https://docs.composio.dev/toolkits/managed-auth plus OpenHuman's
+ * https://docs.composio.dev/toolkits/managed-auth plus Marvi's
  * compatibility aliases (119 toolkits as of May 21, 2026).
  */
 import { type ReactNode, useState } from 'react';

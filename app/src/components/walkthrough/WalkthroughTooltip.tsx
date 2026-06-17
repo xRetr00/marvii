@@ -12,7 +12,7 @@ const STEP_ICONS = ['🏠', '💬', '🗨️', '🧩', '📱', '🧠', '⚙️',
  *
  * Design: frosted-glass card with smooth entrance animation, step-specific
  * emoji accent, pill progress bar, and polished button styling that matches
- * the OpenHuman design system (ocean primary #2F6EF4, warm neutrals).
+ * the Marvi design system (ocean primary #2F6EF4, warm neutrals).
  */
 const WalkthroughTooltip = ({
   continuous,

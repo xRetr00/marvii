@@ -764,7 +764,7 @@ fn gmeet_room_popup_navigates_parent() {
     // "Start an instant meeting" / "New meeting" calls
     // window.open(meet.google.com/<roomid>) to launch a room.
     // Without intervention this would route to system Chrome and
-    // leak the meeting out of OpenHuman.
+    // leak the meeting out of Marvi.
     assert_eq!(
         popup_should_navigate_parent("google-meet", &url("https://meet.google.com/abc-defg-hij"),)
             .map(|u| u.to_string()),

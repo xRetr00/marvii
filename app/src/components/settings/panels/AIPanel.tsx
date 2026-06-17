@@ -431,7 +431,7 @@ function useAISettings() {
       // unreachable between add-time and save-time, etc.) before they reach
       // the saved config and start routing chat traffic to a dead host.
       //
-      // OpenHuman is exempt (session JWT, no /models endpoint to hit).
+      // Marvi is exempt (session JWT, no /models endpoint to hit).
       const savedById = new Map(saved.cloudProviders.map(p => [p.id, p]));
       const toProbe = draft.cloudProviders.filter(p => {
         if (p.slug === 'openhuman') return false;
@@ -1877,7 +1877,7 @@ const CustomRoutingDialog = ({
 }: CustomRoutingDialogProps) => {
   const { t } = useT();
   // Non-openhuman cloud providers + local-ollama (if available) are the
-  // "Custom" options. OpenHuman is its own Managed path; Default serializes
+  // "Custom" options. Marvi is its own Managed path; Default serializes
   // to the backend's `cloud` sentinel. Claude Code is excluded here — it has
   // its own dedicated `claude-code:` select option, not a generic cloud one.
   const customCloud = cloudProviders.filter(
@@ -3235,7 +3235,7 @@ const AIPanel = ({ embedded = false }: AIPanelProps = {}) => {
         {/* end of Auth section */}
 
         {/* ═══════════════════════════════════════════════════════════════
-            ROUTING — top-level routing mode. Managed = OpenHuman decides.
+            ROUTING — top-level routing mode. Managed = Marvi decides.
             Own = one provider/model for everything. Custom = fine-grained
             per-workload routing.
             ═══════════════════════════════════════════════════════════════ */}
@@ -3460,7 +3460,7 @@ const AIPanel = ({ embedded = false }: AIPanelProps = {}) => {
 
               // Live verification — flush the new cloud_providers list and
               // call `/models` through the Rust controller. Skip for the
-              // OpenHuman backend (session JWT, no probe-able endpoint).
+              // Marvi backend (session JWT, no probe-able endpoint).
               if (upserted.slug !== 'openhuman') {
                 const list =
                   editing === 'new'

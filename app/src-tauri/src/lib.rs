@@ -285,7 +285,7 @@ async fn restart_core_process(
     state.inner().restart().await
 }
 
-/// Attempt to auto-recover from a port conflict by reaping stale OpenHuman
+/// Attempt to auto-recover from a port conflict by reaping stale Marvi
 /// processes (cross-platform) and restarting the embedded core.
 ///
 /// Called by the BootCheckGate "Fix Automatically" button when the core is
@@ -1792,7 +1792,7 @@ fn check_linux_display_server() {
         );
         return;
     }
-    let msg = "[openhuman] no display server found (DISPLAY and WAYLAND_DISPLAY are both unset).\n\
+    let msg = "[marvi] no display server found (DISPLAY and WAYLAND_DISPLAY are both unset).\n\
                Marvi requires an X11 or Wayland display to run.\n\
                On WSL2: install WSLg or configure X11 forwarding from Windows.\n\
                Set DISPLAY (e.g. export DISPLAY=:0) or WAYLAND_DISPLAY before launching.";
@@ -2000,7 +2000,7 @@ fn append_platform_cef_gpu_workarounds(
 ///
 /// XSetErrorHandler is a process-global registration; safe to install before
 /// any X display is opened. libX11 is already a runtime dep (verified via
-/// ldd of the compiled OpenHuman binary).
+/// ldd of the compiled Marvi binary).
 #[cfg(target_os = "linux")]
 fn install_silent_x_error_handler() {
     use std::ffi::c_void;
@@ -2110,7 +2110,7 @@ pub fn run() {
     // The guard is held for the entire lifetime of `run()` so events queued
     // during shutdown still flush. Only invoked here (and not in `main.rs`)
     // so renderer/GPU CEF helper subprocesses (re-exec'd via
-    // `tauri::cef_entry_point`) and the `OpenHuman core …` in-process core
+    // `tauri::cef_entry_point`) and the `Marvi core …` in-process core
     // path do NOT spin up a second client — those have their own reporting
     // surfaces.
     let _sentry_guard = sentry::init(sentry::ClientOptions {
@@ -2397,7 +2397,7 @@ pub fn run() {
     #[cfg(windows)]
     let _deep_link_pipe_guard = deep_link_ipc_windows::bind_and_listen();
 
-    // CEF cache-lock preflight (macOS only): if another OpenHuman instance
+    // CEF cache-lock preflight (macOS only): if another Marvi instance
     // is already holding the CEF user-data-dir, the vendored
     // `tauri-runtime-cef` panics inside `cef::initialize` with a Rust
     // backtrace and no actionable message (issue #864). Catch the collision
@@ -2446,7 +2446,7 @@ pub fn run() {
         deep_link_ipc::bind_and_listen()
     };
 
-    // CEF cache-lock preflight (macOS + Linux): if another OpenHuman instance
+    // CEF cache-lock preflight (macOS + Linux): if another Marvi instance
     // holds the CEF user-data-dir SingletonLock, `cef_initialize` returns 0 and
     // the vendored runtime used to panic (`left: 0, right: 1`). The common
     // cause is a *sequential relaunch race* where the prior instance is still
@@ -2518,7 +2518,7 @@ pub fn run() {
             // safe.
             ("--autoplay-policy", Some("no-user-gesture-required")),
             // Background-throttling defeaters. The MeetCallProducer
-            // pumps mascot frames at 24 fps from the *main* OpenHuman
+            // pumps mascot frames at 24 fps from the *main* Marvi
             // window, but as soon as the off-screen Meet webview opens
             // (or the user clicks anywhere outside main), macOS demotes
             // the renderer's priority and Chromium throttles its
@@ -2596,7 +2596,7 @@ pub fn run() {
         // Use an app-owned Quit item for Cmd+Q instead of the native
         // predefined Quit action. The predefined path calls
         // NSApplication::terminate, which reaches CEF shutdown before
-        // OpenHuman's child-webview/core teardown can run.
+        // Marvi's child-webview/core teardown can run.
         .menu(macos_app_menu)
         .on_menu_event(|app, event| {
             if event.id().as_ref() == APP_QUIT_MENU_ID {
@@ -3623,7 +3623,7 @@ pub fn run() {
 pub fn run_core_from_args(args: &[String]) -> Result<(), String> {
     // Core lives in-process: dispatch directly through the linked `openhuman_core`
     // library instead of shelling out to a separate binary. The Tauri main()
-    // routes `OpenHuman core <args>` here so users can still drive the core CLI
+    // routes `Marvi core <args>` here so users can still drive the core CLI
     // from the bundled app.
     openhuman_core::run_core_from_args(args).map_err(|e| format!("{e:#}"))
 }

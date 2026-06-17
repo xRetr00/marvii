@@ -460,21 +460,21 @@ async fn run_session_cycle<R: Runtime>(
                     try {\
                         var NativeNotification = window.Notification;\
                         if (typeof NativeNotification === 'function') {\
-                            var OpenHumanNotification = function(title, options){\
+                            var MarviNotification = function(title, options){\
                                 try { return new NativeNotification(title, options); }\
                                 catch (_) { return {}; }\
                             };\
-                            OpenHumanNotification.prototype = NativeNotification.prototype;\
+                            MarviNotification.prototype = NativeNotification.prototype;\
                             try {\
-                                Object.defineProperty(OpenHumanNotification, 'permission', {\
+                                Object.defineProperty(MarviNotification, 'permission', {\
                                     get: function(){ return 'granted'; },\
                                     configurable: true\
                                 });\
                             } catch (_) {}\
-                            OpenHumanNotification.requestPermission = function(){\
+                            MarviNotification.requestPermission = function(){\
                                 return Promise.resolve('granted');\
                             };\
-                            window.Notification = OpenHumanNotification;\
+                            window.Notification = MarviNotification;\
                         }\
                     } catch (_) {}\
                     try {\

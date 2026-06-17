@@ -1,7 +1,7 @@
-// OpenHuman Meet camera bridge.
+// Marvi Meet camera bridge.
 //
 // Replaces the agent's outbound video stream with a pre-rendered mascot
-// frame stream produced by the main OpenHuman renderer (a hidden
+// frame stream produced by the main Marvi renderer (a hidden
 // Remotion composition). Runs post-reload via Runtime.evaluate (see
 // `inject.rs` for the rationale).
 //
@@ -22,7 +22,7 @@
 // inside meet.google.com's origin sandbox.
 (function () {
   if (window.__openhumanCameraBridge) return;
-  const TAG = '[openhuman-camera-bridge]';
+  const TAG = '[marvi-camera-bridge]';
   const W = 1280;
   const H = 720;
   const FPS = 30;

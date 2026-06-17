@@ -1,9 +1,5 @@
 import { persistor } from '../store';
-import {
-  resetOpenHumanDataAndRestartCore,
-  restartApp,
-  scheduleCefProfilePurge,
-} from './tauriCommands';
+import { resetMarviDataAndRestartCore, restartApp, scheduleCefProfilePurge } from './tauriCommands';
 
 const ACTIVE_USER_KEY = 'OPENHUMAN_ACTIVE_USER_ID';
 
@@ -103,7 +99,7 @@ export const clearAllAppData = async ({
   // 3. Delete workspace folder + restart core. The core RPC removes both the
   //    active openhuman_dir and the default `~/.openhuman`, then we restart
   //    the sidecar so it boots from a clean slate.
-  await resetOpenHumanDataAndRestartCore();
+  await resetMarviDataAndRestartCore();
 
   // 4. Purge redux-persist + browser storage. `persistor.purge()` wipes the
   //    persisted backend; `clearUserScopedStorage` removes only the active

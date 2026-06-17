@@ -353,7 +353,7 @@ const messages: TranslationMap = {
   'skills.channels': 'मैसेजिंग',
   'skills.explorer.emptyCta': 'URL से इंस्टॉल करें',
   'skills.explorer.emptyDescription':
-    'SKILL.md पैकेज इंस्टॉल करें या Hermes-शैली फ़ोल्डर ~/.openhuman/skills में रखें।',
+    'SKILL.md पैकेज इंस्टॉल करें या Hermes-शैली फ़ोल्डर the Marvi skills folder में रखें।',
   'skills.explorer.emptyTitle': 'कोई स्किल नहीं मिली',
   'skills.explorer.installFromUrl': 'URL से इंस्टॉल करें',
   'skills.explorer.newSkill': 'नई स्किल',
@@ -3330,7 +3330,7 @@ const messages: TranslationMap = {
   'settings.ai.claudeCode.fullAccessOff':
     'केवल संपादन स्वीकारें — फ़ाइल संपादन स्वतः लागू करता है, कमांड और नेटवर्क को सीमित करता है।',
   'settings.ai.claudeCode.sandboxNoteMac':
-    'macOS पर, दोनों मोड में ~/.openhuman सैंडबॉक्स द्वारा सुरक्षित रहता है।',
+    'macOS पर, दोनों मोड में the local Marvi profile सैंडबॉक्स द्वारा सुरक्षित रहता है।',
   'settings.ai.claudeCode.sandboxNoteOther':
     'इस प्लेटफ़ॉर्म पर पूर्ण पहुँच असीमित है — केवल तभी सक्षम करें जब आप वर्कस्पेस पर भरोसा करते हों।',
   'settings.ai.claudeCode.enableToCheck': 'साइन-इन जाँचने के लिए Claude Code सक्षम करें।',
@@ -4134,7 +4134,7 @@ const messages: TranslationMap = {
   'settings.mcpServer.copied': 'नकल की गई!',
   'settings.mcpServer.openConfigFile': 'कॉन्फ़िग फ़ाइल खोलें',
   'settings.mcpServer.binaryPathNotFound':
-    'Marvi बाइनरी नहीं मिली. यदि स्रोत से चल रहा है, तो इसके साथ निर्माण करें: cargo build --bin openhuman-core',
+    'Marvi बाइनरी नहीं मिली. यदि स्रोत से चल रहा है, तो इसके साथ निर्माण करें: build the Marvi core binary',
   'settings.mcpServer.openConfigError': 'कॉन्फ़िग फ़ाइल खोलने में विफल',
   'settings.mcpServer.clientClaudeDesktop': 'क्लाउड डेस्कटॉप',
   'settings.mcpServer.clientCursor': 'कर्सर',
@@ -4523,9 +4523,9 @@ const messages: TranslationMap = {
   'skills.create.name': 'नाम',
   'skills.create.namePlaceholder': 'जैसे Trade Journal',
   'skills.create.scope': 'स्कोप',
-  'skills.create.scopeProjectHint': '/.openhuman/skills/',
+  'skills.create.scopeProjectHint': '/Marvi skills/',
   'skills.create.scopeUserHint':
-    '~/.openhuman/skills/<slug>/SKILL.md में लिखा जाता है — सभी वर्कस्पेस में उपलब्ध।',
+    'the Marvi skills folder में लिखा जाता है — सभी वर्कस्पेस में उपलब्ध।',
   'skills.create.slugLabel': 'स्लग लेबल',
   'skills.create.subtitle': 'SKILL.md',
   'skills.create.tags': 'टैग्स',
@@ -4571,7 +4571,7 @@ const messages: TranslationMap = {
     'केवल सीधे `.md` लिंक काम करते हैं। GitHub के लिए, एक फ़ाइल से लिंक करें (github.com/owner/repo/blob/.../SKILL.md) - ट्री और रेपो रूट स्थापित नहीं हैं।',
   'skills.install.errors.unsupportedUrlTitle': 'URL फॉर्म समर्थित नहीं है',
   'skills.install.errors.writeFailedHint':
-    'कार्यक्षेत्र कौशल निर्देशिका लिखने योग्य नहीं थी. `<workspace>/.openhuman/skills/` के लिए फ़ाइल सिस्टम अनुमतियाँ जाँचें।',
+    'कार्यक्षेत्र कौशल निर्देशिका लिखने योग्य नहीं थी. `the workspace Marvi skills folder` के लिए फ़ाइल सिस्टम अनुमतियाँ जाँचें।',
   'skills.install.errors.writeFailedTitle': 'SKILL.md नहीं लिख सका',
   'skills.install.fetchLog': 'फ़ेच लॉग',
   'skills.install.fetchingPrefix': 'ला रहा है',

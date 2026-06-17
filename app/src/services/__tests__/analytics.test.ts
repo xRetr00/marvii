@@ -499,7 +499,7 @@ describe('trackPageView (OpenPanel)', () => {
 
   test('sends a screen_view event to OpenPanel when consent is on', async () => {
     const { initGA, trackPageView } = await freshAnalytics();
-    document.title = 'OpenHuman Test';
+    document.title = 'Marvi Test';
     initGA();
     trackPageView('/home');
     expect(fetch).toHaveBeenCalledWith(
@@ -520,7 +520,7 @@ describe('trackPageView (OpenPanel)', () => {
       page_hash: '',
       __path: '/home',
       __referrer: document.referrer,
-      __title: 'OpenHuman Test',
+      __title: 'Marvi Test',
     });
     expectAnalyticsContext(openPanelPayload().payload.properties);
     expect(openPanelPayload().payload.properties.__timestamp).toEqual(expect.any(String));

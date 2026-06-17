@@ -6,7 +6,7 @@
 //!
 //! Stale-listener policy (see issue #1130): if something is already listening
 //! on the configured port when `ensure_running` runs, we probe `GET /` to see
-//! whether it is an OpenHuman core. If it is, we treat it as a stale process
+//! whether it is a Marvi core. If it is, we treat it as a stale process
 //! left behind by a previous build/dev session and proactively terminate it
 //! (graceful signal, then a force-kill that *revalidates* the pid is still
 //! the same listener — guards against PID reuse if the original exits inside
@@ -140,7 +140,7 @@ impl CoreProcessHandle {
         // us — return Ok without identifying or taking over. Without this,
         // a second `start_core_process` call (e.g. HMR re-mounting the boot
         // gate) sees its own port as bound, classifies the listener as
-        // "stale OpenHuman", and walks into the SIGTERM/SIGKILL takeover
+        // "stale Marvi", and walks into the SIGTERM/SIGKILL takeover
         // path against itself. (#1130 takeover is meant to recover from
         // *external* leftover binaries, not our own in-process spawn.)
         {
@@ -163,7 +163,7 @@ impl CoreProcessHandle {
             // call (from BootCheckGate re-render, React StrictMode mount, or
             // any double-invoke of `start_core_process`) hits the
             // `identify_listener` path, identifies the listener as
-            // OpenHuman, calls `takeover_stale_listener`, and aborts with
+            // Marvi, calls `takeover_stale_listener`, and aborts with
             // "stale-listener pid <self> matches the Tauri host pid;
             // refusing to self-terminate". (#1316 introduced the
             // frontend-driven `start_core_process` invoke without
@@ -190,7 +190,7 @@ impl CoreProcessHandle {
             }
 
             match identify_listener(self.preferred_port).await {
-                ListenerKind::OpenHuman => {
+                ListenerKind::Marvi => {
                     log::warn!(
                         "[core] found stale Marvi listener on port {} — taking over (issue #1130)",
                         self.preferred_port
@@ -459,7 +459,7 @@ impl CoreProcessHandle {
 
     /// Identify the OS pid currently bound to our port and terminate it,
     /// then wait for the port to free. Used when the listener has been
-    /// fingerprinted as an OpenHuman core (via `GET /`) so killing it is safe.
+    /// fingerprinted as a Marvi core (via `GET /`) so killing it is safe.
     async fn takeover_stale_listener(&self) -> Result<(), String> {
         let port = self.preferred_port;
         let pid = match find_pid_on_port(port) {
@@ -485,7 +485,7 @@ impl CoreProcessHandle {
             port
         );
         if let Err(e) = kill_pid_term(pid) {
-            return Err(format!("failed to signal stale openhuman pid {pid}: {e}"));
+            return Err(format!("failed to signal stale Marvi pid {pid}: {e}"));
         }
 
         // Wait for the graceful exit, then revalidate ownership before any
@@ -505,9 +505,7 @@ impl CoreProcessHandle {
                         port
                     );
                     if let Err(e) = kill_pid_force(pid) {
-                        return Err(format!(
-                            "failed to force-kill stale openhuman pid {pid}: {e}"
-                        ));
+                        return Err(format!("failed to force-kill stale Marvi pid {pid}: {e}"));
                     }
                 }
                 Some(current) => {
@@ -675,7 +673,7 @@ pub struct RecoveryOutcome {
 }
 
 impl CoreProcessHandle {
-    /// Attempt to recover from a port conflict: reap stale OpenHuman processes,
+    /// Attempt to recover from a port conflict: reap stale Marvi processes,
     /// wait briefly for the port to free, then start the embedded core.
     ///
     /// Called from the `recover_port_conflict` Tauri command when the frontend's
@@ -752,8 +750,8 @@ async fn is_port_open(port: u16) -> bool {
 #[derive(Debug)]
 enum ListenerKind {
     /// `GET /` returned a JSON body with `"name": "openhuman"` — i.e. a
-    /// stale OpenHuman core process from a previous build/session.
-    OpenHuman,
+    /// stale Marvi core process from a previous build/session.
+    Marvi,
     /// Either the listener didn't speak HTTP, didn't respond, or returned
     /// a body that doesn't identify as openhuman.
     Unknown { reason: String },
@@ -796,12 +794,12 @@ async fn identify_listener(port: u16) -> ListenerKind {
         }
     };
     if is_openhuman_root_body(&body) {
-        log::info!("[core] listener on port {port} identified as openhuman core");
-        ListenerKind::OpenHuman
+        log::info!("[core] listener on port {port} identified as Marvi core");
+        ListenerKind::Marvi
     } else {
         let preview: String = body.chars().take(80).collect();
         ListenerKind::Unknown {
-            reason: format!("probe GET / body did not identify as openhuman ({preview:?})"),
+            reason: format!("probe GET / body did not identify as Marvi core ({preview:?})"),
         }
     }
 }
@@ -828,7 +826,7 @@ fn is_expected_port_clash(reason: &str) -> bool {
         || reason.contains("connection refused")
         || reason.contains("returned status 404")
         || reason.contains("returned status 200")
-        || reason.contains("body did not identify as openhuman")
+        || reason.contains("body did not identify as Marvi core")
         || reason.contains("already in use by another process")
         || reason.contains("os error 10013")
         || reason.contains("wsaeacces")

@@ -1,4 +1,4 @@
-//! Startup recovery for OpenHuman processes left behind by hard exits.
+//! Startup recovery for Marvi processes left behind by hard exits.
 
 #[derive(Debug, Clone, PartialEq, Eq, serde::Serialize)]
 pub(crate) struct ProcessInfo {
@@ -320,19 +320,19 @@ mod imp {
         use super::*;
 
         fn contents_dir() -> PathBuf {
-            PathBuf::from("/Applications/OpenHuman.app/Contents")
+            PathBuf::from("/Applications/Marvi.app/Contents")
         }
 
         fn main_exe() -> PathBuf {
-            contents_dir().join("MacOS/OpenHuman")
+            contents_dir().join("MacOS/Marvi")
         }
 
         #[test]
         fn parse_ps_matches_main_and_helper_bundle_argv0() {
             let stdout = "\
-  123   1 /Applications/OpenHuman.app/Contents/MacOS/OpenHuman
-  124 123 /Applications/OpenHuman.app/Contents/Frameworks/OpenHuman Helper (Renderer).app/Contents/MacOS/OpenHuman Helper (Renderer) --type=renderer
-  999   1 /Applications/Other.app/Contents/MacOS/OpenHuman
+  123   1 /Applications/Marvi.app/Contents/MacOS/Marvi
+  124 123 /Applications/Marvi.app/Contents/Frameworks/Marvi Helper (Renderer).app/Contents/MacOS/Marvi Helper (Renderer) --type=renderer
+  999   1 /Applications/Other.app/Contents/MacOS/Marvi
 ";
             let processes = parse_ps_output(stdout, &contents_dir(), Some(&main_exe()));
             assert_eq!(processes.len(), 2);
@@ -341,7 +341,7 @@ mod imp {
             assert_eq!(processes[1].pid, 124);
             assert_eq!(
                 processes[1].argv0,
-                "/Applications/OpenHuman.app/Contents/Frameworks/OpenHuman Helper (Renderer).app/Contents/MacOS/OpenHuman Helper (Renderer)"
+                "/Applications/Marvi.app/Contents/Frameworks/Marvi Helper (Renderer).app/Contents/MacOS/Marvi Helper (Renderer)"
             );
         }
 
@@ -591,12 +591,12 @@ mod linux_imp {
         fn is_openhuman_executable_matches_core_binary() {
             assert!(is_openhuman_executable("/usr/local/bin/openhuman-core"));
             assert!(is_openhuman_executable("openhuman-core"));
-            assert!(is_openhuman_executable("/opt/OpenHuman/openhuman-core"));
+            assert!(is_openhuman_executable("/opt/Marvi/openhuman-core"));
         }
 
         #[test]
         fn is_openhuman_executable_matches_app_binary() {
-            assert!(is_openhuman_executable("/opt/OpenHuman/OpenHuman"));
+            assert!(is_openhuman_executable("/opt/Marvi/Marvi"));
             assert!(is_openhuman_executable("openhuman"));
         }
 
@@ -836,7 +836,7 @@ mod windows_imp {
             let csv = "\
 Node,Caption,ExecutablePath,ParentProcessId,ProcessId\r\n\
 \r\n\
-DESKTOP-ABC,openhuman-core.exe,C:\\Program Files\\OpenHuman\\openhuman-core.exe,1234,5678\r\n\
+DESKTOP-ABC,openhuman-core.exe,C:\\Program Files\\Marvi\\openhuman-core.exe,1234,5678\r\n\
 DESKTOP-ABC,chrome.exe,C:\\Program Files\\Google\\Chrome\\chrome.exe,1,9000\r\n\
 ";
             let results = parse_wmic_output(csv, 9999);
@@ -851,7 +851,7 @@ DESKTOP-ABC,chrome.exe,C:\\Program Files\\Google\\Chrome\\chrome.exe,1,9000\r\n\
             let csv = "\
 Node,Caption,ExecutablePath,ParentProcessId,ProcessId\r\n\
 \r\n\
-DESKTOP-ABC,openhuman-core.exe,C:\\Program Files\\OpenHuman\\openhuman-core.exe,1,1234\r\n\
+DESKTOP-ABC,openhuman-core.exe,C:\\Program Files\\Marvi\\openhuman-core.exe,1,1234\r\n\
 ";
             let results = parse_wmic_output(csv, 1234);
             assert!(results.is_empty(), "self pid should be excluded");
@@ -863,10 +863,7 @@ DESKTOP-ABC,openhuman-core.exe,C:\\Program Files\\OpenHuman\\openhuman-core.exe,
                 "openhuman-core.exe",
                 "C:\\path\\openhuman-core.exe"
             ));
-            assert!(is_openhuman_executable(
-                "OpenHuman.exe",
-                "C:\\path\\OpenHuman.exe"
-            ));
+            assert!(is_openhuman_executable("Marvi.exe", "C:\\path\\Marvi.exe"));
         }
 
         #[test]

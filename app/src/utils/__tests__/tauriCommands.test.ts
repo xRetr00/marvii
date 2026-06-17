@@ -13,7 +13,7 @@ describe('tauriCommands', () => {
   const mockInvoke = invoke as Mock;
   const mockCallCoreRpc = callCoreRpc as Mock;
   let getAuthState: typeof import('../tauriCommands').getAuthState;
-  let resetOpenHumanDataAndRestartCore: typeof import('../tauriCommands').resetOpenHumanDataAndRestartCore;
+  let resetMarviDataAndRestartCore: typeof import('../tauriCommands').resetMarviDataAndRestartCore;
   let storeSession: typeof import('../tauriCommands').storeSession;
   let openhumanLocalAiStatus: typeof import('../tauriCommands').openhumanLocalAiStatus;
   let openhumanServiceStatus: typeof import('../tauriCommands').openhumanServiceStatus;
@@ -33,7 +33,7 @@ describe('tauriCommands', () => {
     holder.__TAURI_INTERNALS__ = { invoke: () => undefined };
     const actual = await vi.importActual<typeof import('../tauriCommands')>('../tauriCommands');
     getAuthState = actual.getAuthState;
-    resetOpenHumanDataAndRestartCore = actual.resetOpenHumanDataAndRestartCore;
+    resetMarviDataAndRestartCore = actual.resetMarviDataAndRestartCore;
     storeSession = actual.storeSession;
     openhumanLocalAiStatus = actual.openhumanLocalAiStatus;
     openhumanServiceStatus = actual.openhumanServiceStatus;
@@ -68,8 +68,8 @@ describe('tauriCommands', () => {
     });
   });
 
-  test('resetOpenHumanDataAndRestartCore invokes the destructive Tauri command', async () => {
-    await resetOpenHumanDataAndRestartCore();
+  test('resetMarviDataAndRestartCore invokes the destructive Tauri command', async () => {
+    await resetMarviDataAndRestartCore();
 
     // The helper used to call `openhuman.config_reset_local_data` over
     // JSON-RPC followed by `restart_core_process`, but the in-process
@@ -82,7 +82,7 @@ describe('tauriCommands', () => {
     expect(mockInvoke).toHaveBeenCalledWith('reset_local_data');
   });
 
-  test('resetOpenHumanDataAndRestartCore surfaces invoke failures to the caller', async () => {
+  test('resetMarviDataAndRestartCore surfaces invoke failures to the caller', async () => {
     // Callers (e.g. `clearAllAppData`) treat a thrown error as unrecoverable
     // and abort the flow — so the helper must rethrow instead of swallowing
     // a `reset_local_data` failure (e.g. Windows `ERROR_SHARING_VIOLATION`
@@ -91,7 +91,7 @@ describe('tauriCommands', () => {
     mockInvoke.mockRejectedValueOnce(boom);
     const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
-    await expect(resetOpenHumanDataAndRestartCore()).rejects.toBe(boom);
+    await expect(resetMarviDataAndRestartCore()).rejects.toBe(boom);
     expect(consoleErrorSpy).toHaveBeenCalled();
 
     consoleErrorSpy.mockRestore();

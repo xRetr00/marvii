@@ -2,7 +2,7 @@
 //!
 //! The vendored `tauri-runtime-cef` calls `cef::initialize()` and asserts the
 //! result equals `1`. When the CEF user-data-dir is still in use by another
-//! OpenHuman process, `cef::initialize()` returns `0` and that assert panics
+//! Marvi process, `cef::initialize()` returns `0` and that assert panics
 //! with `assertion left == right failed, left: 0, right: 1` — a fatal,
 //! actionless crash (Sentry TAURI-RUST-F, ~3.2k events, Windows-only).
 //!
@@ -92,7 +92,7 @@ fn backoff_delay(attempt: u32) -> Duration {
         .min(BACKOFF_CAP)
 }
 
-/// Block (bounded) until no other OpenHuman instance holds the CEF cache, then
+/// Block (bounded) until no other Marvi instance holds the CEF cache, then
 /// return so the caller can proceed to `cef::initialize()`. If the holder is
 /// still alive after [`WAIT_BUDGET`], forward any pending deep links to it and
 /// exit cleanly — never initialize into a locked cache.

@@ -128,7 +128,7 @@ describe('DiscordConfig', () => {
       screen.getByText('Managed channels are not available for local users.')
     ).toBeInTheDocument();
     expect(screen.queryByText('OAuth Sign-in')).not.toBeInTheDocument();
-    expect(screen.queryByText('Login with OpenHuman')).not.toBeInTheDocument();
+    expect(screen.queryByText('Login with Marvi')).not.toBeInTheDocument();
     expect(screen.getAllByText('Bot Token').length).toBeGreaterThanOrEqual(1);
   });
 });

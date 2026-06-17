@@ -61,7 +61,7 @@ describe('AutocompletePanel (simplified)', () => {
         phase: 'idle',
         debounce_ms: 120,
         model_id: 'gemma3:4b-it-qat',
-        app_name: 'OpenHuman',
+        app_name: 'Marvi',
         last_error: null,
         updated_at_ms: Date.now(),
         suggestion: null,

@@ -350,7 +350,7 @@ const messages: TranslationMap = {
   'skills.channels': 'المراسلة',
   'skills.explorer.emptyCta': 'التثبيت من رابط',
   'skills.explorer.emptyDescription':
-    'ثبّت حزمة SKILL.md أو ضع مجلدات بنمط Hermes داخل ~/.openhuman/skills.',
+    'ثبّت حزمة SKILL.md أو ضع مجلدات بنمط Hermes داخل the Marvi skills folder.',
   'skills.explorer.emptyTitle': 'لم يتم العثور على مهارات',
   'skills.explorer.installFromUrl': 'التثبيت من رابط',
   'skills.explorer.newSkill': 'مهارة جديدة',
@@ -3256,7 +3256,7 @@ const messages: TranslationMap = {
   'settings.ai.claudeCode.fullAccessOff':
     'قبول التعديلات فقط — يطبّق تعديلات الملفات تلقائيًا ويقيّد الأوامر والشبكة.',
   'settings.ai.claudeCode.sandboxNoteMac':
-    'على نظام macOS، يظل ~/.openhuman محميًا بواسطة البيئة المعزولة في كلا الوضعين.',
+    'على نظام macOS، يظل the local Marvi profile محميًا بواسطة البيئة المعزولة في كلا الوضعين.',
   'settings.ai.claudeCode.sandboxNoteOther':
     'الوصول الكامل غير مقيّد على هذه المنصة — فعّله فقط إذا كنت تثق بمساحة العمل.',
   'settings.ai.claudeCode.enableToCheck': 'فعّل Claude Code للتحقق من تسجيل الدخول.',
@@ -4039,14 +4039,14 @@ const messages: TranslationMap = {
   'settings.mcpServer.title': 'Xqx0x',
   'settings.mcpServer.toolsSectionTitle': 'الأدوات المتاحة',
   'settings.mcpServer.toolsSectionDesc':
-    'الأدوات التي يتم كشفها عبر خادم MCP stdio عند تشغيل mcp openhuman-core',
+    'الأدوات التي يتم كشفها عبر خادم MCP stdio عند تشغيل Marvi core MCP',
   'settings.mcpServer.configSectionTitle': 'تكوين العميل',
   'settings.mcpServer.configSectionDesc': 'حدد عميل MCP الخاص بك لإنشاء مقتطف التكوين الصحيح',
   'settings.mcpServer.copySnippet': 'انسخ إلى الحافظة',
   'settings.mcpServer.copied': 'تم النسخ!',
   'settings.mcpServer.openConfigFile': 'فتح ملف التكوين',
   'settings.mcpServer.binaryPathNotFound':
-    'Marvi لم يتم العثور على الثنائي. في حالة التشغيل من المصدر، قم بالإنشاء باستخدام: cargo build --bin openhuman-core',
+    'Marvi لم يتم العثور على الثنائي. في حالة التشغيل من المصدر، قم بالإنشاء باستخدام: build the Marvi core binary',
   'settings.mcpServer.openConfigError': 'فشل في فتح ملف التكوين',
   'settings.mcpServer.clientClaudeDesktop': 'Claude Desktop',
   'settings.mcpServer.clientCursor': 'المؤشر',
@@ -4429,9 +4429,8 @@ const messages: TranslationMap = {
   'skills.create.name': 'الاسم',
   'skills.create.namePlaceholder': 'مثال: يومية التداول',
   'skills.create.scope': 'النطاق',
-  'skills.create.scopeProjectHint': '/.openhuman/skills/',
-  'skills.create.scopeUserHint':
-    'مكتوب في ~/.openhuman/skills/<slug>/SKILL.md — متاح في جميع مساحات العمل.',
+  'skills.create.scopeProjectHint': '/Marvi skills/',
+  'skills.create.scopeUserHint': 'مكتوب في the Marvi skills folder — متاح في جميع مساحات العمل.',
   'skills.create.slugLabel': 'تسمية المعرف',
   'skills.create.subtitle': 'SKILL.md',
   'skills.create.tags': 'الوسوم',
@@ -4477,7 +4476,7 @@ const messages: TranslationMap = {
     'تعمل فقط الروابط المباشرة `.md`. بالنسبة إلى GitHub، قم بالارتباط بملف (github.com/owner/repo/blob/.../SKILL.md) - لم يتم تثبيت جذور الشجرة والريبو.',
   'skills.install.errors.unsupportedUrlTitle': 'URL النموذج غير مدعوم',
   'skills.install.errors.writeFailedHint':
-    'دليل مهارات مساحة العمل غير قابل للكتابة. تحقق من أذونات نظام الملفات لـ `<workspace>/.openhuman/skills/`.',
+    'دليل مهارات مساحة العمل غير قابل للكتابة. تحقق من أذونات نظام الملفات لـ `the workspace Marvi skills folder`.',
   'skills.install.errors.writeFailedTitle': 'تعذر كتابة SKILL.md',
   'skills.install.fetchLog': 'جلب السجل',
   'skills.install.fetchingPrefix': 'جلب',

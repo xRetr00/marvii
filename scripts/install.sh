@@ -67,7 +67,7 @@ while [[ $# -gt 0 ]]; do
       exit 0
       ;;
     --version)
-      echo "openhuman-installer ${INSTALLER_VERSION}"
+      echo "marvi-installer ${INSTALLER_VERSION}"
       exit 0
       ;;
     --channel)
@@ -586,9 +586,9 @@ install_macos() {
 
 install_linux() {
   local bin_dir="${HOME}/.local/bin"
-  local app_path="${bin_dir}/openhuman"
+  local app_path="${bin_dir}/marvi"
   local desktop_dir="${HOME}/.local/share/applications"
-  local desktop_file="${desktop_dir}/openhuman.desktop"
+  local desktop_file="${desktop_dir}/marvi.desktop"
 
   mkdir -p "${bin_dir}" "${desktop_dir}"
 
@@ -616,7 +616,7 @@ Name=Marvi
 Comment=Marvi desktop assistant
 Exec=${app_path}
 TryExec=${app_path}
-Icon=${bin_dir}/openhuman.png
+Icon=${bin_dir}/marvi.png
 Terminal=false
 Categories=Utility;
 EOF

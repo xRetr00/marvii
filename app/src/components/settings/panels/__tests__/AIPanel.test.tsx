@@ -110,7 +110,7 @@ const baseSettings = {
     {
       id: 'p_oh_x',
       slug: 'openhuman',
-      label: 'OpenHuman',
+      label: 'Marvi',
       endpoint: 'https://api.openhuman.ai/v1',
       auth_style: 'openhuman_jwt' as const,
       has_api_key: false,
@@ -265,12 +265,12 @@ describe('AIPanel', () => {
     expect(screen.getAllByText(/^Routing$/).length).toBeGreaterThan(0);
   });
 
-  it('renders the OpenHuman primary card after load', async () => {
+  it('renders the Marvi primary card after load', async () => {
     renderWithProviders(<AIPanel />);
-    // The OpenHuman label now appears in multiple places (provider card,
-    // each workload routing row's "↳ OpenHuman" resolution hint), so we
+    // The Marvi label now appears in multiple places (provider card,
+    // each workload routing row's "↳ Marvi" resolution hint), so we
     // assert at-least-one match rather than getByText.
-    await waitFor(() => expect(screen.getAllByText(/OpenHuman/i).length).toBeGreaterThan(0));
+    await waitFor(() => expect(screen.getAllByText(/Marvi/i).length).toBeGreaterThan(0));
   });
 
   it('renders the always-on Managed chip', async () => {
@@ -619,7 +619,7 @@ describe('AIPanel', () => {
     const [, nextSettings] = vi.mocked(saveAISettings).mock.calls[0];
     // MiniMax speaks OpenAI on `/v1` (chat/completions + models). The old
     // `/anthropic` base + anthropic auth pointed at its Messages API, which
-    // OpenHuman doesn't speak — both paths 404'd (Sentry TAURI-RUST-8X3).
+    // Marvi doesn't speak — both paths 404'd (Sentry TAURI-RUST-8X3).
     expect(nextSettings.cloudProviders).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
@@ -757,7 +757,7 @@ describe('AIPanel', () => {
     // Routing entries that were pinned to openai must be reset to the user default route.
     expect(nextSettings.routing.reasoning).toEqual({ kind: 'default' });
     expect(nextSettings.routing.agentic).toEqual({ kind: 'default' });
-    // Entries that were already OpenHuman-managed remain unchanged.
+    // Entries that were already Marvi-managed remain unchanged.
     expect(nextSettings.routing.coding).toEqual({ kind: 'openhuman' });
   });
 

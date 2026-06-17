@@ -1,6 +1,6 @@
 //! Pre-CEF deep-link forwarding for Linux (issue #2359).
 //!
-//! On Linux, `openhuman://` OAuth callbacks launch a second OpenHuman
+//! On Linux, `openhuman://` OAuth callbacks launch a second Marvi
 //! binary with the URL in argv. That secondary hits
 //! `cef_preflight::check_default_cache()` and exits before Builder::setup
 //! runs, so tauri-plugin-deep-link never gets a chance to forward the URL.

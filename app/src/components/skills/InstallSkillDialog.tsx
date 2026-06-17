@@ -261,7 +261,7 @@ export default function InstallSkillDialog({ onClose, onInstalled }: Props) {
               <p className="mt-0.5 text-xs text-stone-500 dark:text-neutral-400">
                 {t('skills.install.subtitlePrefix')}{' '}
                 <code className="font-mono">SKILL.md</code> {t('skills.install.subtitleMiddle')}{' '}
-                <code className="font-mono">.openhuman/skills/</code>.{' '}
+                <code className="font-mono">Marvi skills</code>.{' '}
                 {t('skills.install.subtitleSuffix')}
               </p>
             </div>

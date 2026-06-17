@@ -137,7 +137,7 @@ fn ensure_running_does_not_publish_token_to_env() {
     );
 }
 
-/// Issue #1613: when the preferred port is occupied by a non-OpenHuman
+/// Issue #1613: when the preferred port is occupied by a non-Marvi
 /// listener, startup should fall back to a nearby port instead of failing.
 #[test]
 fn ensure_running_falls_back_for_unknown_listener_on_port() {
@@ -282,7 +282,7 @@ fn expected_port_clash_classifier_matches_benign_probe_shapes() {
     ));
     assert!(is_expected_port_clash("probe GET / returned status 200 OK"));
     assert!(is_expected_port_clash(
-        "probe GET / body did not identify as openhuman (\"hello\")"
+        "probe GET / body did not identify as Marvi core (\"hello\")"
     ));
 }
 

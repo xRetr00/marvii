@@ -1,4 +1,4 @@
-// OpenHuman captions bridge for the embedded Google Meet webview.
+// Marvi captions bridge for the embedded Google Meet webview.
 //
 // Companion to `audio_bridge.js`. Where the audio bridge handles the
 // SPEAK direction (synthesized PCM → MediaStream the page hands to its

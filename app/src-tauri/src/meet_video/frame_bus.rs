@@ -4,7 +4,7 @@
 //!
 //! The camera bridge that we inject into the Meet CEF webview needs a
 //! live source of pre-rendered pixels — the rich Remotion-driven mascot
-//! lives in the main OpenHuman renderer process, not inside Meet's
+//! lives in the main Marvi renderer process, not inside Meet's
 //! origin sandbox (see CLAUDE.md: "no new JS injection in CEF child
 //! webviews"). We can't ship the Remotion runtime into meet.google.com,
 //! and Tauri events don't reach child webviews. So the producer (main

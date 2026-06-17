@@ -297,7 +297,7 @@ function makeCallRecord(overrides: Partial<MeetCallRecord> = {}): MeetCallRecord
   return {
     request_id: 'req-1',
     meet_url: 'https://meet.google.com/abc-defg-hij',
-    bot_display_name: 'OpenHuman',
+    bot_display_name: 'Marvi',
     owner_display_name: 'Alice',
     started_at_ms: Date.now() - 5 * 60 * 1000,
     ended_at_ms: Date.now() - 4 * 60 * 1000,

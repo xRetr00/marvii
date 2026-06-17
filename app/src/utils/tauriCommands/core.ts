@@ -260,9 +260,9 @@ export const installAppUpdate = async (): Promise<void> => {
   console.debug('[app-update] installAppUpdate: returned (install did not relaunch)');
 };
 
-export async function resetOpenHumanDataAndRestartCore(): Promise<void> {
+export async function resetMarviDataAndRestartCore(): Promise<void> {
   if (!isTauri()) {
-    console.debug('[core] resetOpenHumanDataAndRestartCore: skipped — not running in Tauri');
+    console.debug('[core] resetMarviDataAndRestartCore: skipped — not running in Tauri');
     return;
   }
   // Single Tauri command: the shell stops the embedded core (dropping
@@ -273,14 +273,14 @@ export async function resetOpenHumanDataAndRestartCore(): Promise<void> {
   // tokio task — on Windows that hit `ERROR_SHARING_VIOLATION` (os error
   // 32) because the core still held SQLite / log / Sentry handles open in
   // the directory it was trying to delete (OPENHUMAN-TAURI-AF).
-  console.debug('[core] resetOpenHumanDataAndRestartCore: invoking reset_local_data');
+  console.debug('[core] resetMarviDataAndRestartCore: invoking reset_local_data');
   try {
     await invoke<void>('reset_local_data');
   } catch (err) {
-    console.error('[core] resetOpenHumanDataAndRestartCore: reset_local_data failed', err);
+    console.error('[core] resetMarviDataAndRestartCore: reset_local_data failed', err);
     throw err;
   }
-  console.debug('[core] resetOpenHumanDataAndRestartCore: done');
+  console.debug('[core] resetMarviDataAndRestartCore: done');
 }
 
 /** Read onboarding_completed from core config. */

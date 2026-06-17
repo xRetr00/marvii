@@ -21,7 +21,7 @@ async function invokeCmd<T>(cmd: string, args?: Record<string, unknown>): Promis
 }
 
 /**
- * Invoke the `recover_port_conflict` Tauri command to reap stale OpenHuman
+ * Invoke the `recover_port_conflict` Tauri command to reap stale Marvi
  * processes and restart the embedded core on any available port.
  */
 export async function recoverPortConflict(): Promise<{

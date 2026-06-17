@@ -4,12 +4,12 @@
   Unit tests for scripts/install.ps1 helpers (#913 MSI argument contract).
 
 .DESCRIPTION
-  Dot-sources install.ps1 (does not run Install-OpenHuman) and validates
-  Get-OpenHumanMsiexecInstallArgumentList, Select-OpenHumanWindowsAssetFromRelease,
-  and Test-OpenHumanWindowsProcessElevated.
+  Dot-sources install.ps1 (does not run Install-Marvi) and validates
+  Get-MarviMsiexecInstallArgumentList, Select-MarviWindowsAssetFromRelease,
+  and Test-MarviWindowsProcessElevated.
 
   Run from repo root:
-    pwsh -NoProfile -File scripts/tests/OpenHumanWindowsInstall.Tests.ps1
+    pwsh -NoProfile -File scripts/tests/MarviWindowsInstall.Tests.ps1
 #>
 $ErrorActionPreference = 'Stop'
 
@@ -47,14 +47,14 @@ function Assert-True {
   }
 }
 
-Write-Host "`n== Get-OpenHumanMsiexecInstallArgumentList (#913) ==" -ForegroundColor Cyan
+Write-Host "`n== Get-MarviMsiexecInstallArgumentList (#913) ==" -ForegroundColor Cyan
 $p = 'C:\Temp\Marvi_0.0.0_x64_en-US.msi'
-$args = Get-OpenHumanMsiexecInstallArgumentList -MsiPath $p
+$args = Get-MarviMsiexecInstallArgumentList -MsiPath $p
 Assert-True ($args.Count -eq 4) 'returns exactly 4 argument tokens'
 Assert-Equal '/i' $args[0] 'first token is /i'
 Assert-Equal $p $args[1] 'second token is MSI path'
 $pSpaces = 'C:\Temp\Test User\Marvi_0.0.0_x64_en-US.msi'
-$argsSpaces = Get-OpenHumanMsiexecInstallArgumentList -MsiPath $pSpaces
+$argsSpaces = Get-MarviMsiexecInstallArgumentList -MsiPath $pSpaces
 Assert-Equal $pSpaces $argsSpaces[1] 'path with spaces remains one second argv token (no split)'
 Assert-Equal '/qn' $args[2] 'third token is /qn'
 Assert-Equal '/norestart' $args[3] 'fourth token is /norestart'
@@ -65,14 +65,14 @@ $joined = $args -join ' '
 Assert-True ($joined -notmatch 'MSIINSTALLPERUSER') 'joined args omit MSIINSTALLPERUSER'
 Assert-True ($joined -notmatch 'ALLUSERS') 'joined args omit ALLUSERS'
 
-Write-Host "`n== Select-OpenHumanWindowsAssetFromRelease ==" -ForegroundColor Cyan
+Write-Host "`n== Select-MarviWindowsAssetFromRelease ==" -ForegroundColor Cyan
 $release = [pscustomobject]@{
   assets = @(
     [pscustomobject]@{ name = 'Marvi_1.0.0_x64_en-US.msi'; browser_download_url = 'https://example/msi' }
     [pscustomobject]@{ name = 'other.zip'; browser_download_url = 'https://example/z' }
   )
 }
-$sel = Select-OpenHumanWindowsAssetFromRelease -Release $release
+$sel = Select-MarviWindowsAssetFromRelease -Release $release
 Assert-Equal 'Marvi_1.0.0_x64_en-US.msi' $sel.name 'prefers MSI over other assets'
 
 $releaseExe = [pscustomobject]@{
@@ -80,16 +80,16 @@ $releaseExe = [pscustomobject]@{
     [pscustomobject]@{ name = 'Marvi_1.0.0_x64-setup.exe'; browser_download_url = 'https://example/exe' }
   )
 }
-$sel2 = Select-OpenHumanWindowsAssetFromRelease -Release $releaseExe
+$sel2 = Select-MarviWindowsAssetFromRelease -Release $releaseExe
 Assert-True ($null -ne $sel2) 'selects exe when no msi'
 Assert-Equal 'Marvi_1.0.0_x64-setup.exe' $sel2.name 'exe name matches pattern'
 
 $releaseEmpty = [pscustomobject]@{ assets = @() }
-$sel3 = Select-OpenHumanWindowsAssetFromRelease -Release $releaseEmpty
+$sel3 = Select-MarviWindowsAssetFromRelease -Release $releaseEmpty
 Assert-True ($null -eq $sel3) 'null when no assets'
 
-Write-Host "`n== Test-OpenHumanWindowsProcessElevated ==" -ForegroundColor Cyan
-$t = Test-OpenHumanWindowsProcessElevated
+Write-Host "`n== Test-MarviWindowsProcessElevated ==" -ForegroundColor Cyan
+$t = Test-MarviWindowsProcessElevated
 Assert-True ($t -is [bool]) 'returns a boolean'
 
 Write-Host "`n== $($testCount) checks, $failCount failed ==" -ForegroundColor $(if ($failCount -eq 0) { 'Green' } else { 'Red' })

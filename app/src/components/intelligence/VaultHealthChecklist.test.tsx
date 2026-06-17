@@ -43,7 +43,7 @@ describe('<VaultHealthChecklist />', () => {
       expect(screen.getByTestId('vault-health-item-exists')).toBeInTheDocument();
     });
     expect(screen.getByText(/Passed · Workspace vault path exists/)).toBeInTheDocument();
-    expect(screen.getByText(/Passed · Vault is writable by OpenHuman/)).toBeInTheDocument();
+    expect(screen.getByText(/Passed · Vault is writable by Marvi/)).toBeInTheDocument();
     expect(screen.getByText(/Passed · Vault is registered in Obsidian/)).toBeInTheDocument();
     expect(screen.getByText(/Passed · Memory pipeline is healthy/)).toBeInTheDocument();
   });

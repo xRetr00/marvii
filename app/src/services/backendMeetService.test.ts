@@ -182,7 +182,7 @@ describe('joinMeetViaBackendBot', () => {
 
     await joinMeetViaBackendBot({
       meetUrl: 'https://meet.google.com/abc-defg-hij',
-      displayName: 'OpenHuman',
+      displayName: 'Marvi',
       agentName: 'Aria',
       systemPrompt: 'Be concise.',
       mascotId: 'yellow',
@@ -193,7 +193,7 @@ describe('joinMeetViaBackendBot', () => {
       method: 'openhuman.agent_meetings_join',
       params: {
         meet_url: 'https://meet.google.com/abc-defg-hij',
-        display_name: 'OpenHuman',
+        display_name: 'Marvi',
         platform: undefined,
         agent_name: 'Aria',
         system_prompt: 'Be concise.',

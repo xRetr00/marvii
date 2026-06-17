@@ -367,7 +367,7 @@ const messages: TranslationMap = {
   'skills.channels': 'Mensajería',
   'skills.explorer.emptyCta': 'Instalar desde URL',
   'skills.explorer.emptyDescription':
-    'Instala un paquete SKILL.md o coloca carpetas estilo Hermes en ~/.openhuman/skills.',
+    'Instala un paquete SKILL.md o coloca carpetas estilo Hermes en the Marvi skills folder.',
   'skills.explorer.emptyTitle': 'No se encontraron skills',
   'skills.explorer.installFromUrl': 'Instalar desde URL',
   'skills.explorer.newSkill': 'Nueva skill',
@@ -1466,7 +1466,7 @@ const messages: TranslationMap = {
   'settings.billing.movedToWeb': 'La facturación se trasladó a la web',
   'settings.billing.openDashboard': 'Abrir panel de facturación',
   'settings.billing.movedToWebDesc':
-    'Los cambios de suscripción, métodos de pago, créditos y facturas ahora se gestionan en TinyHumans en la web.',
+    'Los cambios de suscripción, métodos de pago, créditos y facturas ahora se gestionan en Marvi en la web.',
   'settings.billing.backToSettings': 'Volver a configuración',
   'settings.billing.openingBrowser': 'Abriendo tu navegador...',
   'settings.billing.browserNotOpen': 'Si tu navegador no se abrió, usa el botón de arriba.',
@@ -2508,7 +2508,7 @@ const messages: TranslationMap = {
   'welcome.continueLocally': 'Continuar localmente',
   'welcome.continueLocallyExperimental': 'Continuar localmente (Experimental)',
   'welcome.localSessionStarting': 'Iniciando sesión local...',
-  'welcome.localSessionDesc': 'Utiliza un perfil local sin conexión y omite TinyHumans OAuth.',
+  'welcome.localSessionDesc': 'Utiliza un perfil local sin conexión y omite Marvi OAuth.',
   'chat.agentChatDesc': 'Abre una sesión de chat directo con el agente.',
   'chat.modelPlaceholder': 'gpt-4o',
   'channels.activeRouteValue': '{channel} vía {authMode}',
@@ -3391,7 +3391,7 @@ const messages: TranslationMap = {
   'settings.ai.claudeCode.fullAccessOff':
     'Aceptar solo ediciones — aplica los cambios de archivos automáticamente y restringe comandos y red.',
   'settings.ai.claudeCode.sandboxNoteMac':
-    'En macOS, ~/.openhuman permanece protegido por el sandbox en ambos modos.',
+    'En macOS, the local Marvi profile permanece protegido por el sandbox en ambos modos.',
   'settings.ai.claudeCode.sandboxNoteOther':
     'El acceso completo no tiene restricciones en esta plataforma — actívalo solo si confías en el espacio de trabajo.',
   'settings.ai.claudeCode.enableToCheck': 'Activa Claude Code para comprobar el inicio de sesión.',
@@ -4199,7 +4199,7 @@ const messages: TranslationMap = {
   'settings.mcpServer.title': 'MCP Servidor',
   'settings.mcpServer.toolsSectionTitle': 'Herramientas disponibles',
   'settings.mcpServer.toolsSectionDesc':
-    'Herramientas expuestas a través del servidor stdio MCP cuando se ejecuta openhuman-core mcp',
+    'Herramientas expuestas a través del servidor stdio MCP cuando se ejecuta Marvi core MCP',
   'settings.mcpServer.configSectionTitle': 'Configuración del cliente',
   'settings.mcpServer.configSectionDesc':
     'Seleccione su cliente MCP para generar el fragmento de configuración correcto',
@@ -4207,7 +4207,7 @@ const messages: TranslationMap = {
   'settings.mcpServer.copied': '¡Copiado!',
   'settings.mcpServer.openConfigFile': 'Abrir archivo de configuración',
   'settings.mcpServer.binaryPathNotFound':
-    'Marvi binario no encontrado. Si se ejecuta desde el código fuente, compila con: cargo build --bin openhuman-core',
+    'Marvi binario no encontrado. Si se ejecuta desde el código fuente, compila con: build the Marvi core binary',
   'settings.mcpServer.openConfigError': 'No se pudo abrir el archivo de configuración',
   'settings.mcpServer.clientClaudeDesktop': 'Escritorio Claude',
   'settings.mcpServer.clientCursor': 'Cursor',
@@ -4611,7 +4611,7 @@ const messages: TranslationMap = {
   'skills.create.scope': 'Alcance',
   'skills.create.scopeProjectHint': '/.openhuman/habilidades/',
   'skills.create.scopeUserHint':
-    'Se escribe en ~/.openhuman/skills/<slug>/SKILL.md — disponible en todos los espacios de trabajo.',
+    'Se escribe en the Marvi skills folder — disponible en todos los espacios de trabajo.',
   'skills.create.slugLabel': 'Etiqueta de slug',
   'skills.create.subtitle': 'HABILIDAD.md',
   'skills.create.tags': 'Etiquetas',
@@ -4658,7 +4658,7 @@ const messages: TranslationMap = {
     'Sólo funcionan los enlaces directos `.md`. Para GitHub, enlace a un archivo (github.com/owner/repo/blob/.../SKILL.md): las raíces del árbol y del repositorio no están instaladas.',
   'skills.install.errors.unsupportedUrlTitle': 'Formulario URL no compatible',
   'skills.install.errors.writeFailedHint':
-    'No se podía escribir en el directorio de habilidades del espacio de trabajo. Verifique los permisos del sistema de archivos para `<workspace>/.openhuman/skills/`.',
+    'No se podía escribir en el directorio de habilidades del espacio de trabajo. Verifique los permisos del sistema de archivos para `the workspace Marvi skills folder`.',
   'skills.install.errors.writeFailedTitle': 'No se pudo escribir SKILL.md',
   'skills.install.fetchLog': 'Obtener registro',
   'skills.install.fetchingPrefix': 'buscando',

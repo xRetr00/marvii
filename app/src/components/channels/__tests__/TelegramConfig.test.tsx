@@ -33,13 +33,13 @@ afterEach(() => {
 describe('TelegramConfig', () => {
   it('renders auth mode labels', () => {
     renderWithProviders(<TelegramConfig definition={telegramDef} />);
-    expect(screen.getByText('Login with OpenHuman')).toBeInTheDocument();
+    expect(screen.getByText('Login with Marvi')).toBeInTheDocument();
   });
 
   it('renders both auth modes', () => {
     renderWithProviders(<TelegramConfig definition={telegramDef} />);
     expect(screen.getAllByText(/Bot Token/i).length).toBeGreaterThanOrEqual(1);
-    expect(screen.getByText('Login with OpenHuman')).toBeInTheDocument();
+    expect(screen.getByText('Login with Marvi')).toBeInTheDocument();
   });
 
   it('documents Telegram remote-control commands', () => {
@@ -140,7 +140,7 @@ describe('TelegramConfig', () => {
     expect(
       screen.getByText('Managed channels are not available for local users.')
     ).toBeInTheDocument();
-    expect(screen.queryByText('Login with OpenHuman')).not.toBeInTheDocument();
+    expect(screen.queryByText('Login with Marvi')).not.toBeInTheDocument();
     expect(screen.getAllByText(/Bot Token/i).length).toBeGreaterThanOrEqual(1);
   });
 });

@@ -46,7 +46,7 @@ describe('Rewards page', () => {
     expect(rewardsApi.getMyRewards).not.toHaveBeenCalled();
     expect(
       screen.getByText(
-        'Local login does not earn rewards, coupons, or referral credit. To earn rewards, log out and continue by signing in with an OpenHuman account.'
+        'Local login does not earn rewards, coupons, or referral credit. To earn rewards, log out and continue by signing in with a Marvi account.'
       )
     ).toBeInTheDocument();
   });
@@ -79,7 +79,7 @@ describe('Rewards page', () => {
         {
           id: 'STREAK_7',
           title: '7-Day Streak',
-          description: 'Use OpenHuman on seven consecutive active days.',
+          description: 'Use Marvi on seven consecutive active days.',
           actionLabel: 'Keep your streak alive for 7 days',
           unlocked: true,
           progressLabel: 'Unlocked',
@@ -153,7 +153,7 @@ describe('Rewards page', () => {
           {
             id: 'STREAK_7',
             title: '7-Day Streak',
-            description: 'Use OpenHuman on seven consecutive active days.',
+            description: 'Use Marvi on seven consecutive active days.',
             actionLabel: 'Keep your streak alive for 7 days',
             unlocked: true,
             progressLabel: 'Unlocked',

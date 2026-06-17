@@ -129,7 +129,7 @@ describe('Welcome — decryption-failure recovery action', () => {
     mockClearAllAppData.mockReset().mockResolvedValue(undefined);
     vi.mocked(useDeepLinkAuthState).mockReturnValue({
       isProcessing: false,
-      errorMessage: "Sign-in failed because OpenHuman couldn't decrypt locally stored data.",
+      errorMessage: "Sign-in failed because Marvi couldn't decrypt locally stored data.",
       requiresAppDataReset: true,
     });
   });

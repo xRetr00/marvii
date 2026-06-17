@@ -108,7 +108,7 @@ fn basename_of_first_token(s: &str) -> String {
 
 /// Pull the first whitespace-delimited token out of a Windows-style command
 /// string, honouring double-quoted paths. The registry stores values like
-/// `"C:\Program Files\OpenHuman\OpenHuman.exe" "%1"` — we want the exe path.
+/// `"C:\Program Files\Marvi\Marvi.exe" "%1"` — we want the exe path.
 pub(crate) fn extract_first_token(command: &str) -> &str {
     let trimmed = command.trim_start();
     if let Some(rest) = trimmed.strip_prefix('"') {
@@ -290,30 +290,30 @@ mod tests {
     #[test]
     fn extract_first_token_quoted_exe_with_args() {
         assert_eq!(
-            extract_first_token("\"C:\\Program Files\\OpenHuman\\OpenHuman.exe\" \"%1\""),
-            "C:\\Program Files\\OpenHuman\\OpenHuman.exe"
+            extract_first_token("\"C:\\Program Files\\Marvi\\Marvi.exe\" \"%1\""),
+            "C:\\Program Files\\Marvi\\Marvi.exe"
         );
     }
 
     #[test]
     fn extract_first_token_unquoted_exe_with_args() {
         assert_eq!(
-            extract_first_token("C:\\OpenHuman\\OpenHuman.exe %1"),
-            "C:\\OpenHuman\\OpenHuman.exe"
+            extract_first_token("C:\\Marvi\\Marvi.exe %1"),
+            "C:\\Marvi\\Marvi.exe"
         );
     }
 
     #[test]
     fn extract_first_token_handles_leading_whitespace() {
         assert_eq!(
-            extract_first_token("   C:\\OpenHuman\\OpenHuman.exe %1"),
-            "C:\\OpenHuman\\OpenHuman.exe"
+            extract_first_token("   C:\\Marvi\\Marvi.exe %1"),
+            "C:\\Marvi\\Marvi.exe"
         );
     }
 
     #[test]
     fn extract_first_token_single_value_no_args() {
-        assert_eq!(extract_first_token("OpenHuman.exe"), "OpenHuman.exe");
+        assert_eq!(extract_first_token("Marvi.exe"), "Marvi.exe");
     }
 
     #[test]
@@ -329,8 +329,8 @@ mod tests {
         // Some installers register the command without the `"%1"` argv
         // placeholder. The first token is still the quoted exe path.
         assert_eq!(
-            extract_first_token("\"C:\\OpenHuman\\OpenHuman.exe\""),
-            "C:\\OpenHuman\\OpenHuman.exe"
+            extract_first_token("\"C:\\Marvi\\Marvi.exe\""),
+            "C:\\Marvi\\Marvi.exe"
         );
     }
 
@@ -339,15 +339,15 @@ mod tests {
         // Defensive: malformed REG_SZ should not panic. We return the rest of
         // the string instead of slicing past a missing terminator.
         assert_eq!(
-            extract_first_token("\"C:\\OpenHuman\\OpenHuman.exe %1"),
-            "C:\\OpenHuman\\OpenHuman.exe %1"
+            extract_first_token("\"C:\\Marvi\\Marvi.exe %1"),
+            "C:\\Marvi\\Marvi.exe %1"
         );
     }
 
     #[test]
     fn paths_equal_loose_is_case_insensitive_and_slash_agnostic() {
         assert!(paths_equal_loose(
-            "C:\\Program Files\\OpenHuman\\OpenHuman.exe",
+            "C:\\Program Files\\Marvi\\Marvi.exe",
             "c:/program files/openhuman/openhuman.exe"
         ));
     }
@@ -355,16 +355,16 @@ mod tests {
     #[test]
     fn paths_equal_loose_distinguishes_different_paths() {
         assert!(!paths_equal_loose(
-            "C:\\OldPath\\OpenHuman.exe",
-            "C:\\NewPath\\OpenHuman.exe"
+            "C:\\OldPath\\Marvi.exe",
+            "C:\\NewPath\\Marvi.exe"
         ));
     }
 
     #[test]
     fn command_references_exe_matches_quoted_command_with_percent_one() {
-        let exe = PathBuf::from("C:\\Program Files\\OpenHuman\\OpenHuman.exe");
+        let exe = PathBuf::from("C:\\Program Files\\Marvi\\Marvi.exe");
         assert!(command_references_exe(
-            "\"C:\\Program Files\\OpenHuman\\OpenHuman.exe\" \"%1\"",
+            "\"C:\\Program Files\\Marvi\\Marvi.exe\" \"%1\"",
             &exe
         ));
     }
@@ -374,20 +374,17 @@ mod tests {
         // Some HKCU writers omit the quotes when the path has no spaces. The
         // matcher must still resolve to the exe via the unquoted code path in
         // `extract_first_token` rather than relying only on the quoted path.
-        let exe = PathBuf::from("C:\\OpenHuman\\OpenHuman.exe");
-        assert!(command_references_exe(
-            "C:\\OpenHuman\\OpenHuman.exe %1",
-            &exe
-        ));
+        let exe = PathBuf::from("C:\\Marvi\\Marvi.exe");
+        assert!(command_references_exe("C:\\Marvi\\Marvi.exe %1", &exe));
     }
 
     #[test]
     fn command_references_exe_detects_stale_install_path() {
         // Repro of the "user moved the install" failure mode: registry still
         // points at the old location.
-        let exe = PathBuf::from("C:\\NewLocation\\OpenHuman.exe");
+        let exe = PathBuf::from("C:\\NewLocation\\Marvi.exe");
         assert!(!command_references_exe(
-            "\"C:\\OldLocation\\OpenHuman.exe\" \"%1\"",
+            "\"C:\\OldLocation\\Marvi.exe\" \"%1\"",
             &exe
         ));
     }
@@ -398,13 +395,13 @@ mod tests {
         // user's home directory must produce a log line that contains the
         // exe basenames but neither the username nor the parent dirs.
         let status = RegistrationStatus::Stale {
-            registered_command:
-                "\"C:\\Users\\joe\\AppData\\Local\\OpenHuman\\OpenHuman.exe\" \"%1\"".into(),
-            expected_exe: "C:\\Users\\joe\\AppData\\Local\\OpenHuman_new\\OpenHuman.exe".into(),
+            registered_command: "\"C:\\Users\\joe\\AppData\\Local\\Marvi\\Marvi.exe\" \"%1\""
+                .into(),
+            expected_exe: "C:\\Users\\joe\\AppData\\Local\\Marvi_new\\Marvi.exe".into(),
         };
         let rendered = status.redacted();
         assert!(
-            rendered.contains("OpenHuman.exe"),
+            rendered.contains("Marvi.exe"),
             "basename should survive redaction: {rendered}"
         );
         assert!(
@@ -420,9 +417,9 @@ mod tests {
     #[test]
     fn redacted_preserves_valid_variant_label_and_basename() {
         let status = RegistrationStatus::Valid {
-            command: "\"C:\\Program Files\\OpenHuman\\OpenHuman.exe\" \"%1\"".into(),
+            command: "\"C:\\Program Files\\Marvi\\Marvi.exe\" \"%1\"".into(),
         };
-        assert_eq!(status.redacted(), "Valid { exe: OpenHuman.exe }");
+        assert_eq!(status.redacted(), "Valid { exe: Marvi.exe }");
     }
 
     #[test]

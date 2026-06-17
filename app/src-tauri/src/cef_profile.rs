@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 
 pub const CEF_CACHE_PATH_ENV: &str = "OPENHUMAN_CEF_CACHE_PATH";
 const ACTIVE_USER_STATE_FILE: &str = "active_user.toml";
-/// Sibling of the OpenHuman data dir (not under it) so the marker survives
+/// Sibling of the Marvi data dir (not under it) so the marker survives
 /// `reset_local_data` removing the whole `default_openhuman_dir` tree.
 const PENDING_PURGE_STATE_FILE: &str = "openhuman_pending_cef_purge.toml";
 /// Pre–sibling-layout marker (lived under the data root; `reset_local_data` removed it).
@@ -24,7 +24,7 @@ struct PendingCefPurgeState {
     paths: Vec<String>,
 }
 
-/// Resolves the on-disk OpenHuman root dir name (`.openhuman` vs
+/// Resolves the on-disk Marvi root dir name (`.openhuman` vs
 /// `.openhuman-staging`) for the Tauri shell. Delegates to
 /// [`openhuman_core::api::config::app_env_from_env`] so the shell and the
 /// embedded core agree on the channel selection — including the
@@ -163,7 +163,7 @@ fn is_trusted_queued_purge_path(default_openhuman_dir: &Path, target: &Path) -> 
     true
 }
 
-/// Marker file lives in the **parent** of the OpenHuman data root so a full
+/// Marker file lives in the **parent** of the Marvi data root so a full
 /// `remove_dir_all(default_openhuman_dir)` (e.g. from core `reset_local_data`) does
 /// not delete the pending-purge list before it is processed.
 fn pending_purge_marker_path(default_openhuman_dir: &Path) -> Result<PathBuf, String> {
@@ -284,7 +284,7 @@ pub fn prepare_process_cache_path() -> Result<PathBuf, String> {
     drain_pending_purges(&default_openhuman_dir)?;
 
     // Honor a pre-set `OPENHUMAN_CEF_CACHE_PATH` so harnesses (E2E in
-    // particular) can locate the CEF cache outside the OpenHuman workspace
+    // particular) can locate the CEF cache outside the Marvi workspace
     // tree. The mega-flow spec calls `openhuman.config_reset_local_data`
     // between scenarios, which `remove_dir_all`'s the whole workspace —
     // if CEF's cache lives inside it the running renderer crashes mid-spec

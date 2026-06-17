@@ -1,4 +1,4 @@
-//! Install the OpenHuman camera bridge into the Meet webview via CDP.
+//! Install the Marvi camera bridge into the Meet webview via CDP.
 //!
 //! ## Why post-reload `Runtime.evaluate`, not `addScriptToEvaluateOnNewDocument`
 //!

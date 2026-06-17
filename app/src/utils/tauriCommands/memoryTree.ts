@@ -68,7 +68,7 @@ export interface Chunk {
   /** Up to 500 chars; used as the result-list subject preview. */
   content_preview?: string;
   has_embedding: boolean;
-  /** Hierarchical: ["person/Steve-Enamakel", "organization/TinyHumans"]. */
+  /** Hierarchical: ["person/Steve-Enamakel", "organization/Marvi"]. */
   tags: string[];
 }
 

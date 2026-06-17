@@ -35,9 +35,9 @@ describe('rpcMethods catalog', () => {
     });
 
     test('trims whitespace and converts to lower case', () => {
-      expect(normalizeRpcMethod('  OpenHuman.Auth.Login  ')).toBe('openhuman.auth_login');
+      expect(normalizeRpcMethod('  Marvi.Auth.Login  ')).toBe('openhuman.auth_login');
       expect(normalizeRpcMethod('  OPENHUMAN.GET_CONFIG ')).toBe(CORE_RPC_METHODS.configGet);
-      expect(normalizeRpcMethod('OpenHuman.Accessibility_Status  ')).toBe(
+      expect(normalizeRpcMethod('Marvi.Accessibility_Status  ')).toBe(
         'openhuman.screen_intelligence_status'
       );
       expect(normalizeRpcMethod('   some_RANDOM_method  ')).toBe('some_random_method');

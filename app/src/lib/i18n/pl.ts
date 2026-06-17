@@ -359,7 +359,7 @@ const messages: TranslationMap = {
   'skills.channels': 'Wiadomości',
   'skills.explorer.emptyCta': 'Zainstaluj z URL',
   'skills.explorer.emptyDescription':
-    'Zainstaluj pakiet SKILL.md albo umieść foldery w stylu Hermes w ~/.openhuman/skills.',
+    'Zainstaluj pakiet SKILL.md albo umieść foldery w stylu Hermes w the Marvi skills folder.',
   'skills.explorer.emptyTitle': 'Nie znaleziono skilli',
   'skills.explorer.installFromUrl': 'Zainstaluj z URL',
   'skills.explorer.newSkill': 'Nowy skill',
@@ -3379,7 +3379,7 @@ const messages: TranslationMap = {
   'settings.ai.claudeCode.fullAccessOff':
     'Akceptuj tylko zmiany — automatycznie stosuje zmiany w plikach, ogranicza polecenia i sieć.',
   'settings.ai.claudeCode.sandboxNoteMac':
-    'W systemie macOS katalog ~/.openhuman pozostaje chroniony przez piaskownicę w obu trybach.',
+    'W systemie macOS katalog the local Marvi profile pozostaje chroniony przez piaskownicę w obu trybach.',
   'settings.ai.claudeCode.sandboxNoteOther':
     'Pełny dostęp nie jest ograniczony na tej platformie — włącz go tylko, jeśli ufasz przestrzeni roboczej.',
   'settings.ai.claudeCode.enableToCheck': 'Włącz Claude Code, aby sprawdzić logowanie.',
@@ -4187,7 +4187,7 @@ const messages: TranslationMap = {
   'settings.mcpServer.title': 'Serwer MCP',
   'settings.mcpServer.toolsSectionTitle': 'Dostępne narzędzia',
   'settings.mcpServer.toolsSectionDesc':
-    'Narzędzia udostępniane przez serwer stdio MCP podczas uruchamiania openhuman-core mcp',
+    'Narzędzia udostępniane przez serwer stdio MCP podczas uruchamiania Marvi core MCP',
   'settings.mcpServer.configSectionTitle': 'Konfiguracja klienta',
   'settings.mcpServer.configSectionDesc':
     'Wybierz swojego klienta MCP, aby wygenerować poprawny fragment konfiguracji',
@@ -4195,7 +4195,7 @@ const messages: TranslationMap = {
   'settings.mcpServer.copied': 'Skopiowano!',
   'settings.mcpServer.openConfigFile': 'Otwórz plik konfiguracyjny',
   'settings.mcpServer.binaryPathNotFound':
-    'Nie znaleziono pliku binarnego Marvi. Jeśli uruchamiasz ze źródeł, zbuduj: cargo build --bin openhuman-core',
+    'Nie znaleziono pliku binarnego Marvi. Jeśli uruchamiasz ze źródeł, zbuduj: build the Marvi core binary',
   'settings.mcpServer.openConfigError': 'Nie udało się otworzyć pliku konfiguracyjnego',
   'settings.mcpServer.clientClaudeDesktop': 'Claude Desktop',
   'settings.mcpServer.clientCursor': 'Cursor',
@@ -4591,9 +4591,9 @@ const messages: TranslationMap = {
   'skills.create.name': 'Nazwa',
   'skills.create.namePlaceholder': 'np. Dziennik transakcji',
   'skills.create.scope': 'Zakres',
-  'skills.create.scopeProjectHint': '/.openhuman/skills/',
+  'skills.create.scopeProjectHint': '/Marvi skills/',
   'skills.create.scopeUserHint':
-    'Zapisane do ~/.openhuman/skills/<slug>/SKILL.md — dostępne we wszystkich przestrzeniach roboczych.',
+    'Zapisane do the Marvi skills folder — dostępne we wszystkich przestrzeniach roboczych.',
   'skills.create.slugLabel': 'Etykieta slug',
   'skills.create.subtitle': 'SKILL.md',
   'skills.create.tags': 'Tagi',
@@ -4639,7 +4639,7 @@ const messages: TranslationMap = {
     'Działają tylko bezpośrednie linki `.md`. Dla GitHuba linkuj do pliku (github.com/owner/repo/blob/.../SKILL.md) — drzewa i korzenie repo nie są instalowane.',
   'skills.install.errors.unsupportedUrlTitle': 'Forma URL nieobsługiwana',
   'skills.install.errors.writeFailedHint':
-    'Katalog umiejętności w przestrzeni roboczej nie był zapisywalny. Sprawdź uprawnienia systemu plików dla `<workspace>/.openhuman/skills/`.',
+    'Katalog umiejętności w przestrzeni roboczej nie był zapisywalny. Sprawdź uprawnienia systemu plików dla `the workspace Marvi skills folder`.',
   'skills.install.errors.writeFailedTitle': 'Nie udało się zapisać SKILL.md',
   'skills.install.fetchLog': 'Dziennik pobierania',
   'skills.install.fetchingPrefix': 'Pobieranie',

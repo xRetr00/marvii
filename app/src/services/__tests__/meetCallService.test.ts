@@ -138,7 +138,7 @@ describe('listMeetCalls', () => {
       {
         request_id: 'req-1',
         meet_url: 'https://meet.google.com/abc-defg-hij',
-        bot_display_name: 'OpenHuman',
+        bot_display_name: 'Marvi',
         owner_display_name: 'Alice',
         started_at_ms: 1700000000000,
         ended_at_ms: 1700000060000,
@@ -208,9 +208,9 @@ describe('joinMeetViaBackendBot', () => {
 
     const result = await joinMeetViaBackendBot({
       meetUrl: ' https://meet.google.com/abc-defg-hij ',
-      displayName: 'OpenHuman',
+      displayName: 'Marvi',
       platform: 'gmeet',
-      agentName: 'OpenHuman',
+      agentName: 'Marvi',
       systemPrompt: 'Answer only when addressed.',
       riveColors: { primaryColor: '#ffcc00', secondaryColor: '#112233' },
     });
@@ -219,9 +219,9 @@ describe('joinMeetViaBackendBot', () => {
       method: 'openhuman.agent_meetings_join',
       params: {
         meet_url: 'https://meet.google.com/abc-defg-hij',
-        display_name: 'OpenHuman',
+        display_name: 'Marvi',
         platform: 'gmeet',
-        agent_name: 'OpenHuman',
+        agent_name: 'Marvi',
         system_prompt: 'Answer only when addressed.',
         rive_colors: { primary_color: '#ffcc00', secondary_color: '#112233' },
       },

@@ -354,7 +354,7 @@ const messages: TranslationMap = {
   'skills.channels': '메시징',
   'skills.explorer.emptyCta': 'URL에서 설치',
   'skills.explorer.emptyDescription':
-    'SKILL.md 패키지를 설치하거나 Hermes 스타일 폴더를 ~/.openhuman/skills에 넣으세요.',
+    'SKILL.md 패키지를 설치하거나 Hermes 스타일 폴더를 the Marvi skills folder에 넣으세요.',
   'skills.explorer.emptyTitle': '스킬을 찾을 수 없음',
   'skills.explorer.installFromUrl': 'URL에서 설치',
   'skills.explorer.newSkill': '새 스킬',
@@ -1423,7 +1423,7 @@ const messages: TranslationMap = {
   'settings.billing.movedToWeb': '결제가 웹으로 이동됨',
   'settings.billing.openDashboard': '결제 대시보드 열기',
   'settings.billing.movedToWebDesc':
-    '구독 변경, 결제 수단, 크레딧 및 인보이스는 이제 웹의 TinyHumans에서 관리됩니다.',
+    '구독 변경, 결제 수단, 크레딧 및 인보이스는 이제 웹의 Marvi에서 관리됩니다.',
   'settings.billing.backToSettings': '설정으로 돌아가기',
   'settings.billing.openingBrowser': '브라우저를 여는 중...',
   'settings.billing.browserNotOpen': '브라우저가 열리지 않았다면 위 버튼을 사용하세요.',
@@ -2434,7 +2434,7 @@ const messages: TranslationMap = {
   'welcome.continueLocally': '로컬에서 계속',
   'welcome.continueLocallyExperimental': '로컬에서 계속(실험적)',
   'welcome.localSessionStarting': '로컬 세션 시작 중...',
-  'welcome.localSessionDesc': '오프라인 로컬 프로필을 사용하고 TinyHumans를 건너뜁니다. OAuth.',
+  'welcome.localSessionDesc': '오프라인 로컬 프로필을 사용하고 Marvi를 건너뜁니다. OAuth.',
   'chat.agentChatDesc': '에이전트와 직접 채팅 세션을 엽니다.',
   'chat.modelPlaceholder': 'gpt-4o',
   'channels.activeRouteValue': '{authMode}을(를) 통해 {channel}',
@@ -3302,7 +3302,7 @@ const messages: TranslationMap = {
   'settings.ai.claudeCode.fullAccessOff':
     '편집만 수락 — 파일 편집을 자동으로 적용하고 명령과 네트워크를 제한합니다.',
   'settings.ai.claudeCode.sandboxNoteMac':
-    'macOS에서는 두 모드 모두 ~/.openhuman이 샌드박스로 보호됩니다.',
+    'macOS에서는 두 모드 모두 the local Marvi profile이 샌드박스로 보호됩니다.',
   'settings.ai.claudeCode.sandboxNoteOther':
     '이 플랫폼에서는 전체 액세스가 제한되지 않습니다 — 작업 공간을 신뢰하는 경우에만 사용 설정하세요.',
   'settings.ai.claudeCode.enableToCheck': '로그인을 확인하려면 Claude Code를 사용 설정하세요.',
@@ -4080,8 +4080,7 @@ const messages: TranslationMap = {
   'settings.developerMenu.voiceDebug.desc': '음성 받아쓰기 런타임 상태 및 디버그 설정',
   'settings.mcpServer.title': 'MCP 서버',
   'settings.mcpServer.toolsSectionTitle': '사용 가능한 도구',
-  'settings.mcpServer.toolsSectionDesc':
-    '도구 노출 openhuman-core mcp 실행 시 MCP stdio 서버를 통해',
+  'settings.mcpServer.toolsSectionDesc': '도구 노출 Marvi core MCP 실행 시 MCP stdio 서버를 통해',
   'settings.mcpServer.configSectionTitle': '클라이언트 구성',
   'settings.mcpServer.configSectionDesc':
     '올바른 구성 조각을 생성하려면 MCP 클라이언트를 선택하세요.',
@@ -4089,7 +4088,7 @@ const messages: TranslationMap = {
   'settings.mcpServer.copied': '복사되었습니다!',
   'settings.mcpServer.openConfigFile': '구성 파일 열기',
   'settings.mcpServer.binaryPathNotFound':
-    'Marvi 바이너리를 찾을 수 없습니다. 소스에서 실행하는 경우 다음을 사용하여 빌드하세요: cargo build --bin openhuman-core',
+    'Marvi 바이너리를 찾을 수 없습니다. 소스에서 실행하는 경우 다음을 사용하여 빌드하세요: build the Marvi core binary',
   'settings.mcpServer.openConfigError': '구성 파일을 열지 못했습니다.',
   'settings.mcpServer.clientClaudeDesktop': 'Claude Desktop',
   'settings.mcpServer.clientCursor': '커서',
@@ -4477,9 +4476,9 @@ const messages: TranslationMap = {
   'skills.create.name': '이름',
   'skills.create.namePlaceholder': '예: Trade Journal',
   'skills.create.scope': '범위',
-  'skills.create.scopeProjectHint': '/.openhuman/skills/',
+  'skills.create.scopeProjectHint': '/Marvi skills/',
   'skills.create.scopeUserHint':
-    '~/.openhuman/skills/<slug>/SKILL.md에 작성됨 — 모든 워크스페이스에서 사용 가능.',
+    'the Marvi skills folder에 작성됨 — 모든 워크스페이스에서 사용 가능.',
   'skills.create.slugLabel': '슬러그 라벨',
   'skills.create.subtitle': 'SKILL.md',
   'skills.create.tags': '태그',
@@ -4526,7 +4525,7 @@ const messages: TranslationMap = {
     '직접 `.md` 링크만 작동합니다. GitHub의 경우 파일 링크(github.com/owner/repo/blob/.../SKILL.md) - 트리 및 repo 루트는 설치되지 않습니다.',
   'skills.install.errors.unsupportedUrlTitle': 'URL 형식이 지원되지 않습니다.',
   'skills.install.errors.writeFailedHint':
-    '작업공간 기술 디렉터리에 쓸 수 없습니다. `<workspace>/.openhuman/skills/`에 대한 파일 시스템 권한을 확인하세요.',
+    '작업공간 기술 디렉터리에 쓸 수 없습니다. `the workspace Marvi skills folder`에 대한 파일 시스템 권한을 확인하세요.',
   'skills.install.errors.writeFailedTitle': 'SKILL.md를 쓸 수 없습니다.',
   'skills.install.fetchLog': '로그 가져오기',
   'skills.install.fetchingPrefix': '가져오는 중',

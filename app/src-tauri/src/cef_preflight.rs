@@ -1,6 +1,6 @@
 //! CEF cache-lock preflight check (macOS and Linux).
 //!
-//! When another OpenHuman instance is already running, it holds an exclusive
+//! When another Marvi instance is already running, it holds an exclusive
 //! lock on the CEF user-data-dir. On macOS this is
 //! `~/Library/Caches/com.openhuman.app/cef`; on Linux it is the path in
 //! `OPENHUMAN_CEF_CACHE_PATH` (set by `cef_profile::prepare_process_cache_path`
@@ -311,7 +311,7 @@ pub fn wait_for_cache_release() {
                         "[cef-preflight] CEF cache still held after {} ms budget; exiting cleanly instead of initializing into a locked cache (TAURI-RUST-F)",
                         WAIT_BUDGET.as_millis()
                     );
-                    eprintln!("\n[openhuman] {held}\n");
+                    eprintln!("\n[marvi] {held}\n");
                     std::process::exit(0);
                 }
                 // Clamp the backoff to the remaining budget so the final sleep

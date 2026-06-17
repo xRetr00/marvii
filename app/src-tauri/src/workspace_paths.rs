@@ -52,7 +52,7 @@ pub async fn preview_workspace_text(path: String) -> Result<WorkspaceTextPreview
 }
 
 /// Resolve a workspace-relative path to its canonical absolute path on disk,
-/// after validating it stays inside the active OpenHuman workspace.
+/// after validating it stays inside the active Marvi workspace.
 ///
 /// This exposes the internal [`resolve_workspace_path`] helper so UI flows that
 /// need an absolute path to compose with a platform-specific URL scheme (e.g.

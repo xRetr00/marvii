@@ -1,4 +1,4 @@
-//! Install the OpenHuman audio bridge into the Meet webview via CDP.
+//! Install the Marvi audio bridge into the Meet webview via CDP.
 //!
 //! ## Why this can't live in the runtime
 //!

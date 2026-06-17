@@ -2,7 +2,7 @@ use crate::core_process;
 #[cfg(target_os = "windows")]
 use crate::reset_reboot_schedule;
 
-/// Reset the user's local OpenHuman data and bounce the embedded core.
+/// Reset the user's local Marvi data and bounce the embedded core.
 ///
 /// Replaces the prior two-step UI flow that called the core JSON-RPC
 /// `openhuman.config_reset_local_data` (in-process removal) followed by
@@ -168,7 +168,7 @@ fn reset_local_data_delete_error(
         //     `shutdown_file_guard()` (drops the rolling log file handle).
         // So any remaining lock now comes from *outside* this process —
         // anti-virus / file indexer / sibling app / Explorer — and cannot
-        // be released by closing more OpenHuman windows. See issue #1615.
+        // be released by closing more Marvi windows. See issue #1615.
         #[cfg(target_os = "windows")]
         {
             return schedule_reboot_delete_or_describe(label, path, error);
