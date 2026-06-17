@@ -127,10 +127,6 @@ export function normalizeRpcMethod(method: string): string {
     return LEGACY_METHOD_ALIASES[normalized];
   }
 
-  if (normalized.startsWith('openhuman.auth.')) {
-    return `openhuman.auth_${normalized.slice('openhuman.auth.'.length).split('.').join('_')}`;
-  }
-
   if (normalized.startsWith('openhuman.accessibility_')) {
     return normalized.replace('openhuman.accessibility_', 'openhuman.screen_intelligence_');
   }

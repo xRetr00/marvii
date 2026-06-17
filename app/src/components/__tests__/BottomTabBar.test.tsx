@@ -3,8 +3,7 @@
  *  - 6 tabs are rendered (no Rewards or Activity tab; Human restored; Chat is a regular tab)
  *  - Chat tab is present (id 'chat', label 'Chat')
  *  - Walkthrough attributes reflect the new ids (tab-connections)
- *  - Avatar menu opens and shows Account / Billing / Rewards / Invites / Wallet
- *  - Clicking an avatar menu item navigates or opens URL
+ *  - Hosted Account / Billing / Rewards / Invites / Wallet avatar menu stays removed
  *  - The bar is hidden on '/' and '/login' paths
  */
 import { configureStore } from '@reduxjs/toolkit';
@@ -304,64 +303,32 @@ describe('BottomTabBar', () => {
     expect(trackEvent).not.toHaveBeenCalled();
   });
 
-  it('renders the avatar button with the signed-in user initials', async () => {
+  it('does not render the hosted account avatar button', async () => {
     await renderBottomTabBar('/home', { currentUser: { firstName: 'Ada', lastName: 'Lovelace' } });
 
-    const avatar = screen.getByRole('button', { name: 'Account' });
-    expect(avatar).toHaveTextContent('AL');
+    expect(screen.queryByRole('button', { name: 'Account' })).toBeNull();
   });
 
-  it('falls back to a generic initial when no user is present', async () => {
+  it('does not render a generic account avatar for local sessions', async () => {
     await renderBottomTabBar('/home', { currentUser: null });
 
-    expect(screen.getByRole('button', { name: 'Account' })).toHaveTextContent('U');
+    expect(screen.queryByRole('button', { name: 'Account' })).toBeNull();
   });
 
-  it('avatar menu shows Account, Billing, Rewards, Invites, and Wallet items', async () => {
+  it('does not render hosted account menu items in the tab bar', async () => {
     await renderBottomTabBar('/home');
 
-    fireEvent.click(screen.getByRole('button', { name: 'Account' }));
-
-    const menu = screen.getByRole('menu', { name: 'Account' });
-    const menuItems = menu.querySelectorAll('[role="menuitem"]');
-    const labels = Array.from(menuItems).map(el => el.textContent?.trim());
-    expect(labels).toContain('Account');
-    expect(labels).toContain('Billing');
-    expect(labels).toContain('Rewards');
-    expect(labels).toContain('Invite a friend');
-    expect(labels).toContain('Wallet');
-  });
-
-  it('clicking Account in avatar menu closes the menu', async () => {
-    await renderBottomTabBar('/home');
-
-    fireEvent.click(screen.getByRole('button', { name: 'Account' }));
-    expect(screen.getByRole('menu', { name: 'Account' })).toBeInTheDocument();
-
-    const accountItem = screen.getByRole('menuitem', { name: 'Account' });
-    fireEvent.click(accountItem);
-
-    // Menu should close after click
     expect(screen.queryByRole('menu', { name: 'Account' })).toBeNull();
+    expect(screen.queryByText('Billing')).toBeNull();
+    expect(screen.queryByText('Rewards')).toBeNull();
+    expect(screen.queryByText('Invite a friend')).toBeNull();
+    expect(screen.queryByText('Wallet')).toBeNull();
   });
 
-  it('avatar menu does not show cloud-only items for local session', async () => {
-    // A local session token contains the literal string 'local'
+  it('keeps hosted account menu removed for local session tokens', async () => {
     await renderBottomTabBar('/home', { tokenValue: 'header.payload.local' });
 
-    fireEvent.click(screen.getByRole('button', { name: 'Account' }));
-
-    const menu = screen.getByRole('menu', { name: 'Account' });
-    const menuItems = menu.querySelectorAll('[role="menuitem"]');
-    const labels = Array.from(menuItems).map(el => el.textContent?.trim());
-
-    // Account and Wallet are always shown
-    expect(labels).toContain('Account');
-    expect(labels).toContain('Wallet');
-
-    // Cloud-only items should not appear for local sessions
-    expect(labels).not.toContain('Billing');
-    expect(labels).not.toContain('Rewards');
-    expect(labels).not.toContain('Invite a friend');
+    expect(screen.queryByRole('button', { name: 'Account' })).toBeNull();
+    expect(screen.queryByRole('menu', { name: 'Account' })).toBeNull();
   });
 });

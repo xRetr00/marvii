@@ -58,20 +58,18 @@ fn anthropic_entry(id: &str, slug: &str) -> CloudProviderCreds {
 #[test]
 fn openhuman_literal() {
     let config = Config::default();
-    let (_, model) = create_chat_provider_from_string("reasoning", "openhuman", &config)
-        .expect("openhuman literal must build");
-    assert!(!model.is_empty(), "model must not be empty");
+    let err = create_chat_provider_from_string("reasoning", "openhuman", &config)
+        .err()
+        .expect("openhuman literal must be disabled");
+    assert!(err.to_string().contains("disabled in this build"), "{err}");
 }
 
 #[test]
-fn cloud_no_providers_falls_back_to_openhuman() {
+fn cloud_no_providers_falls_back_to_local_default() {
     let config = Config::default();
-    let result = create_chat_provider_from_string("reasoning", "cloud", &config);
-    assert!(
-        result.is_ok(),
-        "cloud fallback must succeed: {:?}",
-        result.err()
-    );
+    let (_, model) = create_chat_provider_from_string("reasoning", "cloud", &config)
+        .expect("cloud fallback must build local provider");
+    assert_eq!(model, "gemma3:1b-it-qat");
 }
 
 #[test]
@@ -85,11 +83,12 @@ fn direct_cloud_sentinel_resolves_to_primary_custom_provider() {
 }
 
 #[test]
-fn openhuman_slug_routes_to_backend() {
+fn openhuman_slug_is_disabled() {
     let config = config_with_providers(vec![oh_entry("p_oh")]);
-    let (_, model) =
-        create_chat_provider_from_string("reasoning", "openhuman:", &config).expect("build");
-    assert!(!model.is_empty());
+    let err = create_chat_provider_from_string("reasoning", "openhuman:", &config)
+        .err()
+        .expect("openhuman slug must be disabled");
+    assert!(err.to_string().contains("disabled in this build"), "{err}");
 }
 
 #[test]
@@ -336,8 +335,9 @@ async fn lmstudio_provider_without_api_key_does_not_require_credentials() {
 }
 
 #[test]
-fn all_workloads_default_to_openhuman() {
+fn all_workloads_default_to_local_provider() {
     let config = Config::default();
+    let expected = local_default_provider_string(&config);
     for role in &[
         "chat",
         "reasoning",
@@ -351,8 +351,8 @@ fn all_workloads_default_to_openhuman() {
     ] {
         assert_eq!(
             provider_for_role(role, &config),
-            "openhuman",
-            "role={role} must default to openhuman"
+            expected,
+            "role={role} must default to local provider"
         );
     }
 }
@@ -377,7 +377,10 @@ fn workload_override_respected() {
         provider_for_role("heartbeat", &config),
         "ollama:llama3.2:3b"
     );
-    assert_eq!(provider_for_role("reasoning", &config), "openhuman");
+    assert_eq!(
+        provider_for_role("reasoning", &config),
+        local_default_provider_string(&config)
+    );
 }
 
 #[test]
@@ -564,9 +567,13 @@ async fn cloud_provider_with_malformed_endpoint_surfaces_url_error() {
 }
 
 #[test]
-fn primary_cloud_defaults_to_openhuman_when_no_providers() {
+fn primary_cloud_defaults_to_local_provider_when_no_providers() {
     let config = Config::default();
     assert!(create_chat_provider("reasoning", &config).is_ok());
+    assert_eq!(
+        provider_for_role("reasoning", &config),
+        local_default_provider_string(&config)
+    );
 }
 
 #[test]
@@ -601,7 +608,7 @@ fn legacy_inference_url_custom_provider_wins_over_openhuman_primary_for_unset_ro
 fn legacy_inference_url_without_matching_provider_returns_byok_sentinel() {
     // BYOK intent: primary is OpenHuman but inference_url points at a custom
     // endpoint with no matching cloud_providers entry. Must fail closed — do
-    // NOT silently route through the managed backend.
+    // NOT silently route through a hosted backend.
     let mut other = openai_entry("p_other", "other");
     other.endpoint = "https://other.example.com/v1".to_string();
 
@@ -638,6 +645,10 @@ fn explicit_openhuman_route_ignores_legacy_inference_url() {
     config.reasoning_provider = Some("openhuman".to_string());
 
     assert_eq!(provider_for_role("reasoning", &config), "openhuman");
+    let err = create_chat_provider("reasoning", &config)
+        .err()
+        .expect("explicit openhuman route must be disabled");
+    assert!(err.to_string().contains("disabled in this build"), "{err}");
 }
 
 #[test]
@@ -653,32 +664,36 @@ fn summarization_aliases_memory_provider() {
 }
 
 #[test]
-fn summarization_defaults_to_openhuman_like_memory() {
+fn summarization_defaults_to_local_like_memory() {
     let config = Config::default();
-    assert_eq!(provider_for_role("memory", &config), "openhuman");
-    assert_eq!(provider_for_role("summarization", &config), "openhuman");
+    let expected = local_default_provider_string(&config);
+    assert_eq!(provider_for_role("memory", &config), expected);
+    assert_eq!(provider_for_role("summarization", &config), expected);
 }
 
 #[test]
-fn unknown_workload_falls_back_to_openhuman() {
+fn unknown_workload_falls_back_to_local_default() {
     let config = Config::default();
     assert_eq!(
         provider_for_role("nope-not-a-workload", &config),
-        "openhuman"
+        local_default_provider_string(&config)
     );
-    assert_eq!(provider_for_role("", &config), "openhuman");
+    assert_eq!(
+        provider_for_role("", &config),
+        local_default_provider_string(&config)
+    );
 }
 
 #[test]
-fn openhuman_backend_uses_config_path_parent_as_state_dir() {
+fn local_default_uses_configured_local_model() {
     let mut config = Config::default();
-    config.config_path = std::path::PathBuf::from("/tmp/oh-test-workspace/config.toml");
-    let (_provider, model) = create_chat_provider("reasoning", &config)
-        .expect("openhuman backend must build with no cloud_providers");
-    assert!(!model.is_empty(), "model must be set")
+    config.local_ai.chat_model_id = "llama3.2:3b".to_string();
+    let (_provider, model) =
+        create_chat_provider("reasoning", &config).expect("local default must build");
+    assert_eq!(model, "llama3.2:3b");
 }
 
-// ── verify_session_active tests ──────────────────────────────────────
+// ── local-only provider creation ─────────────────────────────────────
 
 /// Helper: build a Config whose `config_path` lives inside a tempdir.
 fn config_in_tempdir(tmp: &TempDir) -> Config {
@@ -742,67 +757,14 @@ async fn discover_live_ollama_model() -> anyhow::Result<String> {
 }
 
 #[test]
-fn verify_session_active_rejects_when_no_session_token() {
+fn local_provider_builds_without_openhuman_app_session() {
     let tmp = TempDir::new().expect("tempdir");
     let config = config_in_tempdir(&tmp);
-    let err = verify_session_active(&config).expect_err("should fail without session token");
-    let msg = err.to_string();
-    assert!(
-        msg.contains("SESSION_EXPIRED"),
-        "expected SESSION_EXPIRED, got: {msg}",
-    );
-}
 
-#[test]
-fn verify_session_active_rejects_when_token_is_empty() {
-    let tmp = TempDir::new().expect("tempdir");
-    let mut config = config_in_tempdir(&tmp);
-    let auth = AuthService::new(tmp.path(), config.secrets.encrypt);
-    auth.store_provider_token("app-session", "default", "", Default::default(), false)
-        .expect("store empty token");
-    let err = verify_session_active(&config).expect_err("should reject empty token");
-    assert!(
-        err.to_string().contains("SESSION_EXPIRED"),
-        "expected SESSION_EXPIRED, got: {err}",
-    );
-}
+    let (_, model) = create_chat_provider_from_string("reasoning", "ollama:llama3", &config)
+        .expect("local provider must not require an OpenHuman app session");
 
-#[test]
-fn verify_session_active_passes_when_session_token_present() {
-    let tmp = TempDir::new().expect("tempdir");
-    let mut config = config_in_tempdir(&tmp);
-    let auth = AuthService::new(tmp.path(), config.secrets.encrypt);
-    auth.store_provider_token(
-        "app-session",
-        "default",
-        "fake-jwt-token",
-        Default::default(),
-        false,
-    )
-    .expect("store session token");
-    assert!(
-        verify_session_active(&config).is_ok(),
-        "should pass when session token exists",
-    );
-}
-
-#[test]
-fn verify_session_active_called_for_custom_provider_not_for_openhuman() {
-    // openhuman backend must always build (no session gate applied).
-    let config = Config::default();
-    assert!(create_chat_provider_from_string("reasoning", "openhuman", &config).is_ok(),);
-    // Verify that when a custom provider is tried without a session,
-    // we'd get blocked (this test exercises the non-#[cfg(test)] path
-    // by directly calling verify_session_active).
-    let tmp = TempDir::new().expect("tempdir");
-    let config = config_in_tempdir(&tmp);
-    let _ = create_chat_provider_from_string("reasoning", "ollama:llama3", &config);
-    // Under #[cfg(test)] the gate is skipped, so this succeeds.
-    // We assert the gate *would* fire by testing verify_session_active directly.
-    assert!(
-        verify_session_active(&config).is_err(),
-        "verify_session_active must reject config without session",
-    );
+    assert_eq!(model, "llama3");
 }
 
 #[test]
@@ -914,89 +876,6 @@ fn vision_tier_is_vision_capable() {
     assert!(oh_tier_supports_vision("hint:vision"));
 }
 
-#[test]
-fn make_openhuman_backend_forwards_unknown_hint_verbatim() {
-    // Unrecognised hint:* strings (e.g. hint:reaction for lightweight models)
-    // must be forwarded to the backend unchanged. The backend is authoritative
-    // over which hint values it accepts; the factory only translates the
-    // canonical hints (reasoning/chat/agentic/coding/summarization).
-    // `hint:summarization` became canonical when `summarization-v1` shipped
-    // (PR #2690), so it is no longer a passthrough case.
-    for hint in ["hint:reaction", "hint:garbage", "hint:lightweight"] {
-        let mut config = Config::default();
-        config.default_model = Some(hint.to_string());
-        let (_, model) = make_openhuman_backend("chat", &config).expect("factory should succeed");
-        assert_eq!(model, hint, "hint '{hint}' should pass through unchanged");
-    }
-}
-
-#[test]
-fn make_openhuman_backend_translates_summarization_hint() {
-    let mut config = Config::default();
-    config.default_model = Some("hint:summarization".to_string());
-    let (_, model) = make_openhuman_backend("chat", &config).expect("factory should succeed");
-    assert_eq!(model, crate::openhuman::config::MODEL_SUMMARIZATION_V1);
-}
-
-#[test]
-fn make_openhuman_backend_reports_vision_capability() {
-    let config = Config::default();
-    let (provider, _) = make_openhuman_backend("chat", &config).expect("factory should succeed");
-    let caps = provider.capabilities();
-    assert!(caps.native_tool_calling);
-    assert!(
-        caps.vision,
-        "OpenHuman backend must report vision so attachment-driven reasoning turns clear the harness gate"
-    );
-}
-
-#[test]
-fn make_openhuman_backend_falls_back_for_invalid_model() {
-    // An invalid default_model must not be forwarded to the backend.
-    // The factory must silently fall back to reasoning-v1 (the platform default).
-    let mut config = Config::default();
-    config.default_model = Some("deepseek-v4-pro".to_string());
-    let (_, model) = make_openhuman_backend("chat", &config).expect("factory should succeed");
-    assert_eq!(
-        model,
-        crate::openhuman::config::MODEL_REASONING_V1,
-        "invalid default_model should fall back to MODEL_REASONING_V1"
-    );
-}
-
-#[test]
-fn make_openhuman_backend_keeps_valid_tier() {
-    let mut config = Config::default();
-    config.default_model = Some("chat-v1".to_string());
-    let (_, model) = make_openhuman_backend("chat", &config).expect("factory should succeed");
-    assert_eq!(model, "chat-v1");
-}
-
-#[test]
-fn make_openhuman_backend_keeps_reasoning_quick() {
-    let mut config = Config::default();
-    config.default_model = Some("reasoning-quick-v1".to_string());
-    let (_, model) = make_openhuman_backend("chat", &config).expect("factory should succeed");
-    assert_eq!(model, "reasoning-quick-v1");
-}
-
-#[test]
-fn make_openhuman_backend_pins_vision_role_to_vision_tier() {
-    // Regression (PR #3699): the managed default_model is chat-v1 (a NON-vision
-    // tier). When `vision_provider` is unset the vision workload resolves to the
-    // managed backend, so make_openhuman_backend must override the default model
-    // with `vision-v1` — otherwise `oh_tier_supports_vision` reports false and
-    // the turn engine strips every attached image, blinding the vision sub-agent.
-    let config = Config::default();
-    assert_eq!(config.default_model.as_deref(), Some("chat-v1"));
-    let (_, model) = make_openhuman_backend("vision", &config).expect("factory should succeed");
-    assert_eq!(model, crate::openhuman::config::MODEL_VISION_V1);
-    assert!(
-        oh_tier_supports_vision(&model),
-        "vision role must resolve to a vision-capable managed tier"
-    );
-}
-
 // ── BYOK fail-closed tests ────────────────────────────────────────────────────
 
 #[test]
@@ -1039,8 +918,12 @@ fn explicit_workload_route_bypasses_byok_sentinel() {
     let mut config = Config::default();
     config.inference_url = Some("https://custom-api.example.com/v1".to_string());
     config.reasoning_provider = Some("openhuman".to_string());
-    // Explicit "openhuman" route → goes straight to backend, no sentinel.
+    // Explicit "openhuman" route stays explicit at routing time, then fails closed.
     assert_eq!(provider_for_role("reasoning", &config), "openhuman");
+    let err = create_chat_provider("reasoning", &config)
+        .err()
+        .expect("explicit openhuman route must fail closed");
+    assert!(err.to_string().contains("disabled in this build"), "{err}");
 }
 
 #[test]
@@ -1085,18 +968,19 @@ fn byok_sentinel_error_mentions_configuration_action() {
 // ── BYOK workload inheritance tests ──────────────────────────────────────────
 
 #[test]
-fn byok_fallback_agentic_always_uses_managed_backend() {
-    // The agentic role is excluded from BYOK inheritance: it uses managed-backend
-    // tier models (agentic-v1) and handles hint:agentic routing directives.
+fn byok_fallback_agentic_uses_local_default() {
+    // The agentic role is excluded from BYOK inheritance, but Marvi must not
+    // fall back to the hosted backend.
     let mut config = Config::default();
     config.cloud_providers.push(openai_entry("p_oai", "openai"));
     config.chat_provider = Some("openai:gpt-4o".to_string());
-    // agentic_provider is unset and chat BYOK is configured → agentic must
-    // still resolve to the managed backend, NOT inherit from chat BYOK.
+    // agentic_provider is unset and chat BYOK is configured -> agentic must
+    // not inherit chat BYOK, and must use the local default instead.
     let result = provider_for_role("agentic", &config);
     assert_eq!(
-        result, "openhuman",
-        "agentic role must always resolve to managed backend regardless of BYOK config"
+        result,
+        local_default_provider_string(&config),
+        "agentic role must resolve to local default regardless of BYOK config"
     );
 }
 
@@ -1150,10 +1034,11 @@ fn byok_fallback_respects_priority_order() {
 fn byok_fallback_skips_local_ollama() {
     let mut config = Config::default();
     config.chat_provider = Some("ollama:llama3.1".to_string());
-    // Ollama is local — must NOT be inherited for non-agentic roles either
+    // Ollama is local — must NOT be inherited as BYOK fallback.
     let result = provider_for_role("coding", &config);
     assert_eq!(
-        result, "openhuman",
+        result,
+        local_default_provider_string(&config),
         "local ollama must not be inherited as BYOK fallback"
     );
 }
@@ -1162,10 +1047,11 @@ fn byok_fallback_skips_local_ollama() {
 fn byok_fallback_skips_local_lmstudio() {
     let mut config = Config::default();
     config.chat_provider = Some("lmstudio:google/gemma-4-e4b".to_string());
-    // LM Studio is local — must NOT be inherited; fall through to openhuman
+    // LM Studio is local — must NOT be inherited; fall through to local default.
     let result = provider_for_role("coding", &config);
     assert_eq!(
-        result, "openhuman",
+        result,
+        local_default_provider_string(&config),
         "local lmstudio must not be inherited as BYOK fallback"
     );
 }
@@ -1174,10 +1060,11 @@ fn byok_fallback_skips_local_lmstudio() {
 fn byok_fallback_skips_openhuman_sentinel() {
     let mut config = Config::default();
     config.chat_provider = Some("openhuman".to_string());
-    // "openhuman" is the managed backend sentinel, not BYOK
+    // "openhuman" is a disabled hosted sentinel, not BYOK.
     let result = provider_for_role("coding", &config);
     assert_eq!(
-        result, "openhuman",
+        result,
+        local_default_provider_string(&config),
         "openhuman sentinel in chat must not be treated as BYOK"
     );
 }
@@ -1189,24 +1076,26 @@ fn byok_fallback_skips_cloud_sentinel() {
     // "cloud" means "use primary" — not BYOK
     let result = provider_for_role("coding", &config);
     assert_eq!(
-        result, "openhuman",
+        result,
+        local_default_provider_string(&config),
         "cloud sentinel in chat must not be treated as BYOK"
     );
 }
 
 #[test]
 fn byok_fallback_no_byok_configured() {
-    // All workload routes unset → falls through to managed backend unchanged
+    // All workload routes unset -> local default in Marvi.
     let config = Config::default();
+    let expected = local_default_provider_string(&config);
     assert_eq!(
         provider_for_role("coding", &config),
-        "openhuman",
-        "no BYOK configured must fall through to openhuman for coding"
+        expected,
+        "no BYOK configured must fall through to local default for coding"
     );
     assert_eq!(
         provider_for_role("agentic", &config),
-        "openhuman",
-        "no BYOK configured must fall through to openhuman for agentic"
+        expected,
+        "no BYOK configured must fall through to local default for agentic"
     );
 }
 
@@ -1233,12 +1122,17 @@ fn byok_fallback_explicit_openhuman_agentic_overrides_chat_byok() {
     config.cloud_providers.push(openai_entry("p_oai", "openai"));
     config.chat_provider = Some("openai:gpt-4o".to_string());
     config.agentic_provider = Some("openhuman".to_string());
-    // Explicit "openhuman" in agentic wins — user made a deliberate choice
+    // Explicit "openhuman" in agentic wins at routing time, then provider
+    // creation rejects it because hosted managed routing is disabled.
     let result = provider_for_role("agentic", &config);
     assert_eq!(
         result, "openhuman",
         "explicit openhuman in agentic must not be overridden by BYOK inheritance"
     );
+    let err = create_chat_provider("agentic", &config)
+        .err()
+        .expect("explicit openhuman agentic route must fail closed");
+    assert!(err.to_string().contains("disabled in this build"), "{err}");
 }
 
 #[test]
@@ -1280,8 +1174,9 @@ fn byok_fallback_empty_string_treated_as_unset() {
     config.agentic_provider = Some(String::new());
     let agentic_result = provider_for_role("agentic", &config);
     assert_eq!(
-        agentic_result, "openhuman",
-        "empty agentic_provider must stay on managed backend even when chat BYOK is configured"
+        agentic_result,
+        local_default_provider_string(&config),
+        "empty agentic_provider must use local default even when chat BYOK is configured"
     );
 }
 
@@ -1365,12 +1260,13 @@ fn resolve_byok_fallback_skips_empty_and_finds_next() {
 }
 
 #[test]
-fn byok_fallback_background_workloads_never_inherit() {
+fn byok_fallback_background_workloads_never_inherit_and_use_local_default() {
     // Background workloads (memory, embeddings, heartbeat, learning, subconscious)
-    // must stay on the managed backend even when chat BYOK is configured.
+    // must not inherit chat BYOK and must not fall back to hosted OpenHuman.
     let mut config = Config::default();
     config.cloud_providers.push(openai_entry("p_oai", "openai"));
     config.chat_provider = Some("openai:gpt-4o".to_string());
+    let expected = local_default_provider_string(&config);
     for role in &[
         "memory",
         "embeddings",
@@ -1380,8 +1276,8 @@ fn byok_fallback_background_workloads_never_inherit() {
     ] {
         let result = provider_for_role(role, &config);
         assert_eq!(
-            result, "openhuman",
-            "background workload '{}' must not inherit chat BYOK",
+            result, expected,
+            "background workload '{}' must use local default",
             role
         );
     }

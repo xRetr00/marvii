@@ -73,7 +73,7 @@ describe('coreRpcClient', () => {
     vi.stubGlobal('fetch', vi.fn());
   });
 
-  test('normalizes legacy auth methods from dotted to underscored', async () => {
+  test('does not normalize hosted auth methods back into account-login RPCs', async () => {
     const fetchMock = vi.mocked(fetch);
     fetchMock.mockResolvedValueOnce({
       ok: true,
@@ -85,7 +85,7 @@ describe('coreRpcClient', () => {
     expect(fetchMock).toHaveBeenCalledTimes(1);
     const requestInit = fetchMock.mock.calls[0][1] as RequestInit;
     const body = JSON.parse(String(requestInit.body));
-    expect(body.method).toBe('openhuman.auth_get_state');
+    expect(body.method).toBe('openhuman.auth.get_state');
   });
 
   test('maps accessibility prefix to screen intelligence prefix', async () => {
@@ -288,7 +288,7 @@ describe('coreRpcClient', () => {
     );
   });
 
-  test('rewrites multi-segment auth methods (auth.sub.segment) to underscore form', async () => {
+  test('passes through multi-segment hosted auth methods unchanged', async () => {
     const fetchMock = vi.mocked(fetch);
     fetchMock.mockResolvedValueOnce({
       ok: true,
@@ -297,7 +297,7 @@ describe('coreRpcClient', () => {
 
     await callCoreRpc({ method: 'openhuman.auth.sub.segment' });
     const body = JSON.parse(String((fetchMock.mock.calls[0][1] as RequestInit).body));
-    expect(body.method).toBe('openhuman.auth_sub_segment');
+    expect(body.method).toBe('openhuman.auth.sub.segment');
   });
 
   test('rejects with a timeout error when fetch does not resolve within CORE_RPC_TIMEOUT_MS', async () => {

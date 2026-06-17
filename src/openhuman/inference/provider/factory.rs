@@ -34,9 +34,7 @@ use crate::openhuman::inference::provider::openai_codex::{
     openai_codex_client_version, openai_codex_user_agent, resolve_openai_codex_routing,
     OPENAI_CODEX_ACCOUNT_HEADER, OPENAI_CODEX_ORIGINATOR, OPENAI_CODEX_ORIGINATOR_HEADER,
 };
-use crate::openhuman::inference::provider::openhuman_backend::OpenHumanBackendProvider;
 use crate::openhuman::inference::provider::traits::Provider;
-use crate::openhuman::inference::provider::ProviderRuntimeOptions;
 
 /// Sentinel meaning "use the OpenHuman backend session JWT".
 pub const PROVIDER_OPENHUMAN: &str = "openhuman";
@@ -56,7 +54,7 @@ pub const CLAUDE_AGENT_SDK_PROVIDER: &str = "claude_agent_sdk";
 /// (via a non-openhuman `inference_url`) but no matching `cloud_providers`
 /// entry was found. Passed through `provider_for_role` and caught early in
 /// `create_chat_provider_from_string` to produce a clear configuration error
-/// instead of silently routing through the managed OpenHuman backend.
+/// instead of silently routing through a hosted backend.
 pub const BYOK_INCOMPLETE_SENTINEL: &str = "__byok_incomplete__";
 
 fn is_abstract_tier_model(model: &str) -> bool {
@@ -87,9 +85,8 @@ pub fn auth_key_for_slug(slug: &str) -> String {
 
 /// Resolve a model hint (e.g. `"hint:reasoning"`) or tier name to the
 /// concrete model string that the provider router would use — without
-/// constructing the actual provider.  Returns the provider-string prefix
-/// (e.g. `"openai"`) concatenated with the model when a BYOK provider is
-/// active, or the bare tier name for the managed OpenHuman backend.
+/// constructing the actual provider. Returns the provider-native model when a
+/// BYOK provider is active, or the bare tier name when the route is a sentinel.
 pub fn resolve_model_for_hint(hint_or_tier: &str, config: &Config) -> String {
     let hint_to_tier: &[(&str, &str)] = &[
         ("reasoning", crate::openhuman::config::MODEL_REASONING_V1),
@@ -146,13 +143,9 @@ pub fn resolve_model_for_hint(hint_or_tier: &str, config: &Config) -> String {
 
 /// Return whether `model` is a recognized OpenHuman backend tier name.
 ///
-/// Used to guard against stale `default_model` values (e.g. set by older UI
-/// versions) that the backend would reject with HTTP 400.  The known tiers are
-/// the constants in `crate::openhuman::config`; the four `hint:*` strings that
-/// `make_openhuman_backend` actually translates are also accepted.  An
-/// unrecognized `hint:*` value is intentionally rejected so the factory falls
-/// back to the platform default instead of forwarding an untranslated string
-/// to the backend.
+/// Used by config validation to distinguish Marvi tier aliases from concrete
+/// provider-native model ids. The known tiers are the constants in
+/// `crate::openhuman::config`, plus their canonical `hint:*` aliases.
 pub(crate) fn is_known_openhuman_tier(model: &str) -> bool {
     use crate::openhuman::config::{
         MODEL_AGENTIC_V1, MODEL_CHAT_V1, MODEL_CODING_V1, MODEL_REASONING_QUICK_V1,
@@ -212,13 +205,14 @@ pub(crate) fn oh_tier_supports_vision(model: &str) -> bool {
 /// Empty / `"cloud"` resolves through BYOK fallback first for the three
 /// chat-tier roles (`chat`, `reasoning`, `coding`), then `primary_cloud`.
 /// When a BYOK cloud provider is detected on any workload, unset chat-tier
-/// routes inherit it rather than silently falling back to the managed backend.
+/// routes inherit it rather than silently falling back to the local default.
 ///
 /// Only `chat`, `reasoning`, and `coding` participate in BYOK inheritance.
 /// Background workloads (`memory`, `embeddings`, `heartbeat`, `learning`,
 /// `subconscious`) and the `agentic` workload always fall through to
-/// `primary_cloud` — they use tier-specific models that BYOK providers don't
-/// understand, and their providers are configured independently.
+/// `primary_cloud` / Marvi's local default — they use tier-specific models
+/// that BYOK providers don't understand, and their providers are configured
+/// independently.
 ///
 /// For backwards compatibility, a legacy external `inference_url` takes
 /// precedence when `primary_cloud` still points at OpenHuman because
@@ -232,7 +226,7 @@ pub fn provider_for_role(role: &str, config: &Config) -> String {
         "coding" => config.coding_provider.as_deref(),
         // Tier-specific multimodal model; like `agentic` it is NOT part of the
         // chat-tier BYOK inheritance below — when unset it falls through to
-        // `primary_cloud` (→ managed `vision-v1`).
+        // `primary_cloud` / Marvi's local default.
         "vision" => config.vision_provider.as_deref(),
         // `memory_provider` covers both the memory-tree extract path and
         // the summarizer sub-agent (whose definition declares
@@ -250,8 +244,8 @@ pub fn provider_for_role(role: &str, config: &Config) -> String {
     if s.is_empty() || s == "cloud" {
         // BYOK inheritance is scoped to the three chat-tier roles only.
         // Background workloads (memory, embeddings, heartbeat, learning,
-        // subconscious) and the agentic workload must stay on the managed
-        // backend — they use tier-specific models that BYOK providers don't
+        // subconscious) and the agentic workload must not inherit the chat BYOK
+        // route — they use tier-specific models that BYOK providers don't
         // understand, and their providers are configured separately.
         if matches!(role, "chat" | "reasoning" | "coding") {
             if let Some(byok) = resolve_byok_fallback_provider_string(config) {
@@ -265,14 +259,14 @@ pub fn provider_for_role(role: &str, config: &Config) -> String {
         }
 
         // Diagnostic: when the user has a local provider configured for chat
-        // but this background workload is falling through to cloud, emit a
-        // warning so it's visible in logs (no silent fallback).
+        // but this background workload is falling through to the local default,
+        // emit a warning so it's visible in logs (no silent fallback).
         if !matches!(role, "chat" | "reasoning" | "coding") {
             if let Some(chat) = config.chat_provider.as_deref() {
                 if crate::openhuman::inference::local::profile::is_local_provider_string(chat) {
                     log::info!(
-                        "[providers][local-fallback] role={} using managed backend (chat is \
-                         local '{}' but background workloads require cloud — set \
+                        "[providers][local-fallback] role={} using local default (chat is \
+                         local '{}' but background workloads require their own route — set \
                          {}_provider explicitly to override)",
                         role,
                         chat,
@@ -289,7 +283,7 @@ pub fn provider_for_role(role: &str, config: &Config) -> String {
 }
 
 /// Find the first BYOK cloud provider string configured across all workload
-/// routes, skipping local providers (ollama, lmstudio) and managed-backend
+/// routes, skipping local providers (ollama, lmstudio) and hosted-backend
 /// sentinels ("openhuman", "cloud", empty).
 ///
 /// Returns `None` when no BYOK cloud provider is configured, in which case
@@ -310,7 +304,7 @@ pub(crate) fn resolve_byok_fallback_provider_string(config: &Config) -> Option<S
             continue;
         }
         // Skip local providers — they are not suitable fallbacks for agentic
-        // or background workloads that run on the managed backend.
+        // or background workloads that must use their own local/BYO route.
         if s.starts_with(OLLAMA_PROVIDER_PREFIX)
             || s.starts_with(LM_STUDIO_PROVIDER_PREFIX)
             || s.starts_with(MLX_PROVIDER_PREFIX)
@@ -445,7 +439,7 @@ pub fn create_chat_provider_from_string(
 
     // Fail-closed: BYOK intent was detected upstream but no matching provider
     // entry was found. Surface a clear configuration error instead of silently
-    // routing through the managed OpenHuman backend.
+    // routing through the hosted OpenHuman backend.
     if p == BYOK_INCOMPLETE_SENTINEL {
         let inference_url = config
             .inference_url
@@ -457,7 +451,7 @@ pub fn create_chat_provider_from_string(
              ({inference_url}) but no matching cloud_providers entry was found for role '{role}'. \
              To complete BYOK setup add a cloud_providers entry whose endpoint matches \
              {inference_url} (or use a workload-specific route). \
-             To use the OpenHuman managed backend instead, clear inference_url from config."
+             To recover, clear inference_url from config or configure a local/BYO provider."
         );
     }
 
@@ -471,21 +465,6 @@ pub fn create_chat_provider_from_string(
         anyhow::bail!(
             "[chat-factory] hosted OpenHuman backend routing is disabled in this build; configure a local or BYO provider for role '{role}'"
         );
-    }
-
-    // ── Session gate ──────────────────────────────────────────────────
-    // Custom providers (Ollama, <slug>:<model>) require an active
-    // OpenHuman session.  Without this check an unregistered user can
-    // point every workload at a custom provider and bypass the session
-    // requirement entirely.
-    //
-    // Gate is skipped under #[cfg(test)] so existing unit tests that
-    // create custom providers against a default Config continue to
-    // pass.  The verify_session_active function itself is tested
-    // explicitly with tempdir-backed auth profiles.
-    #[cfg(not(test))]
-    {
-        verify_session_active(config)?;
     }
 
     if let Some(model_with_temp) =
@@ -700,139 +679,6 @@ pub(crate) fn create_local_chat_provider_from_string(
     );
 }
 
-// ── Internal helpers ──────────────────────────────────────────────────────────
-
-/// Build the OpenHuman backend provider (session-JWT auth).
-///
-/// `role` is the workload name (e.g. `"chat"`, `"vision"`). The managed backend
-/// otherwise derives its model from `config.default_model` (which defaults to the
-/// non-vision `chat-v1` tier), so a tier-specific workload whose per-workload
-/// provider is unset would silently inherit the global default. For the `vision`
-/// workload that mismatch is fatal: an unset `vision_provider` would resolve to
-/// `chat-v1`, `model_supports_vision` would report `false`, and the turn engine
-/// would strip every attached image — leaving the managed vision sub-agent blind.
-/// Pin `vision` to the dedicated multimodal `vision-v1` tier so the managed
-/// default path keeps working without requiring the user to set `vision_provider`.
-fn make_openhuman_backend(
-    role: &str,
-    config: &Config,
-) -> anyhow::Result<(Box<dyn Provider>, String)> {
-    let model = if role == "vision" {
-        crate::openhuman::config::MODEL_VISION_V1.to_string()
-    } else {
-        config
-            .default_model
-            .clone()
-            .filter(|m| !m.trim().is_empty())
-            .unwrap_or_else(|| "reasoning-v1".to_string())
-    };
-    // Critical: pass the *config's* workspace directory through so the
-    // provider's `AuthService` reads `auth-profiles.json` from the
-    // same dir login wrote to. Without this, `ProviderRuntimeOptions::default()`
-    // leaves `openhuman_dir = None`, the provider falls back to
-    // `~/.openhuman`, and reads an unrelated (or empty)
-    // profile store — surfacing as "No backend session: store a JWT
-    // via auth (app-session)" even though login just succeeded in the
-    // user's actual workspace (e.g. test workspaces under OPENHUMAN_WORKSPACE).
-    let options = ProviderRuntimeOptions {
-        openhuman_dir: config.config_path.parent().map(std::path::PathBuf::from),
-        secrets_encrypt: config.secrets.encrypt,
-        ..ProviderRuntimeOptions::default()
-    };
-    log::debug!(
-        "[providers][chat-factory] building openhuman backend provider model={} state_dir={:?} secrets_encrypt={}",
-        model,
-        options.openhuman_dir,
-        options.secrets_encrypt
-    );
-    // Translate `hint:<tier>` model strings into the OpenHuman backend's
-    // canonical tier names.  Unrecognised `hint:*` strings (e.g. `hint:reaction`
-    // for lightweight models) are forwarded as-is — the backend is authoritative
-    // over which hint values it accepts, and the web-chat model_override path
-    // uses these verbatim.  Only non-hint strings that are not a known canonical
-    // tier (stale `default_model` values written by older UI versions, e.g.
-    // "deepseek-v4-pro", "claude-opus-4-7") fall back to the platform default.
-    let model = match model.strip_prefix("hint:") {
-        Some("reasoning") => crate::openhuman::config::MODEL_REASONING_V1.to_string(),
-        Some("chat") => crate::openhuman::config::MODEL_CHAT_V1.to_string(),
-        Some("agentic") => crate::openhuman::config::MODEL_AGENTIC_V1.to_string(),
-        Some("coding") => crate::openhuman::config::MODEL_CODING_V1.to_string(),
-        Some("summarization") => crate::openhuman::config::MODEL_SUMMARIZATION_V1.to_string(),
-        Some("vision") => crate::openhuman::config::MODEL_VISION_V1.to_string(),
-        Some(_) => {
-            // Unrecognised hint — forward verbatim; the backend decides validity.
-            model
-        }
-        None => {
-            if is_known_openhuman_tier(&model) {
-                model
-            } else {
-                log::warn!(
-                    "[providers][chat-factory] model '{}' is not a recognized OpenHuman \
-                     backend tier (valid: reasoning-v1, chat-v1, agentic-v1, coding-v1, \
-                     reasoning-quick-v1, summarization-v1, vision-v1); falling back to '{}'",
-                    model,
-                    crate::openhuman::config::MODEL_REASONING_V1,
-                );
-                crate::openhuman::config::MODEL_REASONING_V1.to_string()
-            }
-        }
-    };
-    let p = Box::new(OpenHumanBackendProvider::new(
-        config.api_url.as_deref(),
-        &options,
-    ));
-    Ok((p, model))
-}
-
-/// Verify the user has an active OpenHuman backend session.
-///
-/// Without this check, an unregistered user can configure every workload
-/// to use a custom cloud provider and bypass the session requirement
-/// entirely.  This function ensures that custom providers (Ollama,
-/// `<slug>:<model>`) are only reachable when the workspace holds a valid
-/// `app-session` JWT.
-fn verify_session_active(config: &Config) -> anyhow::Result<()> {
-    // AgentBox marketplace containers run headless with no desktop
-    // `app-session` JWT — the deployment is operator-controlled and ships its
-    // own GMI MaaS credentials via `GMI_*` env vars. The session gate exists to
-    // stop an *unregistered desktop user* from routing every workload at a
-    // custom provider; that threat model doesn't apply here, so bypass it.
-    // Without this, every `/run` job would fail `SESSION_EXPIRED` before
-    // reaching GMI (the startup path stores only `provider:gmi-maas`).
-    if crate::openhuman::agentbox::agentbox_mode_enabled() {
-        log::debug!(
-            "[chat-factory] AgentBox mode — bypassing app-session gate for custom provider"
-        );
-        return Ok(());
-    }
-    // Fast path: the scheduler gate already knows the session is dead.
-    if crate::openhuman::scheduler_gate::is_signed_out() {
-        anyhow::bail!(
-            "SESSION_EXPIRED: backend session not active — sign in to use custom providers"
-        );
-    }
-    // Verify the app-session JWT actually exists in auth-profiles.
-    let state_dir = config
-        .config_path
-        .parent()
-        .map(std::path::PathBuf::from)
-        .unwrap_or_else(|| {
-            directories::UserDirs::new()
-                .map(|d| d.home_dir().join(".openhuman"))
-                .unwrap_or_else(|| std::path::PathBuf::from(".openhuman"))
-        });
-    let auth = AuthService::new(&state_dir, config.secrets.encrypt);
-    let has_session = auth
-        .get_provider_bearer_token(crate::openhuman::credentials::APP_SESSION_PROVIDER, None)?
-        .filter(|s| !s.trim().is_empty())
-        .is_some();
-    if !has_session {
-        anyhow::bail!("SESSION_EXPIRED: no local session is active")
-    }
-    Ok(())
-}
-
 fn resolve_primary_cloud_provider_string(config: &Config) -> String {
     let primary = config
         .primary_cloud
@@ -846,7 +692,7 @@ fn resolve_primary_cloud_provider_string(config: &Config) -> String {
         // Primary is explicitly OpenHuman but inference_url points at a custom
         // endpoint with no matching provider entry — this is a half-migrated BYOK
         // config. Fail closed so the user sees an actionable error rather than
-        // silently routing through the managed backend.
+        // silently routing through a hosted backend.
         if has_custom_inference_intent(config) {
             log::debug!(
                 "[providers][chat-factory] BYOK intent detected (host={}) \
@@ -863,7 +709,7 @@ fn resolve_primary_cloud_provider_string(config: &Config) -> String {
 
     // No explicit primary configured. If inference_url signals custom intent but
     // no matching provider entry exists, fail closed instead of falling back to
-    // the managed backend.
+    // a hosted backend.
     legacy_custom_inference_provider_string(config).unwrap_or_else(|| {
         if has_custom_inference_intent(config) {
             log::debug!(
@@ -1269,9 +1115,8 @@ fn make_cloud_provider_by_slug(
     // unset default_model on the config entry).
     // See https://github.com/tinyhumansai/openhuman/issues/2784.
     //
-    // OpenhumanJwt entries are exempt: they always delegate to
-    // make_openhuman_backend which derives the model from config.default_model,
-    // ignoring whatever effective_model we computed here.
+    // OpenhumanJwt entries are disabled in Marvi below, so this empty-model
+    // guard applies only to real local/BYO provider entries.
     if entry.auth_style != AuthStyle::OpenhumanJwt && effective_model.trim().is_empty() {
         log::warn!(
             "[nvidia-nim][chat-factory] role={} slug={} resolved to empty model — \

@@ -12,10 +12,10 @@ describe('rpcMethods catalog', () => {
       }
     });
 
-    test('transforms auth methods by replacing dots with underscores', () => {
-      expect(normalizeRpcMethod('openhuman.auth.login')).toBe('openhuman.auth_login');
-      expect(normalizeRpcMethod('openhuman.auth.get.state')).toBe('openhuman.auth_get_state');
-      expect(normalizeRpcMethod('openhuman.auth.a.b.c')).toBe('openhuman.auth_a_b_c');
+    test('leaves hosted auth methods unchanged so Marvi does not revive account login routes', () => {
+      expect(normalizeRpcMethod('openhuman.auth.login')).toBe('openhuman.auth.login');
+      expect(normalizeRpcMethod('openhuman.auth.get.state')).toBe('openhuman.auth.get.state');
+      expect(normalizeRpcMethod('openhuman.auth.a.b.c')).toBe('openhuman.auth.a.b.c');
     });
 
     test('transforms accessibility prefix to screen_intelligence prefix', () => {
@@ -35,11 +35,9 @@ describe('rpcMethods catalog', () => {
     });
 
     test('trims whitespace and converts to lower case', () => {
-      expect(normalizeRpcMethod('  Marvi.Auth.Login  ')).toBe('openhuman.auth_login');
+      expect(normalizeRpcMethod('  Marvi.Auth.Login  ')).toBe('marvi.auth.login');
       expect(normalizeRpcMethod('  OPENHUMAN.GET_CONFIG ')).toBe(CORE_RPC_METHODS.configGet);
-      expect(normalizeRpcMethod('Marvi.Accessibility_Status  ')).toBe(
-        'openhuman.screen_intelligence_status'
-      );
+      expect(normalizeRpcMethod('Marvi.Accessibility_Status  ')).toBe('marvi.accessibility_status');
       expect(normalizeRpcMethod('   some_RANDOM_method  ')).toBe('some_random_method');
     });
   });
