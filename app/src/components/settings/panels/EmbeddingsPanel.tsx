@@ -106,7 +106,8 @@ const EmbeddingsPanel = ({ embedded = false }: EmbeddingsPanelProps = {}) => {
   }
 
   const selectedProvider = normalizeProvider(settings.provider);
-  const currentEntry = settings.providers.find(p => p.slug === selectedProvider);
+  const visibleProviders = settings.providers.filter(p => p.slug !== 'managed');
+  const currentEntry = visibleProviders.find(p => p.slug === selectedProvider);
   const currentModels = currentEntry?.models ?? [];
   const currentModel = currentModels.find(m => m.id === settings.model) ?? currentModels[0];
   const allowedDims = currentModel?.allowed_dimensions ?? [];
@@ -361,7 +362,7 @@ const EmbeddingsPanel = ({ embedded = false }: EmbeddingsPanelProps = {}) => {
         {/* Provider selection */}
         <SettingsSection>
           <div role="radiogroup" aria-label={t('settings.embeddings.providerAria')}>
-            {settings.providers.map((entry, idx) => {
+            {visibleProviders.map((entry, idx) => {
               const selected = entry.slug === selectedProvider;
               return (
                 <button

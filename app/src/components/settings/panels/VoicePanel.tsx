@@ -482,6 +482,8 @@ const VoicePanel = ({ embedded = false }: VoicePanelProps = {}) => {
 
   const whisperReady = whisperInstall?.state === 'installed';
   const piperReady = piperInstall?.state === 'installed';
+  const sttRouteValue = sttProvider === 'cloud' ? '' : sttProvider;
+  const ttsRouteValue = ttsProvider === 'cloud' ? '' : ttsProvider;
 
   return (
     <PanelPage
@@ -498,27 +500,9 @@ const VoicePanel = ({ embedded = false }: VoicePanelProps = {}) => {
           <div className="px-4 py-3" data-testid="voice-providers-section">
             {/* Chip row */}
             <div className="flex flex-wrap gap-2">
-              {/* Cloud — always enabled, locked */}
-              <div className="inline-flex items-center gap-2 rounded-full px-2.5 py-1 text-xs font-medium ring-1 ring-emerald-200 bg-emerald-50 text-emerald-800 dark:bg-emerald-500/10 dark:text-emerald-100 dark:ring-emerald-700">
-                <span>{t('voice.providers.chip.cloud')}</span>
-                <button
-                  type="button"
-                  role="switch"
-                  aria-checked={true}
-                  aria-label={t('voice.providers.chip.cloudAria')}
-                  disabled
-                  className="relative inline-flex h-4 w-7 shrink-0 items-center rounded-full bg-emerald-500 disabled:cursor-not-allowed">
-                  <span
-                    aria-hidden
-                    className="inline-block h-3 w-3 transform rounded-full bg-white shadow translate-x-3.5"
-                  />
-                </button>
-              </div>
-
               {/* Whisper — local STT, no API key required. Chip opens the
                   install/enable modal (which calls voice_install_whisper and
-                  then voice_update_provider_settings on Enable). Toggling
-                  off routes STT back to the managed cloud provider. */}
+                  then voice_update_provider_settings on Enable). */}
               {(() => {
                 const tone = LOCAL_VOICE_PROVIDER_TONE.whisper;
                 const enabled = sttProvider === 'whisper';
@@ -545,7 +529,7 @@ const VoicePanel = ({ embedded = false }: VoicePanelProps = {}) => {
                       disabled={isInstallingWhisper || whisperInstall?.state === 'installing'}
                       onClick={() => {
                         if (enabled) {
-                          onSttProviderChange('cloud');
+                          onSttProviderChange('');
                         } else {
                           setPendingKeySlug('whisper');
                           setPendingKeyValue('');
@@ -584,7 +568,7 @@ const VoicePanel = ({ embedded = false }: VoicePanelProps = {}) => {
                       disabled={isInstallingPiper || piperInstall?.state === 'installing'}
                       onClick={() => {
                         if (enabled) {
-                          onTtsProviderChange('cloud');
+                          onTtsProviderChange('');
                         } else {
                           setPendingKeySlug('piper');
                           setPendingKeyValue('');
@@ -642,8 +626,8 @@ const VoicePanel = ({ embedded = false }: VoicePanelProps = {}) => {
                         if (meta.comingSoon) return;
                         if (enabled) {
                           void handleRemoveProvider(slug);
-                          if (sttProvider === slug) onSttProviderChange('cloud');
-                          if (ttsProvider === slug) onTtsProviderChange('cloud');
+                          if (sttProvider === slug) onSttProviderChange('');
+                          if (ttsProvider === slug) onTtsProviderChange('');
                         } else {
                           setPendingKeySlug(slug);
                           setPendingKeyValue('');
@@ -947,11 +931,13 @@ const VoicePanel = ({ embedded = false }: VoicePanelProps = {}) => {
                     <SettingsSelect
                       aria-label={t('voice.providers.sttProviderAria')}
                       data-testid="stt-provider-select"
-                      value={sttProvider || 'cloud'}
+                      value={sttRouteValue}
                       disabled={isSavingProviders}
                       onChange={e => onSttProviderChange(e.target.value)}
                       className="w-full">
-                      <option value="cloud">{t('voice.providers.cloudWhisperProxy')}</option>
+                      <option value="" disabled>
+                        Select a local or configured provider
+                      </option>
                       {/* Whisper only shown when enabled */}
                       {(sttProvider === 'whisper' ||
                         (voiceSettings?.voiceProviders ?? []).some(p => p.slug === 'whisper')) && (
@@ -972,12 +958,12 @@ const VoicePanel = ({ embedded = false }: VoicePanelProps = {}) => {
                       variant="secondary"
                       size="xs"
                       data-testid="test-stt-button"
-                      disabled={isTestingStt || !sttProvider}
+                      disabled={isTestingStt || !sttRouteValue}
                       onClick={async () => {
                         setIsTestingStt(true);
                         setSttTestResult(null);
                         try {
-                          const result = await testVoiceProvider('stt', sttProvider || 'cloud');
+                          const result = await testVoiceProvider('stt', sttRouteValue);
                           setSttTestResult(result);
                         } catch (err) {
                           setSttTestResult({
@@ -1040,11 +1026,13 @@ const VoicePanel = ({ embedded = false }: VoicePanelProps = {}) => {
                     <SettingsSelect
                       aria-label={t('voice.providers.ttsProviderAria')}
                       data-testid="tts-provider-select"
-                      value={ttsProvider || 'cloud'}
+                      value={ttsRouteValue}
                       disabled={isSavingProviders}
                       onChange={e => onTtsProviderChange(e.target.value)}
                       className="w-full">
-                      <option value="cloud">{t('voice.providers.cloudElevenLabsProxy')}</option>
+                      <option value="" disabled>
+                        Select a local or configured provider
+                      </option>
                       {/* Piper only shown when enabled */}
                       {(ttsProvider === 'piper' ||
                         (voiceSettings?.voiceProviders ?? []).some(p => p.slug === 'piper')) && (
@@ -1065,15 +1053,15 @@ const VoicePanel = ({ embedded = false }: VoicePanelProps = {}) => {
                       variant="secondary"
                       size="xs"
                       data-testid="test-tts-button"
-                      disabled={isTestingTts || !ttsProvider}
+                      disabled={isTestingTts || !ttsRouteValue}
                       onClick={async () => {
                         setIsTestingTts(true);
                         setTtsTestResult(null);
                         try {
                           // For ElevenLabs, include the voice ID so the test
                           // actually synthesizes audio with the selected voice.
-                          let ttsTestProvider = ttsProvider || 'cloud';
-                          if (ttsProvider === 'elevenlabs' && elevenlabsVoiceId) {
+                          let ttsTestProvider = ttsRouteValue;
+                          if (ttsRouteValue === 'elevenlabs' && elevenlabsVoiceId) {
                             ttsTestProvider = `elevenlabs:${elevenlabsVoiceId}`;
                           }
                           const result = await testVoiceProvider('tts', ttsTestProvider);

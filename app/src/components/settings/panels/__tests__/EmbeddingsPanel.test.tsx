@@ -60,13 +60,14 @@ const makeProvider = (
 });
 
 const makeSettings = (overrides: Partial<EmbeddingsSettings> = {}): EmbeddingsSettings => ({
-  provider: 'managed',
-  model: 'managed-model-v1',
+  provider: 'ollama',
+  model: 'ollama-model-v1',
   dimensions: 1536,
   rate_limit_per_min: 60,
   vector_search_enabled: true,
   providers: [
     makeProvider('managed', { requires_api_key: false }),
+    makeProvider('ollama', { requires_api_key: false }),
     makeProvider('openai', { requires_api_key: true }),
     makeProvider('custom', { requires_api_key: false, requires_endpoint: true }),
   ],
@@ -78,16 +79,16 @@ describe('EmbeddingsPanel', () => {
     vi.clearAllMocks();
     vi.mocked(loadEmbeddingsSettings).mockResolvedValue(makeSettings());
     vi.mocked(updateEmbeddingsSettings).mockResolvedValue({
-      provider: 'managed',
-      model: 'managed-model-v1',
+      provider: 'ollama',
+      model: 'ollama-model-v1',
       dimensions: 1536,
     });
     vi.mocked(setEmbeddingsApiKey).mockResolvedValue(undefined);
     vi.mocked(clearEmbeddingsApiKey).mockResolvedValue(undefined);
     vi.mocked(testEmbeddingsConnection).mockResolvedValue({
       success: true,
-      provider: 'managed',
-      model: 'managed-model-v1',
+      provider: 'ollama',
+      model: 'ollama-model-v1',
       actual_dimensions: 1536,
     });
   });
@@ -96,7 +97,8 @@ describe('EmbeddingsPanel', () => {
 
   it('loads and renders provider options', async () => {
     renderWithProviders(<EmbeddingsPanel />);
-    expect(await screen.findByText('Managed')).toBeInTheDocument();
+    expect(await screen.findByText('Ollama')).toBeInTheDocument();
+    expect(screen.queryByText('Managed')).not.toBeInTheDocument();
     expect(screen.getByText('Openai')).toBeInTheDocument();
     expect(screen.getByText('Custom')).toBeInTheDocument();
   });
@@ -112,7 +114,7 @@ describe('EmbeddingsPanel', () => {
     // loading placeholder visible
     expect(screen.getByText(/loading/i)).toBeInTheDocument();
     resolveLoad(makeSettings());
-    expect(await screen.findByText('Managed')).toBeInTheDocument();
+    expect(await screen.findByText('Ollama')).toBeInTheDocument();
   });
 
   it('shows error state when loadEmbeddingsSettings rejects', async () => {
@@ -124,36 +126,36 @@ describe('EmbeddingsPanel', () => {
   // ─── Provider selection — no API key needed ───────────────────────────────
 
   it('clicking a provider that needs no API key calls updateEmbeddingsSettings', async () => {
-    // Start with openai selected so managed is a valid switch target
+    // Start with openai selected so ollama is a valid switch target
     const settings = makeSettings({
       provider: 'openai',
       providers: [
-        makeProvider('managed', { requires_api_key: false }),
+        makeProvider('ollama', { requires_api_key: false }),
         makeProvider('openai', { requires_api_key: true, has_api_key: true }),
       ],
     });
     vi.mocked(loadEmbeddingsSettings).mockResolvedValue(settings);
 
     renderWithProviders(<EmbeddingsPanel />);
-    await screen.findByText('Managed');
+    await screen.findByText('Ollama');
 
-    // Click managed (no API key required, different from current)
-    const managedBtn = screen.getByRole('radio', { name: /managed/i });
-    fireEvent.click(managedBtn);
+    // Click ollama (no API key required, different from current)
+    const ollamaBtn = screen.getByRole('radio', { name: /ollama/i });
+    fireEvent.click(ollamaBtn);
 
     await waitFor(() =>
       expect(vi.mocked(updateEmbeddingsSettings)).toHaveBeenCalledWith(
-        expect.objectContaining({ provider: 'managed', confirm_wipe: false })
+        expect.objectContaining({ provider: 'ollama', confirm_wipe: false })
       )
     );
   });
 
   it('clicking the already-selected provider is a no-op', async () => {
     renderWithProviders(<EmbeddingsPanel />);
-    await screen.findByText('Managed');
+    await screen.findByText('Ollama');
 
-    const managedBtn = screen.getByRole('radio', { name: /managed/i });
-    fireEvent.click(managedBtn);
+    const ollamaBtn = screen.getByRole('radio', { name: /ollama/i });
+    fireEvent.click(ollamaBtn);
 
     // No RPC — already selected
     await new Promise(r => setTimeout(r, 50));
@@ -165,7 +167,7 @@ describe('EmbeddingsPanel', () => {
   it('clicking a provider that requires an API key opens the setup popup', async () => {
     const settings = makeSettings({
       providers: [
-        makeProvider('managed', { requires_api_key: false }),
+        makeProvider('ollama', { requires_api_key: false }),
         makeProvider('openai', { requires_api_key: true, has_api_key: false }),
       ],
     });
@@ -185,7 +187,7 @@ describe('EmbeddingsPanel', () => {
   it('can enter an API key and click Save & Switch to persist and switch provider', async () => {
     const settings = makeSettings({
       providers: [
-        makeProvider('managed', { requires_api_key: false }),
+        makeProvider('ollama', { requires_api_key: false }),
         makeProvider('openai', { requires_api_key: true, has_api_key: false }),
       ],
     });
@@ -216,7 +218,7 @@ describe('EmbeddingsPanel', () => {
   it('can click Test Connection inside the setup popup', async () => {
     const settings = makeSettings({
       providers: [
-        makeProvider('managed', { requires_api_key: false }),
+        makeProvider('ollama', { requires_api_key: false }),
         makeProvider('openai', { requires_api_key: true, has_api_key: false }),
       ],
     });
@@ -251,7 +253,7 @@ describe('EmbeddingsPanel', () => {
   it('the setup popup Cancel button closes the popup without persisting', async () => {
     const settings = makeSettings({
       providers: [
-        makeProvider('managed', { requires_api_key: false }),
+        makeProvider('ollama', { requires_api_key: false }),
         makeProvider('openai', { requires_api_key: true, has_api_key: false }),
       ],
     });
@@ -274,7 +276,7 @@ describe('EmbeddingsPanel', () => {
   it('the show/hide key toggle inside the popup toggles input type', async () => {
     const settings = makeSettings({
       providers: [
-        makeProvider('managed', { requires_api_key: false }),
+        makeProvider('ollama', { requires_api_key: false }),
         makeProvider('openai', { requires_api_key: true, has_api_key: false }),
       ],
     });
@@ -303,7 +305,7 @@ describe('EmbeddingsPanel', () => {
   it('clicking the custom provider opens the custom endpoint form', async () => {
     const settings = makeSettings({
       providers: [
-        makeProvider('managed', { requires_api_key: false }),
+        makeProvider('ollama', { requires_api_key: false }),
         makeProvider('custom', { requires_api_key: false, requires_endpoint: true }),
       ],
     });
@@ -323,7 +325,7 @@ describe('EmbeddingsPanel', () => {
   it('can fill and save the custom endpoint form', async () => {
     const settings = makeSettings({
       providers: [
-        makeProvider('managed', { requires_api_key: false }),
+        makeProvider('ollama', { requires_api_key: false }),
         makeProvider('custom', { requires_api_key: false, requires_endpoint: true }),
       ],
     });
@@ -358,7 +360,7 @@ describe('EmbeddingsPanel', () => {
     // message and NOT close the setup popup, so the user can fix the endpoint.
     const settings = makeSettings({
       providers: [
-        makeProvider('managed', { requires_api_key: false }),
+        makeProvider('ollama', { requires_api_key: false }),
         makeProvider('custom', { requires_api_key: false, requires_endpoint: true }),
       ],
     });
@@ -391,7 +393,7 @@ describe('EmbeddingsPanel', () => {
     // user can load a model and retry — verifying at setup is the fix.
     const settings = makeSettings({
       providers: [
-        makeProvider('managed', { requires_api_key: false }),
+        makeProvider('ollama', { requires_api_key: false }),
         makeProvider('custom', { requires_api_key: false, requires_endpoint: true }),
       ],
     });
@@ -424,7 +426,7 @@ describe('EmbeddingsPanel', () => {
     // and keeps the popup open so the user can fix the endpoint and retry.
     const settings = makeSettings({
       providers: [
-        makeProvider('managed', { requires_api_key: false }),
+        makeProvider('ollama', { requires_api_key: false }),
         makeProvider('custom', { requires_api_key: false, requires_endpoint: true }),
       ],
     });
@@ -455,7 +457,7 @@ describe('EmbeddingsPanel', () => {
     const settings = makeSettings({
       provider: 'openai',
       providers: [
-        makeProvider('managed', { requires_api_key: false }),
+        makeProvider('ollama', { requires_api_key: false }),
         makeProvider('openai', { requires_api_key: true, has_api_key: true }),
       ],
     });
@@ -465,9 +467,9 @@ describe('EmbeddingsPanel', () => {
     });
 
     renderWithProviders(<EmbeddingsPanel />);
-    await screen.findByText('Managed');
+    await screen.findByText('Ollama');
 
-    fireEvent.click(screen.getByRole('radio', { name: /managed/i }));
+    fireEvent.click(screen.getByRole('radio', { name: /ollama/i }));
 
     // Wipe confirmation dialog appears
     await waitFor(() =>
@@ -479,7 +481,7 @@ describe('EmbeddingsPanel', () => {
     const settings = makeSettings({
       provider: 'openai',
       providers: [
-        makeProvider('managed', { requires_api_key: false }),
+        makeProvider('ollama', { requires_api_key: false }),
         makeProvider('openai', { requires_api_key: true, has_api_key: true }),
       ],
     });
@@ -487,12 +489,12 @@ describe('EmbeddingsPanel', () => {
     // First call: wipe required; second: success
     vi.mocked(updateEmbeddingsSettings)
       .mockResolvedValueOnce({ error: 'EMBEDDINGS_DIMENSION_CHANGE_REQUIRES_WIPE' })
-      .mockResolvedValueOnce({ provider: 'managed' });
+      .mockResolvedValueOnce({ provider: 'ollama' });
 
     renderWithProviders(<EmbeddingsPanel />);
-    await screen.findByText('Managed');
+    await screen.findByText('Ollama');
 
-    fireEvent.click(screen.getByRole('radio', { name: /managed/i }));
+    fireEvent.click(screen.getByRole('radio', { name: /ollama/i }));
     await waitFor(() =>
       expect(screen.getByRole('heading', { name: /reset memory vectors/i })).toBeInTheDocument()
     );
@@ -512,7 +514,7 @@ describe('EmbeddingsPanel', () => {
     const settings = makeSettings({
       provider: 'openai',
       providers: [
-        makeProvider('managed', { requires_api_key: false }),
+        makeProvider('ollama', { requires_api_key: false }),
         makeProvider('openai', { requires_api_key: true, has_api_key: true }),
       ],
     });
@@ -522,9 +524,9 @@ describe('EmbeddingsPanel', () => {
     });
 
     renderWithProviders(<EmbeddingsPanel />);
-    await screen.findByText('Managed');
+    await screen.findByText('Ollama');
 
-    fireEvent.click(screen.getByRole('radio', { name: /managed/i }));
+    fireEvent.click(screen.getByRole('radio', { name: /ollama/i }));
     await screen.findByRole('heading', { name: /reset memory vectors/i });
 
     fireEvent.click(screen.getByRole('button', { name: /^cancel$/i }));
@@ -574,14 +576,14 @@ describe('EmbeddingsPanel', () => {
 
   it('clicking Test Connection (outside popup) calls testEmbeddingsConnection', async () => {
     const settings = makeSettings({
-      provider: 'managed',
+      provider: 'ollama',
       providers: [
-        makeProvider('managed', {
+        makeProvider('ollama', {
           requires_api_key: false,
           models: [
             {
-              id: 'managed-model-v1',
-              label: 'Managed Model v1',
+              id: 'ollama-model-v1',
+              label: 'ollama Model v1',
               default_dimensions: 1536,
               allowed_dimensions: [1536],
             },
@@ -592,7 +594,7 @@ describe('EmbeddingsPanel', () => {
     vi.mocked(loadEmbeddingsSettings).mockResolvedValue(settings);
 
     renderWithProviders(<EmbeddingsPanel />);
-    await screen.findByText('Managed');
+    await screen.findByText('Ollama');
 
     const testBtn = await screen.findByRole('button', { name: /test connection/i });
     fireEvent.click(testBtn);
@@ -602,14 +604,14 @@ describe('EmbeddingsPanel', () => {
 
   it('shows error when testEmbeddingsConnection returns failure', async () => {
     const settings = makeSettings({
-      provider: 'managed',
+      provider: 'ollama',
       providers: [
-        makeProvider('managed', {
+        makeProvider('ollama', {
           requires_api_key: false,
           models: [
             {
-              id: 'managed-model-v1',
-              label: 'Managed Model v1',
+              id: 'ollama-model-v1',
+              label: 'ollama Model v1',
               default_dimensions: 1536,
               allowed_dimensions: [1536],
             },
@@ -620,13 +622,13 @@ describe('EmbeddingsPanel', () => {
     vi.mocked(loadEmbeddingsSettings).mockResolvedValue(settings);
     vi.mocked(testEmbeddingsConnection).mockResolvedValueOnce({
       success: false,
-      provider: 'managed',
-      model: 'managed-model-v1',
+      provider: 'ollama',
+      model: 'ollama-model-v1',
       error: 'Connection refused',
     });
 
     renderWithProviders(<EmbeddingsPanel />);
-    await screen.findByText('Managed');
+    await screen.findByText('Ollama');
 
     const testBtn = await screen.findByRole('button', { name: /test connection/i });
     fireEvent.click(testBtn);
@@ -782,7 +784,7 @@ describe('EmbeddingsPanel', () => {
       provider: 'none',
       providers: [
         makeProvider('none', { requires_api_key: false }),
-        makeProvider('managed', { requires_api_key: false }),
+        makeProvider('ollama', { requires_api_key: false }),
       ],
     });
     vi.mocked(loadEmbeddingsSettings).mockResolvedValue(settings);
@@ -798,7 +800,7 @@ describe('EmbeddingsPanel', () => {
 
   it('does not render the SettingsHeader in embedded mode', async () => {
     renderWithProviders(<EmbeddingsPanel embedded />);
-    await screen.findByText('Managed');
+    await screen.findByText('Ollama');
 
     // No header rendered in embedded mode
     expect(screen.queryByRole('heading', { name: /embeddings/i })).not.toBeInTheDocument();

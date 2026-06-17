@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { AVATAR_MENU_ITEMS, NAV_TABS } from '../config/navConfig';
+import { NAV_TABS } from '../config/navConfig';
 import { useT } from '../lib/i18n/I18nContext';
 import { useCoreState } from '../providers/CoreStateProvider';
 import { trackEvent } from '../services/analytics';
@@ -9,10 +9,6 @@ import { selectCompanionSessionActive } from '../store/companionSlice';
 import { useAppSelector } from '../store/hooks';
 import { selectUnreadCount } from '../store/notificationSlice';
 import { isAccountsFullscreen } from '../utils/accountsFullscreen';
-import { BILLING_DASHBOARD_URL } from '../utils/links';
-import { isLocalSessionToken } from '../utils/localSession';
-import { openUrl } from '../utils/openUrl';
-import { resolveUserName } from '../utils/userName';
 
 // ── SVG icons, keyed by tab id ────────────────────────────────────────────────
 
@@ -117,15 +113,6 @@ function TabIcon({ id }: { id: string }) {
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
-const getInitials = (name: string): string => {
-  const words = name.trim().split(/\s+/).filter(Boolean);
-  if (words.length === 0) return 'OH';
-  return words
-    .slice(0, 2)
-    .map(word => word[0]?.toUpperCase() ?? '')
-    .join('');
-};
-
 // ── Component ─────────────────────────────────────────────────────────────────
 
 const BottomTabBar = () => {
@@ -135,8 +122,6 @@ const BottomTabBar = () => {
   const { snapshot } = useCoreState();
   const token = snapshot.sessionToken;
   const [revealed, setRevealed] = useState(false);
-  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
-  const profileMenuRef = useRef<HTMLDivElement>(null);
 
   const activeAccountId = useAppSelector(state => state.accounts.activeAccountId);
   const unreadCount = useAppSelector(state => selectUnreadCount(state.notifications.items));
@@ -147,31 +132,8 @@ const BottomTabBar = () => {
   const tabBarLabels = useAppSelector(state => state.theme?.tabBarLabels ?? 'hover');
   const labelsAlwaysVisible = tabBarLabels === 'always';
 
-  const isLocalSession = isLocalSessionToken(token);
-  // The avatar button shows the signed-in user's initials.
-  const userInitials = getInitials(resolveUserName(snapshot.currentUser));
-
   // Resolve translated labels for NAV_TABS once per render cycle.
   const tabs = useMemo(() => NAV_TABS.map(tab => ({ ...tab, label: t(tab.labelKey) })), [t]);
-
-  useEffect(() => {
-    if (!profileMenuOpen) return;
-
-    const onPointerDown = (event: PointerEvent) => {
-      if (profileMenuRef.current?.contains(event.target as Node)) return;
-      setProfileMenuOpen(false);
-    };
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setProfileMenuOpen(false);
-    };
-
-    document.addEventListener('pointerdown', onPointerDown);
-    document.addEventListener('keydown', onKeyDown);
-    return () => {
-      document.removeEventListener('pointerdown', onPointerDown);
-      document.removeEventListener('keydown', onKeyDown);
-    };
-  }, [profileMenuOpen]);
 
   const hiddenPaths = ['/', '/login'];
   if (
@@ -212,16 +174,6 @@ const BottomTabBar = () => {
       });
     }
     navigate(tab.path);
-  };
-
-  const handleAvatarMenuItemClick = (itemId: string, kind: string, target: string) => {
-    setProfileMenuOpen(false);
-    if (kind === 'openUrl') {
-      openUrl(target).catch(() => {});
-    } else {
-      navigate(target);
-    }
-    trackEvent('avatar_menu_item_click', { item_id: itemId });
   };
 
   // One regular pill tab.
@@ -303,53 +255,6 @@ const BottomTabBar = () => {
         }}>
         <nav className="pointer-events-auto inline-flex items-center gap-1 rounded-sm border border-stone-300 dark:border-neutral-700 bg-stone-200 dark:bg-neutral-900 shadow-soft px-1 py-1">
           {tabs.map(tab => renderTab(tab))}
-          <div
-            className="relative ml-1 border-l border-stone-300 pl-1 dark:border-neutral-700"
-            ref={profileMenuRef}>
-            <button
-              type="button"
-              onClick={() => setProfileMenuOpen(open => !open)}
-              className={`relative flex h-9 w-9 items-center justify-center rounded-sm transition-colors duration-300 cursor-pointer ${
-                profileMenuOpen
-                  ? 'bg-white text-stone-900 shadow-sm dark:bg-neutral-800 dark:text-neutral-100'
-                  : 'bg-transparent text-stone-500 hover:bg-stone-300/50 hover:text-stone-700 dark:text-neutral-400 dark:hover:bg-neutral-800/60 dark:hover:text-neutral-200'
-              }`}
-              aria-haspopup="menu"
-              aria-expanded={profileMenuOpen}
-              aria-label={t('nav.avatarMenu.account')}
-              title={t('nav.avatarMenu.account')}>
-              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary-500 text-[10px] font-semibold leading-none text-white">
-                {userInitials}
-              </span>
-            </button>
-
-            {profileMenuOpen && (
-              <div
-                role="menu"
-                aria-label={t('nav.avatarMenu.account')}
-                className="absolute bottom-full right-0 mb-2 w-56 overflow-hidden rounded-sm border border-stone-300 bg-white shadow-soft dark:border-neutral-700 dark:bg-neutral-900">
-                <div className="p-1">
-                  {AVATAR_MENU_ITEMS.filter(item => !item.cloudOnly || !isLocalSession).map(
-                    item => {
-                      // Billing target is resolved from the canonical constant rather than the
-                      // data-file placeholder so it stays in sync with SettingsHome.
-                      const target = item.id === 'billing' ? BILLING_DASHBOARD_URL : item.target;
-                      return (
-                        <button
-                          key={item.id}
-                          type="button"
-                          role="menuitem"
-                          onClick={() => handleAvatarMenuItemClick(item.id, item.kind, target)}
-                          className="flex w-full items-center rounded-sm px-2 py-2 text-left text-sm text-stone-700 transition-colors hover:bg-stone-100 dark:text-neutral-200 dark:hover:bg-neutral-800">
-                          {t(item.labelKey)}
-                        </button>
-                      );
-                    }
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
         </nav>
       </div>
     </div>

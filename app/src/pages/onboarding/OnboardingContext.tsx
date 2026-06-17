@@ -1,7 +1,5 @@
 import { createContext, useContext } from 'react';
 
-export type AiMode = 'cloud' | 'custom';
-
 export type CustomStepKey =
   | 'inference'
   | 'voice'
@@ -15,8 +13,6 @@ export type CustomStepChoice = 'default' | 'configure';
 
 export interface OnboardingDraft {
   connectedSources: string[];
-  /** Which AI provisioning path the user chose on the runtime-choice step. */
-  aiMode?: AiMode;
   /** Per-domain choices made while walking the Custom wizard. */
   customChoices?: Partial<Record<CustomStepKey, CustomStepChoice>>;
 }

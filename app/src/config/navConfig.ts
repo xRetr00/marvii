@@ -70,41 +70,8 @@ export interface AvatarMenuItem {
 
 /**
  * Avatar dropdown menu items shown beneath the agent-profile list.
- * Order: Account → Billing → Rewards → Invites → Wallet.
+ *
+ * Marvi desktop is local-first, so profile/account, billing, rewards, invites,
+ * and wallet shortcuts are intentionally not surfaced in the app chrome.
  */
-export const AVATAR_MENU_ITEMS: AvatarMenuItem[] = [
-  {
-    id: 'account',
-    labelKey: 'nav.avatarMenu.account',
-    target: '/settings/account',
-    kind: 'navigate',
-  },
-  {
-    id: 'billing',
-    labelKey: 'nav.avatarMenu.billing',
-    // Resolved at runtime via BILLING_DASHBOARD_URL; placeholder keeps typing clean.
-    target: '',
-    kind: 'openUrl',
-    cloudOnly: true,
-  },
-  {
-    id: 'rewards',
-    labelKey: 'nav.avatarMenu.rewards',
-    target: '/rewards',
-    kind: 'navigate',
-    cloudOnly: true,
-  },
-  {
-    id: 'invites',
-    labelKey: 'nav.avatarMenu.invites',
-    target: '/invites',
-    kind: 'navigate',
-    cloudOnly: true,
-  },
-  {
-    id: 'wallet',
-    labelKey: 'nav.avatarMenu.wallet',
-    target: '/settings/wallet-balances',
-    kind: 'navigate',
-  },
-];
+export const AVATAR_MENU_ITEMS: AvatarMenuItem[] = [];

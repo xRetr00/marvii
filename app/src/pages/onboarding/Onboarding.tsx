@@ -7,21 +7,16 @@ import CustomInferencePage from './pages/CustomInferencePage';
 import CustomOAuthPage from './pages/CustomOAuthPage';
 import CustomSearchPage from './pages/CustomSearchPage';
 import CustomVoicePage from './pages/CustomVoicePage';
-import RuntimeChoicePage from './pages/RuntimeChoicePage';
 import VaultSetupStep from './pages/VaultSetupStep';
 import WelcomePage from './pages/WelcomePage';
 
 /**
  * Routed onboarding flow.
  *
- *   welcome → runtime-choice
- *     ├── cloud  → /home
- *     └── custom → /custom/inference → voice → oauth → search → embeddings → vault → /home
+ *   welcome → /custom/inference → voice → oauth → search → embeddings → vault → /home
  *
- * Each custom step asks Default (let Marvi manage it) vs Configure
- * (let me pick). Default is a one-click pick; Configure renders inline
- * controls (or a deep-link callout to Settings, for domains not yet
- * embedded). Gmail/Composio (`/onboarding/skills`) and Composio-driven
+ * Each step renders the local/custom configuration controls directly.
+ * Gmail/Composio (`/onboarding/skills`) and Composio-driven
  * context gathering (`/onboarding/context`) are gone from the default
  * flow; their step + page files remain on disk in case we want to revive
  * them later.
@@ -32,7 +27,10 @@ const Onboarding = () => {
       <Route element={<OnboardingLayout />}>
         <Route index element={<Navigate to="welcome" replace />} />
         <Route path="welcome" element={<WelcomePage />} />
-        <Route path="runtime-choice" element={<RuntimeChoicePage />} />
+        <Route
+          path="runtime-choice"
+          element={<Navigate to="/onboarding/custom/inference" replace />}
+        />
         <Route path="custom/inference" element={<CustomInferencePage />} />
         <Route path="custom/voice" element={<CustomVoicePage />} />
         <Route path="custom/oauth" element={<CustomOAuthPage />} />

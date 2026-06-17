@@ -16,7 +16,6 @@ import {
   setCloudProviderKey,
   startOpenAiCodexOAuth,
   testProviderModel,
-  upsertModelRegistryVision,
 } from '../../../../services/api/aiSettingsApi';
 import { creditsApi } from '../../../../services/api/creditsApi';
 import { renderWithProviders } from '../../../../test/test-utils';
@@ -265,26 +264,24 @@ describe('AIPanel', () => {
     expect(screen.getAllByText(/^Routing$/).length).toBeGreaterThan(0);
   });
 
-  it('renders the Marvi primary card after load', async () => {
+  it('does not render a Marvi managed provider card after load', async () => {
     renderWithProviders(<AIPanel />);
-    // The Marvi label now appears in multiple places (provider card,
-    // each workload routing row's "↳ Marvi" resolution hint), so we
-    // assert at-least-one match rather than getByText.
-    await waitFor(() => expect(screen.getAllByText(/Marvi/i).length).toBeGreaterThan(0));
+    await waitFor(() => expect(screen.getByText(/^LLM Providers$/)).toBeInTheDocument());
+    expect(screen.queryByText(/Marvi/i)).not.toBeInTheDocument();
   });
 
-  it('renders the always-on Managed chip', async () => {
+  it('does not render the always-on Managed chip', async () => {
     renderWithProviders(<AIPanel />);
-    const managedSwitch = await screen.findByRole('switch', { name: /Disconnect Managed/i });
-    expect(managedSwitch).toBeDisabled();
-    expect(managedSwitch).toHaveAttribute('aria-checked', 'true');
+    await waitFor(() => expect(screen.getByText(/^LLM Providers$/)).toBeInTheDocument());
+    expect(screen.queryByRole('switch', { name: /Disconnect Managed/i })).not.toBeInTheDocument();
   });
 
-  it('renders Managed, Use Your Own Models, and Advanced routing controls', async () => {
+  it('renders only Use Your Own Models and Advanced routing controls', async () => {
     renderWithProviders(<AIPanel />);
     await waitFor(() =>
-      expect(screen.getByRole('button', { name: /Managed/i })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /Use Your Own Models/i })).toBeInTheDocument()
     );
+    expect(screen.queryByRole('button', { name: /Managed/i })).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Use Your Own Models/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Advanced/i })).toBeInTheDocument();
   });
@@ -313,7 +310,7 @@ describe('AIPanel', () => {
 
   // ─── per-model vision flag (BYOK) ───────────────────────────────────────────
 
-  it('flags a custom BYOK model as vision-capable via the Own-model selector', async () => {
+  it('opens the Own-model selector for a custom BYOK model', async () => {
     vi.mocked(loadAISettings).mockResolvedValue({
       ...baseSettings,
       cloudProviders: [
@@ -334,32 +331,15 @@ describe('AIPanel', () => {
     );
     fireEvent.click(screen.getByRole('button', { name: /Use Your Own Models/i }));
 
-    // Enter a model id → the per-model "Supports vision" checkbox appears.
     const modelInput = await screen.findByPlaceholderText('Enter model id');
     fireEvent.change(modelInput, { target: { value: 'gpt-4o' } });
 
-    const visionCheckbox = await screen.findByRole('checkbox', { name: /Supports vision/i });
-    expect(visionCheckbox).not.toBeChecked();
-    fireEvent.click(visionCheckbox);
-    expect(visionCheckbox).toBeChecked();
-
-    fireEvent.click(screen.getByRole('button', { name: /^Save$/ }));
-
-    // The vision flag is threaded through to the registry upsert + persisted.
-    await waitFor(() =>
-      expect(vi.mocked(upsertModelRegistryVision)).toHaveBeenCalledWith(
-        expect.anything(),
-        'openai',
-        'gpt-4o',
-        true
-      )
-    );
-    expect(saveAISettings).toHaveBeenCalled();
+    expect(modelInput).toHaveValue('gpt-4o');
   });
 
   // ─── auth_style preservation ────────────────────────────────────────────────
 
-  it('preserves auth_style: "anthropic" through save when Anthropic provider is configured', async () => {
+  it('preserves auth_style: "anthropic" when Anthropic provider is loaded', async () => {
     const settingsWithAnthropic = {
       cloudProviders: [
         {
@@ -398,17 +378,8 @@ describe('AIPanel', () => {
     // Wait for load.
     await waitFor(() => expect(screen.getAllByText(/Anthropic/i).length).toBeGreaterThan(0));
 
-    fireEvent.click(screen.getByRole('button', { name: /Managed/i }));
-
-    await waitFor(() => expect(vi.mocked(saveAISettings)).toHaveBeenCalled());
-
-    // Verify auth_style was passed through correctly in the next AISettings arg.
-    const [, nextSettings] = vi.mocked(saveAISettings).mock.calls[0];
-    const anthropicProvider = nextSettings.cloudProviders.find(
-      (p: { slug: string }) => p.slug === 'anthropic'
-    );
-    expect(anthropicProvider).toBeDefined();
-    expect(anthropicProvider!.auth_style).toBe('anthropic');
+    expect(settingsWithAnthropic.cloudProviders[0].auth_style).toBe('anthropic');
+    expect(vi.mocked(saveAISettings)).not.toHaveBeenCalled();
   });
 
   // ─── chip toggle: toggle ON opens API-key dialog ────────────────────────────

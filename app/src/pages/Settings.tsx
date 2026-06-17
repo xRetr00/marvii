@@ -5,7 +5,6 @@ import WorkflowsTab from '../components/intelligence/WorkflowsTab';
 import SettingsIndexRedirect from '../components/settings/layout/SettingsIndexRedirect';
 import SettingsLayout from '../components/settings/layout/SettingsLayout';
 import AboutPanel from '../components/settings/panels/AboutPanel';
-import AccountPanel from '../components/settings/panels/AccountPanel';
 import AgentAccessPanel from '../components/settings/panels/AgentAccessPanel';
 import AgentActivityPanel from '../components/settings/panels/AgentActivityPanel';
 import AgentBoxPanel from '../components/settings/panels/AgentBoxPanel';
@@ -16,7 +15,6 @@ import AppearancePanel from '../components/settings/panels/AppearancePanel';
 import ApprovalHistoryPanel from '../components/settings/panels/ApprovalHistoryPanel';
 import AutocompleteDebugPanel from '../components/settings/panels/AutocompleteDebugPanel';
 import AutocompletePanel from '../components/settings/panels/AutocompletePanel';
-import BillingPanel from '../components/settings/panels/BillingPanel';
 import CompanionPanel from '../components/settings/panels/CompanionPanel';
 import ComposioTriagePanel from '../components/settings/panels/ComposioTriagePanel';
 import CronJobsPanel from '../components/settings/panels/CronJobsPanel';
@@ -37,21 +35,15 @@ import PersonalityPanel from '../components/settings/panels/PersonalityPanel';
 import PrivacyPanel from '../components/settings/panels/PrivacyPanel';
 import ProfileEditorPage from '../components/settings/panels/ProfileEditorPage';
 import ProfilesPanel from '../components/settings/panels/ProfilesPanel';
-import RecoveryPhrasePanel from '../components/settings/panels/RecoveryPhrasePanel';
 import SandboxSettingsPanel from '../components/settings/panels/SandboxSettingsPanel';
 import ScreenAwarenessDebugPanel from '../components/settings/panels/ScreenAwarenessDebugPanel';
 import ScreenIntelligencePanel from '../components/settings/panels/ScreenIntelligencePanel';
 import SecurityPanel from '../components/settings/panels/SecurityPanel';
 import TasksPanel from '../components/settings/panels/TasksPanel';
-import TeamInvitesPanel from '../components/settings/panels/TeamInvitesPanel';
-import TeamManagementPanel from '../components/settings/panels/TeamManagementPanel';
-import TeamMembersPanel from '../components/settings/panels/TeamMembersPanel';
-import TeamPanel from '../components/settings/panels/TeamPanel';
 import ToolPolicyDiagnosticsPanel from '../components/settings/panels/ToolPolicyDiagnosticsPanel';
 import ToolsPanel from '../components/settings/panels/ToolsPanel';
 import UsagePanel from '../components/settings/panels/UsagePanel';
 import VoiceDebugPanel from '../components/settings/panels/VoiceDebugPanel';
-import WalletBalancesPanel from '../components/settings/panels/WalletBalancesPanel';
 import WebhooksDebugPanel from '../components/settings/panels/WebhooksDebugPanel';
 import WorkflowRunnerPanel from '../components/settings/panels/WorkflowRunnerPanel';
 
@@ -86,20 +78,23 @@ const Settings = () => {
           <Route index element={<SettingsIndexRedirect />} />
 
           {/* ── General ─────────────────────────────────────────────── */}
-          <Route path="account" element={wrapSettingsPage(<AccountPanel />)} />
-          <Route path="team" element={wrapSettingsPage(<TeamPanel />)} />
-          <Route path="team/manage/:teamId" element={wrapSettingsPage(<TeamManagementPanel />)} />
+          <Route path="account" element={<Navigate to="/settings/appearance" replace />} />
+          <Route path="team" element={<Navigate to="/settings/appearance" replace />} />
+          <Route
+            path="team/manage/:teamId"
+            element={<Navigate to="/settings/appearance" replace />}
+          />
           <Route
             path="team/manage/:teamId/members"
-            element={wrapSettingsPage(<TeamMembersPanel />)}
+            element={<Navigate to="/settings/appearance" replace />}
           />
           <Route
             path="team/manage/:teamId/invites"
-            element={wrapSettingsPage(<TeamInvitesPanel />)}
+            element={<Navigate to="/settings/appearance" replace />}
           />
-          <Route path="team/members" element={wrapSettingsPage(<TeamMembersPanel />)} />
-          <Route path="team/invites" element={wrapSettingsPage(<TeamInvitesPanel />)} />
-          <Route path="billing" element={wrapSettingsPage(<BillingPanel />)} />
+          <Route path="team/members" element={<Navigate to="/settings/appearance" replace />} />
+          <Route path="team/invites" element={<Navigate to="/settings/appearance" replace />} />
+          <Route path="billing" element={<Navigate to="/settings/appearance" replace />} />
           <Route path="privacy" element={wrapSettingsPage(<PrivacyPanel />)} />
           <Route path="security" element={wrapSettingsPage(<SecurityPanel />)} />
           <Route path="migration" element={wrapSettingsPage(<MigrationPanel />)} />
@@ -132,8 +127,8 @@ const Settings = () => {
 
           {/* ── Data ────────────────────────────────────────────────── */}
           <Route path="memory-sync" element={wrapSettingsPage(<MemorySyncPanel />)} />
-          <Route path="wallet-balances" element={wrapSettingsPage(<WalletBalancesPanel />)} />
-          <Route path="recovery-phrase" element={wrapSettingsPage(<RecoveryPhrasePanel />)} />
+          <Route path="wallet-balances" element={<Navigate to="/settings/memory-sync" replace />} />
+          <Route path="recovery-phrase" element={<Navigate to="/settings/memory-sync" replace />} />
 
           {/* ── Connections ─────────────────────────────────────────── */}
           <Route path="integrations" element={wrapSettingsPage(<IntegrationsPanel />)} />
@@ -194,7 +189,7 @@ const Settings = () => {
             path="features"
             element={<Navigate to="/settings/screen-intelligence" replace />}
           />
-          <Route path="crypto" element={<Navigate to="/settings/wallet-balances" replace />} />
+          <Route path="crypto" element={<Navigate to="/settings/memory-sync" replace />} />
           <Route
             path="notifications-hub"
             element={<Navigate to="/settings/notifications" replace />}

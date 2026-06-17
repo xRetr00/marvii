@@ -3012,7 +3012,9 @@ const AIPanel = ({ embedded = false }: AIPanelProps = {}) => {
       ? 'own'
       : routingEditorMode === 'custom'
         ? 'custom'
-        : inferredRoutingMode;
+        : inferredRoutingMode === 'managed'
+          ? 'own'
+          : inferredRoutingMode;
   const sharedModelRef = useMemo(() => inferSharedModelRef(draft.routing), [draft.routing]);
 
   return (
@@ -3048,15 +3050,6 @@ const AIPanel = ({ embedded = false }: AIPanelProps = {}) => {
             )}
 
             <div className="flex flex-wrap gap-2">
-              <ProviderToggleChip
-                key="openhuman"
-                slug="openhuman"
-                label={t('settings.ai.routing.managed')}
-                enabled
-                locked
-                onToggle={() => {}}
-              />
-
               {/* Built-in cloud providers */}
               {BUILTIN_CLOUD_PROVIDER_SLUGS.map(slug => {
                 const meta = BUILTIN_PROVIDER_META[slug];
@@ -3235,8 +3228,8 @@ const AIPanel = ({ embedded = false }: AIPanelProps = {}) => {
         {/* end of Auth section */}
 
         {/* ═══════════════════════════════════════════════════════════════
-            ROUTING — top-level routing mode. Managed = Marvi decides.
-            Own = one provider/model for everything. Custom = fine-grained
+            ROUTING — top-level routing mode. Own = one provider/model for
+            everything. Custom = fine-grained
             per-workload routing.
             ═══════════════════════════════════════════════════════════════ */}
         <div className="space-y-4">
@@ -3250,29 +3243,7 @@ const AIPanel = ({ embedded = false }: AIPanelProps = {}) => {
           </div>
 
           <section className="space-y-3">
-            <div className="grid gap-3 md:grid-cols-3">
-              <button
-                type="button"
-                onClick={async () => {
-                  setRoutingEditorMode(null);
-                  await persist({
-                    ...draft,
-                    routing: routingWithAllWorkloads({ kind: 'openhuman' }),
-                  });
-                }}
-                className={`flex h-full min-h-[152px] flex-col rounded-2xl border p-4 text-left transition-colors ${
-                  effectiveRoutingMode === 'managed'
-                    ? 'border-emerald-300 bg-emerald-50 dark:border-emerald-500/40 dark:bg-emerald-500/10'
-                    : 'border-neutral-200 bg-white hover:bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:bg-neutral-800'
-                }`}>
-                <div className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
-                  {t('settings.ai.routing.managed')}
-                </div>
-                <p className="mt-2 text-xs leading-5 text-neutral-600 dark:text-neutral-300">
-                  {t('settings.ai.routing.managedDesc')}
-                </p>
-              </button>
-
+            <div className="grid gap-3 md:grid-cols-2">
               <button
                 type="button"
                 onClick={() => setRoutingEditorMode('own')}
@@ -3305,12 +3276,6 @@ const AIPanel = ({ embedded = false }: AIPanelProps = {}) => {
                 </p>
               </button>
             </div>
-
-            {effectiveRoutingMode === 'managed' ? (
-              <div className="rounded-xl border border-emerald-200 bg-emerald-50/70 px-4 py-3 text-sm text-emerald-900 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-100">
-                {t('settings.ai.routing.managedMsg')}
-              </div>
-            ) : null}
 
             {effectiveRoutingMode === 'own' ? (
               <GlobalOwnModelSelector

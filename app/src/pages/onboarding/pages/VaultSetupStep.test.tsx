@@ -69,11 +69,12 @@ describe('VaultSetupStep', () => {
     expect(screen.queryByTestId('onboarding-custom-vault-step-configure')).not.toBeInTheDocument();
   });
 
-  it('shows default/configure chooser cards for managed sessions', () => {
+  it('hides chooser cards for remote sessions too', () => {
     sessionToken = 'header.payload.remote';
     renderPage();
 
-    expect(screen.getByTestId('onboarding-custom-vault-step-default')).toBeInTheDocument();
-    expect(screen.getByTestId('onboarding-custom-vault-step-configure')).toBeInTheDocument();
+    expect(screen.getByTestId('memory-data-panel')).toBeInTheDocument();
+    expect(screen.queryByTestId('onboarding-custom-vault-step-default')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('onboarding-custom-vault-step-configure')).not.toBeInTheDocument();
   });
 });

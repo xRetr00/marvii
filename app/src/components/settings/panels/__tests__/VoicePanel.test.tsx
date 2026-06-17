@@ -192,13 +192,13 @@ describe('VoicePanel', () => {
 
   // ─── Voice Routing Section ──────────────────────────────────────────────
 
-  it('renders the STT and TTS provider dropdowns defaulting to cloud', async () => {
+  it('renders the STT and TTS provider dropdowns without managed cloud defaults', async () => {
     renderWithProviders(<VoicePanel />, { initialEntries: ['/settings/voice'] });
 
     const sttSelect = (await screen.findByTestId('stt-provider-select')) as HTMLSelectElement;
     const ttsSelect = (await screen.findByTestId('tts-provider-select')) as HTMLSelectElement;
-    await waitFor(() => expect(sttSelect.value).toBe('cloud'));
-    expect(ttsSelect.value).toBe('cloud');
+    await waitFor(() => expect(sttSelect.value).toBe(''));
+    expect(ttsSelect.value).toBe('');
   });
 
   it('renders the STT and TTS provider dropdowns seeded from loadVoiceSettings', async () => {
@@ -235,9 +235,8 @@ describe('VoicePanel', () => {
     // Initial value should be whisper (seeded from voiceSettings).
     await waitFor(() => expect(sttSelect.value).toBe('whisper'));
 
-    // Change back to cloud — just updates local state, no RPC yet.
-    fireEvent.change(sttSelect, { target: { value: 'cloud' } });
-    await waitFor(() => expect(sttSelect.value).toBe('cloud'));
+    fireEvent.change(sttSelect, { target: { value: '' } });
+    await waitFor(() => expect(sttSelect.value).toBe(''));
 
     // No RPC call yet — user must click Save.
     expect(vi.mocked(openhumanVoiceSetProviders)).not.toHaveBeenCalled();
@@ -254,16 +253,15 @@ describe('VoicePanel', () => {
     const sttSelect = (await screen.findByTestId('stt-provider-select')) as HTMLSelectElement;
     await waitFor(() => expect(sttSelect.value).toBe('whisper'));
 
-    // Switch back to cloud, then save.
-    fireEvent.change(sttSelect, { target: { value: 'cloud' } });
-    await waitFor(() => expect(sttSelect.value).toBe('cloud'));
+    fireEvent.change(sttSelect, { target: { value: '' } });
+    await waitFor(() => expect(sttSelect.value).toBe(''));
 
     const saveBtn = screen.getByTestId('save-voice-routing');
     fireEvent.click(saveBtn);
 
     await waitFor(() =>
       expect(vi.mocked(openhumanVoiceSetProviders)).toHaveBeenCalledWith(
-        expect.objectContaining({ stt_provider: 'cloud' })
+        expect.objectContaining({ stt_provider: '' })
       )
     );
     expect(await screen.findByText(/Voice providers saved/i)).toBeInTheDocument();
@@ -280,15 +278,14 @@ describe('VoicePanel', () => {
     const ttsSelect = (await screen.findByTestId('tts-provider-select')) as HTMLSelectElement;
     await waitFor(() => expect(ttsSelect.value).toBe('piper'));
 
-    // Switch to cloud, then save.
-    fireEvent.change(ttsSelect, { target: { value: 'cloud' } });
+    fireEvent.change(ttsSelect, { target: { value: '' } });
 
     const saveBtn = screen.getByTestId('save-voice-routing');
     fireEvent.click(saveBtn);
 
     await waitFor(() =>
       expect(vi.mocked(openhumanVoiceSetProviders)).toHaveBeenCalledWith(
-        expect.objectContaining({ tts_provider: 'cloud' })
+        expect.objectContaining({ tts_provider: '' })
       )
     );
   });
@@ -323,7 +320,7 @@ describe('VoicePanel', () => {
     );
 
     // Change provider and click save to trigger the RPC error.
-    fireEvent.change(sttSelect, { target: { value: 'cloud' } });
+    fireEvent.change(sttSelect, { target: { value: '' } });
     const saveBtn = screen.getByTestId('save-voice-routing');
     fireEvent.click(saveBtn);
 
@@ -354,16 +351,13 @@ describe('VoicePanel', () => {
 
   // ─── Provider Chip Rendering ────────────────────────────────────────────
 
-  it('renders the managed cloud chip as always enabled and locked', async () => {
+  it('does not render the managed cloud chip', async () => {
     renderWithProviders(<VoicePanel />, { initialEntries: ['/settings/voice'] });
 
     await screen.findByTestId('voice-providers-section');
-    // The cloud chip aria-label uses the i18n key voice.providers.chip.cloudAria.
-    const cloudSwitch = screen.getByRole('switch', {
-      name: /Marvi managed provider is always enabled/i,
-    });
-    expect(cloudSwitch).toHaveAttribute('aria-checked', 'true');
-    expect(cloudSwitch).toBeDisabled();
+    expect(
+      screen.queryByRole('switch', { name: /Marvi managed provider is always enabled/i })
+    ).not.toBeInTheDocument();
   });
 
   it('renders Whisper and Piper chips as enabled and clickable (regression #2788)', async () => {
@@ -489,14 +483,14 @@ describe('VoicePanel', () => {
     await waitFor(() => expect(sttSelect.value).toBe('whisper'));
   });
 
-  it('falls back to cloud when loadVoiceSettings rejects and voice_status is cloud', async () => {
+  it('falls back to no managed selection when loadVoiceSettings rejects and voice_status is cloud', async () => {
     runtime.voiceStatus.stt_provider = 'cloud';
     vi.mocked(loadVoiceSettings).mockRejectedValueOnce(new Error('not found'));
 
     renderWithProviders(<VoicePanel />, { initialEntries: ['/settings/voice'] });
 
     const sttSelect = (await screen.findByTestId('stt-provider-select')) as HTMLSelectElement;
-    await waitFor(() => expect(sttSelect.value).toBe('cloud'));
+    await waitFor(() => expect(sttSelect.value).toBe(''));
   });
 
   // ─── Error / notice display ─────────────────────────────────────────────
@@ -514,6 +508,10 @@ describe('VoicePanel', () => {
   // ─── STT / TTS Test buttons ────────────────────────────────────────────────
 
   it('clicking Test STT calls testVoiceProvider and shows success result', async () => {
+    runtime.voiceSettings = makeVoiceSettings({
+      sttProvider: { kind: 'local', engine: 'whisper', model: 'medium' },
+      ttsProvider: { kind: 'local', engine: 'piper', model: '' },
+    });
     vi.mocked(testVoiceProvider).mockResolvedValueOnce({ ok: true, detail: 'STT OK' });
 
     renderWithProviders(<VoicePanel />, { initialEntries: ['/settings/voice'] });
@@ -521,11 +519,17 @@ describe('VoicePanel', () => {
     const testSttBtn = await screen.findByTestId('test-stt-button');
     fireEvent.click(testSttBtn);
 
-    await waitFor(() => expect(vi.mocked(testVoiceProvider)).toHaveBeenCalledWith('stt', 'cloud'));
+    await waitFor(() =>
+      expect(vi.mocked(testVoiceProvider)).toHaveBeenCalledWith('stt', 'whisper')
+    );
     expect(await screen.findByText('STT OK')).toBeInTheDocument();
   });
 
   it('clicking Test STT shows error result when testVoiceProvider rejects', async () => {
+    runtime.voiceSettings = makeVoiceSettings({
+      sttProvider: { kind: 'local', engine: 'whisper', model: 'medium' },
+      ttsProvider: { kind: 'local', engine: 'piper', model: '' },
+    });
     vi.mocked(testVoiceProvider).mockRejectedValueOnce(new Error('STT timeout'));
 
     renderWithProviders(<VoicePanel />, { initialEntries: ['/settings/voice'] });
@@ -537,6 +541,10 @@ describe('VoicePanel', () => {
   });
 
   it('clicking Test TTS calls testVoiceProvider and shows success result', async () => {
+    runtime.voiceSettings = makeVoiceSettings({
+      sttProvider: { kind: 'local', engine: 'whisper', model: 'medium' },
+      ttsProvider: { kind: 'local', engine: 'piper', model: '' },
+    });
     vi.mocked(testVoiceProvider).mockResolvedValueOnce({ ok: true, detail: 'TTS OK' });
 
     renderWithProviders(<VoicePanel />, { initialEntries: ['/settings/voice'] });
@@ -544,11 +552,15 @@ describe('VoicePanel', () => {
     const testTtsBtn = await screen.findByTestId('test-tts-button');
     fireEvent.click(testTtsBtn);
 
-    await waitFor(() => expect(vi.mocked(testVoiceProvider)).toHaveBeenCalledWith('tts', 'cloud'));
+    await waitFor(() => expect(vi.mocked(testVoiceProvider)).toHaveBeenCalledWith('tts', 'piper'));
     expect(await screen.findByText('TTS OK')).toBeInTheDocument();
   });
 
   it('clicking Test TTS shows error result when testVoiceProvider rejects', async () => {
+    runtime.voiceSettings = makeVoiceSettings({
+      sttProvider: { kind: 'local', engine: 'whisper', model: 'medium' },
+      ttsProvider: { kind: 'local', engine: 'piper', model: '' },
+    });
     vi.mocked(testVoiceProvider).mockRejectedValueOnce(new Error('TTS unreachable'));
 
     renderWithProviders(<VoicePanel />, { initialEntries: ['/settings/voice'] });

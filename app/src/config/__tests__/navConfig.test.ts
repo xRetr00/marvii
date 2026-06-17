@@ -66,27 +66,7 @@ describe('NAV_TABS', () => {
 });
 
 describe('AVATAR_MENU_ITEMS', () => {
-  it('has exactly 5 entries', () => {
-    expect(AVATAR_MENU_ITEMS).toHaveLength(5);
-  });
-
-  it('has the correct ids in order', () => {
-    expect(AVATAR_MENU_ITEMS.map(i => i.id)).toEqual([
-      'account',
-      'billing',
-      'rewards',
-      'invites',
-      'wallet',
-    ]);
-  });
-
-  it('billing, rewards, and invites are cloudOnly; account and wallet are not', () => {
-    const cloudOnly = AVATAR_MENU_ITEMS.filter(i => i.cloudOnly).map(i => i.id);
-    expect(cloudOnly).toEqual(['billing', 'rewards', 'invites']);
-  });
-
-  it('billing uses openUrl; all others use navigate', () => {
-    const openUrlItems = AVATAR_MENU_ITEMS.filter(i => i.kind === 'openUrl').map(i => i.id);
-    expect(openUrlItems).toEqual(['billing']);
+  it('does not surface account, billing, rewards, invites, or wallet shortcuts', () => {
+    expect(AVATAR_MENU_ITEMS).toEqual([]);
   });
 });

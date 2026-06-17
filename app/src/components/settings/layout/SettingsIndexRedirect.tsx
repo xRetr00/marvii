@@ -14,7 +14,7 @@ import { useMediaQuery } from '../../../hooks/useMediaQuery';
  */
 const SettingsIndexRedirect = () => {
   const isWide = useMediaQuery('(min-width: 768px)');
-  if (isWide) return <Navigate to="/settings/account" replace />;
+  if (isWide) return <Navigate to="/settings/appearance" replace />;
   return null;
 };
 

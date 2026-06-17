@@ -138,16 +138,6 @@ export const SETTINGS_ROUTE_REGISTRY: SettingsRegistryEntry[] = [
   // HOME — top-level section hubs shown on SettingsHome
   // =========================================================================
 
-  // --- Account group (section hub) ---
-  {
-    id: 'account',
-    titleKey: 'pages.settings.accountSection.title',
-    descriptionKey: 'pages.settings.accountSection.description',
-    section: 'home',
-    searchKeywords: ['profile', 'sign out', 'logout'],
-    navGroup: 'general',
-    navOrder: 0,
-  },
   {
     // appearance also hosts the display-language selector (formerly an inline
     // row on the old settings home list).
@@ -167,7 +157,7 @@ export const SETTINGS_ROUTE_REGISTRY: SettingsRegistryEntry[] = [
       'translation',
     ],
     navGroup: 'general',
-    navOrder: 1,
+    navOrder: 0,
   },
   {
     // devices: real pairing panel (the old "Coming Soon" stub was removed).
@@ -266,7 +256,7 @@ export const SETTINGS_ROUTE_REGISTRY: SettingsRegistryEntry[] = [
   },
 
   // =========================================================================
-  // ACCOUNT section leaf panels
+  // LOCAL PRIVACY / SECURITY section leaf panels
   // =========================================================================
   {
     id: 'team',
@@ -274,7 +264,7 @@ export const SETTINGS_ROUTE_REGISTRY: SettingsRegistryEntry[] = [
     descriptionKey: 'pages.settings.account.teamDesc',
     section: 'account',
     searchKeywords: ['members', 'invites', 'organization', 'organisation', 'workspace'],
-    navParent: 'account',
+    hiddenDeepLink: true,
   },
   {
     id: 'privacy',
@@ -282,7 +272,8 @@ export const SETTINGS_ROUTE_REGISTRY: SettingsRegistryEntry[] = [
     descriptionKey: 'pages.settings.account.privacyDesc',
     section: 'account',
     searchKeywords: ['telemetry', 'tracking', 'analytics', 'data'],
-    navParent: 'account',
+    navGroup: 'general',
+    navOrder: 4,
   },
   {
     id: 'security',
@@ -290,7 +281,8 @@ export const SETTINGS_ROUTE_REGISTRY: SettingsRegistryEntry[] = [
     descriptionKey: 'pages.settings.account.securityDesc',
     section: 'account',
     searchKeywords: ['keychain', 'secret', 'password', 'encryption', 'credentials'],
-    navParent: 'account',
+    navGroup: 'general',
+    navOrder: 5,
   },
   {
     id: 'migration',
@@ -298,7 +290,8 @@ export const SETTINGS_ROUTE_REGISTRY: SettingsRegistryEntry[] = [
     descriptionKey: 'pages.settings.account.migrationDesc',
     section: 'account',
     searchKeywords: ['import', 'export', 'transfer', 'data'],
-    navParent: 'account',
+    navGroup: 'data',
+    navOrder: 2,
   },
 
   // =========================================================================
@@ -498,7 +491,7 @@ export const SETTINGS_ROUTE_REGISTRY: SettingsRegistryEntry[] = [
     descriptionKey: 'pages.settings.account.recoveryPhraseDesc',
     section: 'crypto',
     searchKeywords: ['mnemonic', 'seed', 'backup', 'recovery', 'wallet'],
-    navParent: 'wallet-balances',
+    hiddenDeepLink: true,
   },
   {
     id: 'wallet-balances',
@@ -506,8 +499,7 @@ export const SETTINGS_ROUTE_REGISTRY: SettingsRegistryEntry[] = [
     descriptionKey: 'pages.settings.account.walletBalancesDesc',
     section: 'crypto',
     searchKeywords: ['wallet', 'balance', 'tokens', 'crypto'],
-    navGroup: 'data',
-    navOrder: 1,
+    hiddenDeepLink: true,
   },
 
   // =========================================================================
@@ -712,14 +704,12 @@ export const SETTINGS_ROUTE_REGISTRY: SettingsRegistryEntry[] = [
   // INTENTIONALLY HIDDEN / DEEP-LINK ONLY (not surfaced in any menu)
   // =========================================================================
   {
-    // billing: surfaced in the General group (also opened from the avatar menu).
+    // billing: hidden for Marvi local-first desktop.
     id: 'billing',
     titleKey: 'nav.avatarMenu.billing',
     section: 'home',
     searchKeywords: ['billing', 'subscription', 'payment', 'plan', 'invoice'],
-    navGroup: 'general',
-    navOrder: 4,
-    highlight: true,
+    hiddenDeepLink: true,
   },
   {
     // autocomplete: hidden per #717 (route retained for re-enable).

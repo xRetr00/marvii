@@ -113,7 +113,7 @@ describe('findEntryByRoute', () => {
 describe('entriesForSection', () => {
   it('returns only entries belonging to the requested section', () => {
     const cryptoEntries = entriesForSection('crypto');
-    expect(cryptoEntries.length).toBeGreaterThan(0);
+    expect(cryptoEntries).toEqual([]);
     cryptoEntries.forEach(e => expect(e.section).toBe('crypto'));
   });
 
@@ -150,7 +150,7 @@ describe('entriesForSection', () => {
     const homeEntries = entriesForSection('home');
     const ids = homeEntries.map(e => e.id);
     // Surviving home hub entries after the two-pane restructure.
-    expect(ids).toContain('account');
+    expect(ids).not.toContain('account');
     expect(ids).toContain('appearance');
     expect(ids).toContain('personality');
     expect(ids).toContain('automations');
@@ -195,7 +195,6 @@ describe('SETTINGS_ROUTE_REGISTRY integrity', () => {
     expect(homeIds).toContain('personality');
     expect(homeIds).toContain('automations');
     expect(homeIds).toContain('memory-sync');
-    // billing is surfaced in the General group now (no longer a hidden deep-link).
-    expect(homeIds).toContain('billing');
+    expect(homeIds).not.toContain('billing');
   });
 });

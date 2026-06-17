@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import { useT } from '../../../lib/i18n/I18nContext';
 import { useCoreState } from '../../../providers/CoreStateProvider';
 import { trackEvent } from '../../../services/analytics';
-import { isLocalSessionToken } from '../../../utils/localSession';
 import { CUSTOM_WIZARD_ROUTES, CUSTOM_WIZARD_STEPS } from '../customWizardSteps';
 import {
   type CustomStepChoice,
@@ -18,8 +17,7 @@ const log = createDebug('app:onboarding:custom');
 
 const describeError = (err: unknown): string => (err instanceof Error ? err.message : String(err));
 
-const LOCAL_DEFAULT_DISABLED_REASON =
-  'Managed setup requires Marvi sign-in and is unavailable in local mode.';
+const LOCAL_DEFAULT_DISABLED_REASON = 'Managed setup is not available in Marvi local desktop.';
 
 interface CustomWizardConfigPageProps {
   stepKey: CustomStepKey;
@@ -34,22 +32,20 @@ export default function CustomWizardConfigPage({
 }: CustomWizardConfigPageProps) {
   const { t } = useT();
   const navigate = useNavigate();
-  const { snapshot, clearSession } = useCoreState();
+  const { clearSession } = useCoreState();
   const { draft, setDraft, completeAndExit } = useOnboardingContext();
-  const isLocalSession = isLocalSessionToken(snapshot.sessionToken);
   const stepIndex = CUSTOM_WIZARD_STEPS.indexOf(stepKey);
   const [choice, setChoice] = useState<CustomStepChoice | null>(
-    draft.customChoices?.[stepKey] ?? (isLocalSession ? 'configure' : null)
+    draft.customChoices?.[stepKey] ?? 'configure'
   );
 
   useEffect(() => {
-    if (!isLocalSession) return;
     setChoice('configure');
     setDraft(prev => ({
       ...prev,
       customChoices: { ...prev.customChoices, [stepKey]: 'configure' },
     }));
-  }, [isLocalSession, setDraft, stepKey]);
+  }, [setDraft, stepKey]);
 
   const persistChoice = (next: CustomStepChoice) => {
     setChoice(next);
@@ -87,9 +83,9 @@ export default function CustomWizardConfigPage({
       defaultDescription={t(`${namespace}.defaultDesc`)}
       configureDescription={t(`${namespace}.configureDesc`)}
       configureContent={configureContent}
-      defaultDisabled={isLocalSession}
-      defaultDisabledReason={isLocalSession ? LOCAL_DEFAULT_DISABLED_REASON : undefined}
-      hideChoiceCards={isLocalSession}
+      defaultDisabled
+      defaultDisabledReason={LOCAL_DEFAULT_DISABLED_REASON}
+      hideChoiceCards
       choice={choice}
       onChoiceChange={persistChoice}
       onBack={() => void handleBack()}
