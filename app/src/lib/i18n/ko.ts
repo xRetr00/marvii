@@ -2882,7 +2882,6 @@ const messages: TranslationMap = {
   'home.banners.earlyBirdUseCode': '얼리버드 코드 사용',
   'home.banners.getSubscription': '구독하기',
   'home.banners.promoCreditsBody': 'Marvi을 사용해 보고, 더 필요할 때',
-  'home.banners.promoCreditsTitle': '{amount}의 프로모션 크레딧이 있습니다.',
   'home.banners.promoCreditsUsage': '10배 더 많은 사용량을 받으세요.',
   'intelligence.memoryChunk.detail.chunk': '청크',
   'intelligence.memoryChunk.detail.copyChunkId': '청크 ID 복사',

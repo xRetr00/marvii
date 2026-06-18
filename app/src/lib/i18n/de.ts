@@ -2977,7 +2977,6 @@ const messages: TranslationMap = {
   'home.banners.earlyBirdUseCode': 'Frühbucher-Nutzungscode',
   'home.banners.getSubscription': 'Hol dir ein Abonnement',
   'home.banners.promoCreditsBody': 'Probiere Marvi aus und wenn du Lust auf mehr hast,',
-  'home.banners.promoCreditsTitle': 'Du hast {amount} Werbeguthaben.',
   'home.banners.promoCreditsUsage': 'und erhalte 10x mehr Nutzung.',
   'intelligence.memoryChunk.detail.chunk': 'Brocken',
   'intelligence.memoryChunk.detail.copyChunkId': 'Chunk-ID kopieren',
