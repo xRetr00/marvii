@@ -66,7 +66,6 @@ fn is_marvi_visible(capability: &Capability) -> bool {
         "workflows.connect_web3_wallet"
             | "workflows.connect_crypto_exchange"
             | "workflows.polymarket"
-            | "automation.crypto_agent"
             | "settings.view_billing"
             | "settings.manage_subscription"
             | "settings.add_payment_methods"

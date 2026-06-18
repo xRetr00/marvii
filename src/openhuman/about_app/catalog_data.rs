@@ -1431,21 +1431,6 @@ pub(super) const CAPABILITIES: &[Capability] = &[
         status: CapabilityStatus::Beta,
         privacy: None,
     },
-    Capability {
-        id: "automation.crypto_agent",
-        name: "Crypto Agent",
-        domain: "automation",
-        category: CapabilityCategory::Automation,
-        description: "Dedicated wallet & market specialist sub-agent. The orchestrator \
-                      routes transfers, swaps, contract calls, balance lookups, and \
-                      exchange trading requests here. The agent enforces a read → \
-                      simulate → confirm → execute flow, refuses to fabricate chain ids \
-                      or token addresses, and gates every write call behind explicit \
-                      user confirmation.",
-        how_to: "Automatic — invoked by the orchestrator when a crypto wallet or market action is requested. Connect a wallet via Settings > Recovery Phrase first.",
-        status: CapabilityStatus::Beta,
-        privacy: LOCAL_CREDENTIALS,
-    },
     // ── Update ──────────────────────────────────────────────────────────────
     // ── Meet ────────────────────────────────────────────────────────────────
     Capability {

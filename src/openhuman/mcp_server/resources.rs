@@ -74,18 +74,6 @@ const RESOURCE_CATALOG: &[PromptResource] = &[
         content: include_str!("../agent_registry/agents/integrations_agent/prompt.md"),
     },
     PromptResource {
-        uri: "openhuman://prompts/agents/crypto_agent",
-        name: "crypto_agent",
-        description: "Specialist worker for wallet and on-chain operations.",
-        content: include_str!("../agent_registry/agents/crypto_agent/prompt.md"),
-    },
-    PromptResource {
-        uri: "openhuman://prompts/agents/markets_agent",
-        name: "markets_agent",
-        description: "Specialist worker for prediction-market venues (Polymarket, Kalshi).",
-        content: include_str!("../agent_registry/agents/markets_agent/prompt.md"),
-    },
-    PromptResource {
         uri: "openhuman://prompts/agents/tools_agent",
         name: "tools_agent",
         description: "Generalist worker with access to the full tool surface.",
@@ -152,12 +140,6 @@ const RESOURCE_CATALOG: &[PromptResource] = &[
         content: include_str!("../agent_registry/agents/summarizer/prompt.md"),
     },
     PromptResource {
-        uri: "openhuman://prompts/agents/help",
-        name: "help",
-        description: "Read-only worker that answers questions from documentation.",
-        content: include_str!("../agent_registry/agents/help/prompt.md"),
-    },
-    PromptResource {
         uri: "openhuman://prompts/agents/scheduler_agent",
         name: "scheduler_agent",
         description: "Specialist worker for reminders, recurring jobs, and cron inspection.",
@@ -204,12 +186,6 @@ const RESOURCE_CATALOG: &[PromptResource] = &[
         name: "profile_memory_agent",
         description: "Specialist worker for profile and long-term memory updates.",
         content: include_str!("../agent_registry/agents/profile_memory_agent/prompt.md"),
-    },
-    PromptResource {
-        uri: "openhuman://prompts/agents/account_admin_agent",
-        name: "account_admin_agent",
-        description: "Specialist worker for connected account and integration administration.",
-        content: include_str!("../agent_registry/agents/account_admin_agent/prompt.md"),
     },
     PromptResource {
         uri: "openhuman://prompts/agents/screen_awareness_agent",
