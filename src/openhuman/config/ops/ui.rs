@@ -87,6 +87,9 @@ pub struct VoiceServerSettingsPatch {
     pub custom_dictionary: Option<Vec<String>>,
     pub always_on_enabled: Option<bool>,
     pub wake_word: Option<String>,
+    pub wake_word_threshold: Option<f32>,
+    pub wake_word_debug: Option<bool>,
+    pub wake_word_variants: Option<Vec<String>>,
 }
 
 /// Updates the browser-related settings in the configuration.
@@ -563,6 +566,9 @@ pub async fn get_voice_server_settings() -> Result<RpcOutcome<serde_json::Value>
         "custom_dictionary": config.voice_server.custom_dictionary,
         "always_on_enabled": config.voice_server.always_on_enabled,
         "wake_word": config.voice_server.wake_word,
+        "wake_word_threshold": config.voice_server.wake_word_threshold,
+        "wake_word_debug": config.voice_server.wake_word_debug,
+        "wake_word_variants": config.voice_server.wake_word_variants,
     });
     Ok(RpcOutcome::new(
         result,
@@ -615,6 +621,19 @@ pub async fn load_and_apply_voice_server_settings(
     }
     if let Some(wake_word) = update.wake_word {
         config.voice_server.wake_word = wake_word.trim().to_string();
+    }
+    if let Some(threshold) = update.wake_word_threshold {
+        config.voice_server.wake_word_threshold = threshold.clamp(0.0, 1.0);
+    }
+    if let Some(debug) = update.wake_word_debug {
+        config.voice_server.wake_word_debug = debug;
+    }
+    if let Some(variants) = update.wake_word_variants {
+        config.voice_server.wake_word_variants = variants
+            .into_iter()
+            .map(|v| v.trim().to_string())
+            .filter(|v| !v.is_empty())
+            .collect();
     }
     config.save().await.map_err(|e| e.to_string())?;
     let snapshot = snapshot_config_json(&config)?;

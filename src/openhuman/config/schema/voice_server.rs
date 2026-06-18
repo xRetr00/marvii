@@ -84,12 +84,23 @@ pub struct VoiceServerConfig {
     #[serde(default = "default_vad_max_utterance_secs")]
     pub vad_max_utterance_secs: f32,
 
-    /// Wake word for always-on mode. An utterance is only delivered to the agent
-    /// when its transcript contains this phrase; the phrase is stripped and the
-    /// remainder is sent as the command. Empty = no wake word (deliver every
-    /// utterance). Default "Hey Tiny".
+    /// Wake word for always-on mode. Default "Hey Marvi".
     #[serde(default = "default_wake_word")]
     pub wake_word: String,
+
+    /// Sherpa keyword spotting threshold. Higher values reduce false wakes;
+    /// lower values catch more variants in noisy rooms.
+    #[serde(default = "default_wake_word_threshold")]
+    pub wake_word_threshold: f32,
+
+    /// When enabled, log detected and rejected wake-word candidates with
+    /// confidence/tuning metrics. Off by default to avoid noisy mic logs.
+    #[serde(default)]
+    pub wake_word_debug: bool,
+
+    /// Extra wake-word variants used for tuning and fallback transcript gating.
+    #[serde(default = "default_wake_word_variants")]
+    pub wake_word_variants: Vec<String>,
 }
 
 fn default_hotkey() -> String {
@@ -121,7 +132,35 @@ fn default_vad_max_utterance_secs() -> f32 {
 }
 
 fn default_wake_word() -> String {
-    "Hey Tiny".to_string()
+    "Hey Marvi".to_string()
+}
+
+fn default_wake_word_threshold() -> f32 {
+    0.5
+}
+
+fn default_wake_word_variants() -> Vec<String> {
+    [
+        "hey marvi",
+        "marvi",
+        "hey marvy",
+        "marvy",
+        "hey marve",
+        "marve",
+        "hey marvee",
+        "marvee",
+        "hey marfi",
+        "marfi",
+        "hey marfe",
+        "marfe",
+        "hey marvel",
+        "marvel",
+        "hey morvey",
+        "morvey",
+    ]
+    .into_iter()
+    .map(str::to_string)
+    .collect()
 }
 
 impl Default for VoiceServerConfig {
@@ -140,6 +179,9 @@ impl Default for VoiceServerConfig {
             vad_min_speech_ms: default_vad_min_speech_ms(),
             vad_max_utterance_secs: default_vad_max_utterance_secs(),
             wake_word: default_wake_word(),
+            wake_word_threshold: default_wake_word_threshold(),
+            wake_word_debug: false,
+            wake_word_variants: default_wake_word_variants(),
         }
     }
 }

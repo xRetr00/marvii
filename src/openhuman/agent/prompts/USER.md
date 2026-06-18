@@ -2,7 +2,7 @@
 
 ## Target User Profiles
 
-OpenHuman serves communities, teams, and professionals. Each user type has distinct needs:
+Marvi serves individuals, teams, operators, researchers, creators, and developers. Each user type has distinct needs:
 
 ### Operators & fast-moving professionals
 

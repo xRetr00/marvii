@@ -248,7 +248,6 @@ mod tests {
             "task_manager_agent",
             "settings_agent",
             "profile_memory_agent",
-            "account_admin_agent",
             "screen_awareness_agent",
             "tool_maker",
             "skill_creator",

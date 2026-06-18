@@ -3,7 +3,7 @@
 use async_trait::async_trait;
 use log::debug;
 
-use super::super::local_speech::{synthesize_piper, PiperOptions};
+use super::super::local_speech::{synthesize_piper, synthesize_pockettts, PiperOptions};
 use super::super::reply_speech::{synthesize_reply, ReplySpeechOptions, ReplySpeechResult};
 use super::traits::TtsProvider;
 use crate::openhuman::config::schema::voice_providers::TtsApiStyle;
@@ -29,6 +29,11 @@ impl CloudTtsProvider {
 
 #[async_trait]
 impl TtsProvider for CloudTtsProvider {
+    #[cfg(test)]
+    fn as_any(&self) -> &dyn std::any::Any {
+        self
+    }
+
     fn name(&self) -> &'static str {
         "cloud"
     }
@@ -77,6 +82,11 @@ impl PiperTtsProvider {
 
 #[async_trait]
 impl TtsProvider for PiperTtsProvider {
+    #[cfg(test)]
+    fn as_any(&self) -> &dyn std::any::Any {
+        self
+    }
+
     fn name(&self) -> &'static str {
         "piper"
     }
@@ -100,6 +110,52 @@ impl TtsProvider for PiperTtsProvider {
             voice: Some(resolved_voice),
         };
         synthesize_piper(config, text, &opts).await
+    }
+}
+
+/// Local PocketTTS — wraps the `pocket-tts generate` CLI.
+pub struct PocketTtsProvider {
+    voice: String,
+}
+
+impl PocketTtsProvider {
+    pub fn new(voice: impl Into<String>) -> Self {
+        Self {
+            voice: voice.into(),
+        }
+    }
+}
+
+#[async_trait]
+impl TtsProvider for PocketTtsProvider {
+    #[cfg(test)]
+    fn as_any(&self) -> &dyn std::any::Any {
+        self
+    }
+
+    fn name(&self) -> &'static str {
+        "pockettts"
+    }
+
+    async fn synthesize(
+        &self,
+        config: &Config,
+        text: &str,
+        voice: Option<&str>,
+    ) -> Result<RpcOutcome<ReplySpeechResult>, String> {
+        let resolved_voice = voice
+            .map(str::to_string)
+            .filter(|s| !s.trim().is_empty())
+            .unwrap_or_else(|| self.voice.clone());
+        debug!(
+            "{LOG_PREFIX} pockettts TTS dispatch voice={} chars={}",
+            resolved_voice,
+            text.len()
+        );
+        let opts = PiperOptions {
+            voice: Some(resolved_voice),
+        };
+        synthesize_pockettts(config, text, &opts).await
     }
 }
 
@@ -137,6 +193,11 @@ impl ExternalTtsProvider {
 
 #[async_trait]
 impl TtsProvider for ExternalTtsProvider {
+    #[cfg(test)]
+    fn as_any(&self) -> &dyn std::any::Any {
+        self
+    }
+
     fn name(&self) -> &'static str {
         "external"
     }

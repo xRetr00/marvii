@@ -11,7 +11,8 @@ use crate::openhuman::config::Config;
 use crate::openhuman::inference::local as local_ai;
 use crate::openhuman::inference::local::model_ids;
 use crate::openhuman::inference::local::paths::{
-    resolve_piper_binary, resolve_stt_model_path, resolve_tts_voice_path, resolve_whisper_binary,
+    resolve_piper_binary, resolve_pockettts_binary, resolve_stt_model_path, resolve_tts_voice_path,
+    resolve_whisper_binary,
 };
 use crate::openhuman::inference::local::whisper_engine;
 use crate::rpc::RpcOutcome;
@@ -28,8 +29,14 @@ pub async fn voice_status(config: &Config) -> Result<RpcOutcome<VoiceStatus>, St
 
     let whisper_bin = resolve_whisper_binary();
     let piper_bin = resolve_piper_binary();
+    let pockettts_bin = resolve_pockettts_binary();
     let stt_model = resolve_stt_model_path(config).ok();
     let tts_voice = resolve_tts_voice_path(config).ok();
+    let tts_provider = if config.local_ai.tts_provider.trim().is_empty() {
+        "cloud".to_string()
+    } else {
+        config.local_ai.tts_provider.clone()
+    };
 
     let service = local_ai::global(config);
     let whisper_in_process = whisper_engine::is_loaded(&service.whisper);
@@ -42,7 +49,10 @@ pub async fn voice_status(config: &Config) -> Result<RpcOutcome<VoiceStatus>, St
     let stt_available = whisper_in_process
         || (config.local_ai.whisper_in_process && stt_model.is_some())
         || (whisper_bin.is_some() && stt_model.is_some());
-    let tts_available = piper_bin.is_some() && tts_voice.is_some();
+    let tts_available = match tts_provider.as_str() {
+        "pockettts" | "pocket-tts" => pockettts_bin.is_some(),
+        _ => piper_bin.is_some() && tts_voice.is_some(),
+    };
 
     debug!(
         "{LOG_PREFIX} stt_available={stt_available} tts_available={tts_available} \
@@ -59,12 +69,6 @@ pub async fn voice_status(config: &Config) -> Result<RpcOutcome<VoiceStatus>, St
     } else {
         config.local_ai.stt_provider.clone()
     };
-    let tts_provider = if config.local_ai.tts_provider.trim().is_empty() {
-        "cloud".to_string()
-    } else {
-        config.local_ai.tts_provider.clone()
-    };
-
     let status = VoiceStatus {
         stt_available,
         tts_available,

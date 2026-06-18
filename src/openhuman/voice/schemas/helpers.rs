@@ -73,13 +73,13 @@ pub(super) fn validate_stt_provider(provider: &str) -> Result<(), String> {
 
 pub(super) fn validate_tts_provider(provider: &str) -> Result<(), String> {
     match provider {
-        "cloud" | "openhuman" | "piper" => Ok(()),
+        "cloud" | "openhuman" | "piper" | "pockettts" | "pocket-tts" => Ok(()),
         other => {
             if other.contains(':') || !other.is_empty() {
                 Ok(())
             } else {
                 Err(format!(
-                    "invalid tts_provider '{other}' (valid: 'cloud', 'piper', or '<slug>:<voice>')"
+                    "invalid tts_provider '{other}' (valid: 'cloud', 'piper', 'pockettts', or '<slug>:<voice>')"
                 ))
             }
         }

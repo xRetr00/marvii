@@ -213,6 +213,33 @@ pub(crate) fn resolve_piper_binary_with_config(config: &Config) -> Option<PathBu
     resolve_piper_binary()
 }
 
+pub(crate) fn resolve_pockettts_binary() -> Option<PathBuf> {
+    if let Some(from_env) = std::env::var("POCKETTTS_BIN")
+        .ok()
+        .filter(|v| !v.trim().is_empty())
+    {
+        let path = PathBuf::from(from_env);
+        if path.is_file() {
+            return Some(path);
+        }
+    }
+
+    let candidates: &[&str] = if cfg!(windows) {
+        &["pocket-tts.exe", "pocket-tts"]
+    } else {
+        &["pocket-tts"]
+    };
+    std::env::var_os("PATH").and_then(|path_var| {
+        std::env::split_paths(&path_var)
+            .flat_map(|entry| candidates.iter().map(move |name| entry.join(name)))
+            .find(|candidate| candidate.is_file())
+    })
+}
+
+pub(crate) fn resolve_pockettts_binary_with_config(_config: &Config) -> Option<PathBuf> {
+    resolve_pockettts_binary()
+}
+
 // ---------------------------------------------------------------------------
 // Workspace install paths — used by install_whisper / install_piper.
 // ---------------------------------------------------------------------------
@@ -358,12 +385,19 @@ pub(crate) fn resolve_stt_model_path_by_id(id: &str, config: &Config) -> Result<
 
 pub(crate) fn resolve_tts_voice_path(config: &Config) -> Result<String, String> {
     let voice_id = model_ids::effective_tts_voice_id(config);
+    resolve_tts_voice_path_by_id(&voice_id, config)
+}
+
+pub(crate) fn resolve_tts_voice_path_by_id(
+    voice_id: &str,
+    config: &Config,
+) -> Result<String, String> {
     let path = PathBuf::from(&voice_id);
     if path.is_file() {
         return Ok(path.display().to_string());
     }
     let filename = if voice_id.ends_with(".onnx") {
-        voice_id.clone()
+        voice_id.to_string()
     } else {
         format!("{voice_id}.onnx")
     };
@@ -475,6 +509,29 @@ mod tests {
         std::fs::write(&model_path, b"stub").expect("write");
 
         let resolved = resolve_tts_voice_path(&config).expect("resolve tts");
+        assert_eq!(resolved, model_path.display().to_string());
+    }
+
+    #[test]
+    fn resolve_tts_voice_path_by_id_uses_explicit_voice_over_config_default() {
+        let _g = shared_install_lock();
+        let (_tmp, mut config) = temp_config();
+        config.local_ai.tts_voice_id = "voice-a".to_string();
+
+        for id in ["voice-a", "voice-b"] {
+            if let Some((onnx, _)) = workspace_piper_voice_paths(&config, id) {
+                let _ = std::fs::remove_file(onnx);
+            }
+        }
+
+        let model_path = workspace_local_models_dir(&config)
+            .join("tts")
+            .join("voice-b.onnx");
+        std::fs::create_dir_all(model_path.parent().expect("parent")).expect("mkdirs");
+        std::fs::write(&model_path, b"stub").expect("write");
+
+        let resolved =
+            resolve_tts_voice_path_by_id("voice-b", &config).expect("resolve explicit tts");
         assert_eq!(resolved, model_path.display().to_string());
     }
 

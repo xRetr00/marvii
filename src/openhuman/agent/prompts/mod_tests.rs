@@ -206,11 +206,33 @@ fn identity_section_creates_missing_workspace_files() {
     }
     let soul = std::fs::read_to_string(workspace.join("SOUL.md")).unwrap();
     assert!(
-        soul.starts_with("# OpenHuman"),
+        soul.starts_with("# Marvi"),
         "SOUL.md should be seeded from src/openhuman/agent/prompts/SOUL.md"
     );
 
     let _ = std::fs::remove_dir_all(workspace);
+}
+
+#[test]
+fn bundled_identity_prompts_are_marvi_branded() {
+    let identity = include_str!("IDENTITY.md");
+    let user = include_str!("USER.md");
+    let skill_setup = include_str!("../../skill_registry/agent/skill_setup/prompt.md");
+
+    for (name, body) in [
+        ("IDENTITY.md", identity),
+        ("USER.md", user),
+        ("skill setup prompt", skill_setup),
+    ] {
+        assert!(
+            body.contains("Marvi"),
+            "{name} must identify the product as Marvi"
+        );
+        assert!(
+            !body.contains("OpenHuman") && !body.contains("TinyHumans"),
+            "{name} must not expose legacy product branding"
+        );
+    }
 }
 
 #[test]

@@ -179,6 +179,12 @@ pub const BUILTIN_CLOUD_PROVIDERS: &[BuiltinCloudProvider] = &[
         endpoint: "https://ai.sumopod.com/v1",
         auth_style: AuthStyle::Bearer,
     },
+    BuiltinCloudProvider {
+        slug: "opencode-go",
+        label: "OpenCode Go",
+        endpoint: "https://opencode.ai/zen/go/v1",
+        auth_style: AuthStyle::Bearer,
+    },
 ];
 
 fn builtin_cloud_provider(type_str: &str) -> Option<&'static BuiltinCloudProvider> {
@@ -516,6 +522,12 @@ mod tests {
                 "sumopod",
                 "SumoPod",
                 "https://ai.sumopod.com/v1",
+                AuthStyle::Bearer,
+            ),
+            (
+                "opencode-go",
+                "OpenCode Go",
+                "https://opencode.ai/zen/go/v1",
                 AuthStyle::Bearer,
             ),
         ] {

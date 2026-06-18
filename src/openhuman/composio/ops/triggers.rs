@@ -1,5 +1,6 @@
 //! GitHub repo listing and trigger management ops.
 
+use crate::openhuman::config::schema::COMPOSIO_MODE_DIRECT;
 use crate::openhuman::config::Config;
 use crate::rpc::RpcOutcome;
 
@@ -63,6 +64,20 @@ pub async fn composio_list_available_triggers(
     connection_id: Option<String>,
 ) -> OpResult<RpcOutcome<ComposioAvailableTriggersResponse>> {
     tracing::debug!(toolkit = %toolkit, ?connection_id, "[composio] rpc list_available_triggers");
+    if config.composio.mode.trim() == COMPOSIO_MODE_DIRECT {
+        tracing::debug!(
+            toolkit = %toolkit,
+            ?connection_id,
+            "[composio-direct] trigger catalog is backend-webhook only; returning empty list"
+        );
+        return Ok(RpcOutcome::new(
+            ComposioAvailableTriggersResponse::default(),
+            vec![format!(
+                "composio: direct mode has no local trigger catalog for toolkit {toolkit}"
+            )],
+        ));
+    }
+
     let client = resolve_client(config)?;
     let resp = client
         .list_available_triggers(toolkit, connection_id.as_deref())
@@ -85,6 +100,17 @@ pub async fn composio_list_triggers(
     toolkit: Option<String>,
 ) -> OpResult<RpcOutcome<ComposioActiveTriggersResponse>> {
     tracing::debug!(?toolkit, "[composio] rpc list_triggers");
+    if config.composio.mode.trim() == COMPOSIO_MODE_DIRECT {
+        tracing::debug!(
+            ?toolkit,
+            "[composio-direct] active triggers are backend-webhook only; returning empty list"
+        );
+        return Ok(RpcOutcome::new(
+            ComposioActiveTriggersResponse::default(),
+            vec!["composio: direct mode has no local active triggers".to_string()],
+        ));
+    }
+
     let client = resolve_client(config)?;
     let resp = client
         .list_active_triggers(toolkit.as_deref())

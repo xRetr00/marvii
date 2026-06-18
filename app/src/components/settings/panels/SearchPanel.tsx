@@ -1,8 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'react';
 
 import { useT } from '../../../lib/i18n/I18nContext';
-import { useCoreState } from '../../../providers/CoreStateProvider';
-import { isLocalSessionToken } from '../../../utils/localSession';
 import {
   openhumanGetSearchSettings,
   openhumanUpdateSearchSettings,
@@ -59,8 +57,6 @@ const normalizeAllowedHost = (raw: string): string =>
 const SearchPanel = ({ embedded = false }: { embedded?: boolean }) => {
   const { t } = useT();
   const { navigateBack } = useSettingsNavigation();
-  const { snapshot } = useCoreState();
-  const isLocalSession = isLocalSessionToken(snapshot.sessionToken);
 
   const [settings, setSettings] = useState<SearchSettings | null>(null);
   const [status, setStatus] = useState<Status>({ kind: 'loading' });
@@ -88,12 +84,6 @@ const SearchPanel = ({ embedded = false }: { embedded?: boolean }) => {
       requiresKey: false,
     },
     {
-      id: 'managed',
-      label: t('settings.search.engineManagedLabel'),
-      description: t('settings.search.engineManagedDesc'),
-      requiresKey: false,
-    },
-    {
       id: 'parallel',
       label: t('settings.search.engineParallelLabel'),
       description: t('settings.search.engineParallelDesc'),
@@ -112,7 +102,7 @@ const SearchPanel = ({ embedded = false }: { embedded?: boolean }) => {
       requiresKey: true,
     },
   ];
-  const visibleEngines = ENGINES.filter(engine => engine.id !== 'managed');
+  const visibleEngines = ENGINES;
 
   useEffect(() => {
     let cancelled = false;
@@ -218,7 +208,6 @@ const SearchPanel = ({ embedded = false }: { embedded?: boolean }) => {
   const isConfigured = (engine: SearchEngineId): boolean => {
     if (!settings) return false;
     if (engine === 'disabled') return true;
-    if (engine === 'managed') return false;
     if (engine === 'parallel') return settings.parallel_configured;
     if (engine === 'brave') return settings.brave_configured;
     if (engine === 'querit') return settings.querit_configured;
@@ -237,12 +226,6 @@ const SearchPanel = ({ embedded = false }: { embedded?: boolean }) => {
           {t('settings.search.description')}
         </p>
 
-        {isLocalSession && (
-          <div className="rounded-lg border border-stone-200 dark:border-neutral-800 bg-stone-50 dark:bg-neutral-800/60 px-4 py-3 text-sm text-stone-700 dark:text-neutral-200">
-            {t('settings.search.localManagedUnavailable')}
-          </div>
-        )}
-
         {status.kind === 'loading' && (
           <div className="rounded-lg border border-stone-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-4 text-xs text-stone-500 dark:text-neutral-400">
             {t('common.loading')}
@@ -258,7 +241,6 @@ const SearchPanel = ({ embedded = false }: { embedded?: boolean }) => {
               {visibleEngines.map((opt, idx) => {
                 const selected = opt.id === selectedEngine;
                 const configured = isConfigured(opt.id);
-                const blocked = opt.requiresKey && !configured && selected;
                 return (
                   <button
                     key={opt.id}
@@ -295,11 +277,6 @@ const SearchPanel = ({ embedded = false }: { embedded?: boolean }) => {
                       <span className="block mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
                         {opt.description}
                       </span>
-                      {blocked && (
-                        <span className="block mt-1 text-[11px] text-amber-700 dark:text-amber-300">
-                          {t('settings.search.fallbackToManaged')}
-                        </span>
-                      )}
                     </span>
                     {selected && (
                       <svg

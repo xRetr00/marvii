@@ -60,6 +60,10 @@ export interface VoiceServerSettings {
   custom_dictionary: string[];
   /** Phase 2: continuous always-on listening (no hotkey). Opt-in. */
   always_on_enabled: boolean;
+  wake_word?: string;
+  wake_word_threshold?: number;
+  wake_word_debug?: boolean;
+  wake_word_variants?: string[];
 }
 
 export async function openhumanVoiceStatus(): Promise<VoiceStatus> {
@@ -109,6 +113,10 @@ export async function openhumanUpdateVoiceServerSettings(update: {
   silence_threshold?: number;
   custom_dictionary?: string[];
   always_on_enabled?: boolean;
+  wake_word?: string;
+  wake_word_threshold?: number;
+  wake_word_debug?: boolean;
+  wake_word_variants?: string[];
 }): Promise<CommandResponse<ConfigSnapshot>> {
   return await callCoreRpc<CommandResponse<ConfigSnapshot>>({
     method: 'openhuman.config_update_voice_server_settings',

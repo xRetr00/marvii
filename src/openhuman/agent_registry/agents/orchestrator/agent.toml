@@ -74,9 +74,6 @@ allowlist = [
     # `trigger_memory_agent = "always"` pre-fetch — the orchestrator now walks
     # the memory tree only when a message needs it, not before every turn.
     "agent_memory",
-    # Account/admin specialist. Route billing, team membership/invites/roles,
-    # OAuth/credential/session, and referral requests here.
-    "account_admin_agent",
     # Screen-awareness specialist. Route screen-intelligence permissions,
     # capture/session/listener state, and "what can you see" requests here;
     # desktop app operation still goes to desktop_control_agent.
@@ -88,9 +85,6 @@ allowlist = [
     "skill_creator",
     "critic",
     "archivist",
-    # Product docs/help specialist. Route OpenHuman docs, settings,
-    # setup, and feature questions here before guessing from priors.
-    "help",
     # Scheduling/reminder specialist. Owns current_time + cron tools and
     # confirmation-before-create policy so the chat prompt does not carry
     # cron-specific instructions on every turn.
@@ -101,20 +95,6 @@ allowlist = [
     # Desktop-control specialist. Owns launch_app and accessibility
     # interaction policy, including list-before-press behavior.
     "desktop_control_agent",
-    # Crypto wallet & market specialist (#1397). Synthesised into a
-    # `delegate_do_crypto` tool at agent-build time. Route any wallet,
-    # transfer, swap, contract-call, or exchange trading request here —
-    # the agent enforces a strict read → simulate → confirm → execute
-    # contract that the generic delegation surface does not.
-    "crypto_agent",
-    # Prediction-market & event-contract specialist (#2427). Synthesised
-    # into a `delegate_do_prediction_markets` tool at agent-build time.
-    # Route any Polymarket / Kalshi (and future event-contract venue)
-    # market browse, portfolio read, or order request here. The
-    # `tools_agent` wildcard explicitly disallows `polymarket` / `kalshi`
-    # so there is exactly one canonical route — through this delegate —
-    # which keeps the venue-specific approval-gate prompt in scope.
-    "markets_agent",
     # MCP setup specialist (#3039). Synthesised into a `delegate_setup_mcp_server`
     # tool at agent-build time. Route any "install / add / set up / connect an MCP
     # server" request here — the agent owns the full flow: search registries →
@@ -134,8 +114,8 @@ allowlist = [
     # itself and must not carry every connected server's full toolset).
     "mcp_agent",
     # Skill registry specialists. `skill_setup` discovers, installs, and
-    # manages agent skills from community registries (OpenHuman, HermesHub,
-    # ClawHub). `skill_executor` runs an installed skill by loading its
+    # manages agent skills from configured registries. `skill_executor` runs
+    # an installed skill by loading its
     # SKILL.md instructions and executing the procedure.
     "skill_setup",
     "skill_executor",
@@ -235,7 +215,7 @@ named = [
     "skill_registry_install",
     "skill_registry_sources",
     # Self-update — lets the orchestrator answer "am I up to date" /
-    # "update OpenHuman" without sending the user to Settings →
+    # "update Marvi" without sending the user to Settings →
     # Developer Options. `update_check` is read-only; `update_apply`
     # is dangerous, requires explicit user consent through
     # `ask_user_clarification`, and respects

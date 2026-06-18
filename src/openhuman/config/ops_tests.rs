@@ -1111,6 +1111,9 @@ async fn load_and_apply_voice_server_settings_rejects_invalid_activation_mode() 
         custom_dictionary: None,
         always_on_enabled: None,
         wake_word: None,
+        wake_word_threshold: None,
+        wake_word_debug: None,
+        wake_word_variants: None,
     };
     let err = load_and_apply_voice_server_settings(patch)
         .await
@@ -1164,7 +1167,10 @@ async fn load_and_apply_voice_server_settings_accepts_valid_modes_and_clamps() {
         silence_threshold: Some(-1.0),
         custom_dictionary: Some(vec!["term".into()]),
         always_on_enabled: Some(true),
-        wake_word: Some("Hey Tiny".to_string()),
+        wake_word: Some("Hey Marvi".to_string()),
+        wake_word_threshold: Some(2.0),
+        wake_word_debug: Some(true),
+        wake_word_variants: Some(vec!["hey marvi".to_string(), " marvy ".to_string()]),
     };
     let outcome = load_and_apply_voice_server_settings(patch)
         .await
@@ -1174,6 +1180,14 @@ async fn load_and_apply_voice_server_settings_accepts_valid_modes_and_clamps() {
             .as_f64()
             .unwrap_or(-1.0)
             >= 0.0
+    );
+    assert_eq!(
+        outcome.value["config"]["voice_server"]["wake_word_threshold"].as_f64(),
+        Some(1.0)
+    );
+    assert_eq!(
+        outcome.value["config"]["voice_server"]["wake_word_debug"].as_bool(),
+        Some(true)
     );
     unsafe {
         std::env::remove_var("OPENHUMAN_WORKSPACE");

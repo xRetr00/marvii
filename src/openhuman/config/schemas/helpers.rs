@@ -193,6 +193,9 @@ pub(super) struct VoiceServerSettingsUpdate {
     pub(super) custom_dictionary: Option<Vec<String>>,
     pub(super) always_on_enabled: Option<bool>,
     pub(super) wake_word: Option<String>,
+    pub(super) wake_word_threshold: Option<f32>,
+    pub(super) wake_word_debug: Option<bool>,
+    pub(super) wake_word_variants: Option<Vec<String>>,
 }
 
 #[derive(Debug, Deserialize)]

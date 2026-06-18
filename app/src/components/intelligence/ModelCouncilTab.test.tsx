@@ -479,8 +479,8 @@ describe('ModelCouncilTab', () => {
 
     await waitFor(() => expect(providerSelect).not.toBeDisabled());
     expect(
-      within(providerSelect).getByRole('option', { name: 'Managed (openhuman)' })
-    ).toBeInTheDocument();
+      within(providerSelect).queryByRole('option', { name: 'Managed (openhuman)' })
+    ).not.toBeInTheDocument();
     expect(
       within(providerSelect).getByRole('option', { name: 'OpenAI (openai)' })
     ).toBeInTheDocument();
@@ -489,9 +489,8 @@ describe('ModelCouncilTab', () => {
     ).not.toBeInTheDocument();
 
     await waitFor(() => expect(modelSelect).not.toBeDisabled());
-    expect(
-      within(modelSelect).getByRole('option', { name: 'managed-reasoning' })
-    ).toBeInTheDocument();
+    expect(within(modelSelect).queryByRole('option', { name: 'managed-reasoning' })).toBeNull();
+    expect(within(modelSelect).getByRole('option', { name: 'gpt-4o' })).toBeInTheDocument();
 
     fireEvent.change(providerSelect, { target: { value: 'openai' } });
     await waitFor(() => {

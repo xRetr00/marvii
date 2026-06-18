@@ -29,11 +29,17 @@ fn stt_factory_whisper_branch() {
 }
 
 #[test]
-fn stt_factory_whisper_empty_model_uses_default() {
-    // Empty model → default whisper-large-v3-turbo; constructor must not
-    // reject an empty string with an opaque error.
-    let p = create_stt_provider("whisper", "", &cfg()).unwrap();
+fn stt_factory_whisper_empty_model_uses_configured_local_model() {
+    let mut config = cfg();
+    config.local_ai.stt_model_id = "base".to_string();
+
+    let p = create_stt_provider("whisper", "", &config).unwrap();
     assert_eq!(p.name(), "whisper");
+    let p = p
+        .as_any()
+        .downcast_ref::<WhisperSttProvider>()
+        .expect("whisper provider type");
+    assert_eq!(p.model_for_test(), "base");
 }
 
 #[test]
@@ -122,6 +128,14 @@ fn tts_factory_cloud_branch() {
 fn tts_factory_piper_branch() {
     let p = create_tts_provider("piper", "en_US-lessac-medium", &cfg()).unwrap();
     assert_eq!(p.name(), "piper");
+}
+
+#[test]
+fn tts_factory_pockettts_branch() {
+    let p = create_tts_provider("pockettts", "jane", &cfg()).unwrap();
+    assert_eq!(p.name(), "pockettts");
+    let dashed = create_tts_provider("pocket-tts", "jane", &cfg()).unwrap();
+    assert_eq!(dashed.name(), "pockettts");
 }
 
 #[test]

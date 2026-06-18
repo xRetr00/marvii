@@ -5,6 +5,7 @@ import {
   BUILTIN_CLOUD_PROVIDER_SLUGS,
   BUILTIN_CLOUD_PROVIDERS,
   defaultEndpointForBuiltinCloudProvider,
+  opencodeGoUsageForModel,
 } from '../builtinCloudProviders';
 
 describe('builtinCloudProviders', () => {
@@ -17,6 +18,7 @@ describe('builtinCloudProviders', () => {
     ['deepseek', 'https://api.deepseek.com/v1', 'bearer'],
     ['minimax', 'https://api.minimax.io/v1', 'bearer'],
     ['sumopod', 'https://ai.sumopod.com/v1', 'bearer'],
+    ['opencode-go', 'https://opencode.ai/zen/go/v1', 'bearer'],
   ] as const)('maps %s to its endpoint and auth style', (slug, endpoint, authStyle) => {
     expect(defaultEndpointForBuiltinCloudProvider(slug)).toBe(endpoint);
     expect(authStyleForBuiltinCloudProvider(slug)).toBe(authStyle);
@@ -43,7 +45,20 @@ describe('builtinCloudProviders', () => {
         'venice',
         'vercel-ai-gateway',
         'sumopod',
+        'opencode-go',
       ])
     );
+  });
+
+  it('exposes OpenCode Go usage estimates for known model ids', () => {
+    expect(opencodeGoUsageForModel('glm-5.2')).toMatchObject({
+      requestsPer5Hours: 880,
+      requestsPerWeek: 2150,
+      requestsPerMonth: 4300,
+    });
+    expect(opencodeGoUsageForModel('opencode-go/glm-5.2')).toMatchObject({
+      requestsPer5Hours: 880,
+    });
+    expect(opencodeGoUsageForModel('unknown')).toBeNull();
   });
 });

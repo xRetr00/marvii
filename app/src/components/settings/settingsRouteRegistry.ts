@@ -492,26 +492,6 @@ export const SETTINGS_ROUTE_REGISTRY: SettingsRegistryEntry[] = [
   },
 
   // =========================================================================
-  // CRYPTO section leaf panels
-  // =========================================================================
-  {
-    id: 'recovery-phrase',
-    titleKey: 'pages.settings.account.recoveryPhrase',
-    descriptionKey: 'pages.settings.account.recoveryPhraseDesc',
-    section: 'crypto',
-    searchKeywords: ['mnemonic', 'seed', 'backup', 'recovery', 'wallet'],
-    hiddenDeepLink: true,
-  },
-  {
-    id: 'wallet-balances',
-    titleKey: 'pages.settings.account.walletBalances',
-    descriptionKey: 'pages.settings.account.walletBalancesDesc',
-    section: 'crypto',
-    searchKeywords: ['wallet', 'balance', 'tokens', 'crypto'],
-    hiddenDeepLink: true,
-  },
-
-  // =========================================================================
   // DEVELOPER — debug-only entries (devOnly === true)
   // These live ONLY under Settings → Developer & Diagnostics.
   // Items removed from this list compared to the old DeveloperOptionsPanel:
@@ -712,14 +692,6 @@ export const SETTINGS_ROUTE_REGISTRY: SettingsRegistryEntry[] = [
   // =========================================================================
   // INTENTIONALLY HIDDEN / DEEP-LINK ONLY (not surfaced in any menu)
   // =========================================================================
-  {
-    // billing: hidden for Marvi local-first desktop.
-    id: 'billing',
-    titleKey: 'nav.avatarMenu.billing',
-    section: 'home',
-    searchKeywords: ['billing', 'subscription', 'payment', 'plan', 'invoice'],
-    hiddenDeepLink: true,
-  },
   {
     // autocomplete: hidden per #717 (route retained for re-enable).
     id: 'autocomplete',

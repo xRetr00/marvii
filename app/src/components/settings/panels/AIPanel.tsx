@@ -68,6 +68,7 @@ import {
   BUILTIN_CLOUD_PROVIDER_SLUGS,
   builtinCloudProvider,
   defaultEndpointForBuiltinCloudProvider,
+  opencodeGoUsageForModel,
 } from './builtinCloudProviders';
 import { presentProviderSetupError, ProviderSetupErrorNotice } from './ProviderSetupErrorNotice';
 import { useReembedBackfillModal } from './useReembedBackfillModal';
@@ -1859,6 +1860,48 @@ function humanizeModelId(id: string): string {
   return id.replace(/[-_]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 }
 
+const REQUEST_COUNT_FORMAT = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 });
+const TOKEN_PRICE_FORMAT = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+  maximumFractionDigits: 4,
+});
+
+const OpenCodeGoUsageHint = ({ providerSlug, model }: { providerSlug: string; model: string }) => {
+  if (providerSlug !== 'opencode-go') return null;
+  const usage = opencodeGoUsageForModel(model);
+  if (!usage) {
+    return (
+      <p className="text-[11px] leading-5 text-neutral-500 dark:text-neutral-400">
+        OpenCode Go usage varies by model. Live plan usage is available in the OpenCode console; the
+        public API currently exposes models, not quota windows.
+      </p>
+    );
+  }
+
+  const requests = [
+    `${REQUEST_COUNT_FORMAT.format(usage.requestsPer5Hours)} / 5h`,
+    `${REQUEST_COUNT_FORMAT.format(usage.requestsPerWeek)} / week`,
+    `${REQUEST_COUNT_FORMAT.format(usage.requestsPerMonth)} / month`,
+  ].join(' · ');
+  const prices = [
+    `${TOKEN_PRICE_FORMAT.format(usage.inputUsdPer1m)} input`,
+    `${TOKEN_PRICE_FORMAT.format(usage.outputUsdPer1m)} output`,
+    `${TOKEN_PRICE_FORMAT.format(usage.cachedReadUsdPer1m)} cached read`,
+  ].join(' · ');
+
+  return (
+    <div className="rounded-lg border border-sky-200 bg-sky-50/70 px-3 py-2 text-[11px] leading-5 text-sky-900 dark:border-sky-500/30 dark:bg-sky-500/10 dark:text-sky-100">
+      <div className="font-semibold">OpenCode Go usage estimate for {usage.model}</div>
+      <div>{requests}</div>
+      <div>{prices} per 1M tokens</div>
+      <div className="text-sky-700/80 dark:text-sky-200/80">
+        Static estimate from OpenCode docs. Check the OpenCode console for live usage.
+      </div>
+    </div>
+  );
+};
+
 function appendTemperatureToProviderString(provider: string, temperature: number | null): string {
   if (temperature == null || !Number.isFinite(temperature)) return provider;
   const rounded = Math.round(temperature * 100) / 100;
@@ -2277,6 +2320,9 @@ const CustomRoutingDialog = ({
                   }
                 />
               )}
+              {selectedCloud ? (
+                <OpenCodeGoUsageHint providerSlug={selectedCloud.slug} model={model.trim()} />
+              ) : null}
             </div>
 
             {/* Temperature override (optional). When unchecked, the workload
@@ -2567,6 +2613,8 @@ const GlobalOwnModelSelector = ({
   const [saving, setSaving] = useState(false);
 
   const selectedSlug = source?.kind === 'cloud' ? source.providerSlug : null;
+  const selectedCloud =
+    source?.kind === 'cloud' ? customCloud.find(c => c.slug === source.providerSlug) : undefined;
 
   useEffect(() => {
     if (!selectedSlug) {
@@ -2743,6 +2791,9 @@ const GlobalOwnModelSelector = ({
               )}
               {cloudModelsError ? (
                 <div className="text-xs text-coral-700 dark:text-coral-300">{cloudModelsError}</div>
+              ) : null}
+              {selectedCloud ? (
+                <OpenCodeGoUsageHint providerSlug={selectedCloud.slug} model={model.trim()} />
               ) : null}
             </div>
           </div>

@@ -10,15 +10,24 @@ mod catalog_data;
 use catalog_data::CAPABILITIES;
 
 static VALIDATED: OnceLock<()> = OnceLock::new();
+static VISIBLE_CAPABILITIES: OnceLock<Vec<Capability>> = OnceLock::new();
 
 pub fn all_capabilities() -> &'static [Capability] {
     ensure_validated();
-    CAPABILITIES
+    VISIBLE_CAPABILITIES
+        .get_or_init(|| {
+            CAPABILITIES
+                .iter()
+                .filter(|capability| is_marvi_visible(capability))
+                .copied()
+                .collect()
+        })
+        .as_slice()
 }
 
 pub fn capabilities_by_category(category: CapabilityCategory) -> Vec<Capability> {
     ensure_validated();
-    CAPABILITIES
+    all_capabilities()
         .iter()
         .filter(|capability| capability.category == category)
         .copied()
@@ -28,7 +37,7 @@ pub fn capabilities_by_category(category: CapabilityCategory) -> Vec<Capability>
 pub fn lookup(id: &str) -> Option<Capability> {
     ensure_validated();
     let normalized = id.trim();
-    CAPABILITIES
+    all_capabilities()
         .iter()
         .find(|capability| capability.id == normalized)
         .copied()
@@ -38,14 +47,30 @@ pub fn search(query: &str) -> Vec<Capability> {
     ensure_validated();
     let normalized = query.trim().to_ascii_lowercase();
     if normalized.is_empty() {
-        return CAPABILITIES.to_vec();
+        return all_capabilities().to_vec();
     }
 
-    CAPABILITIES
+    all_capabilities()
         .iter()
         .filter(|capability| searchable_text(capability).contains(&normalized))
         .copied()
         .collect()
+}
+
+fn is_marvi_visible(capability: &Capability) -> bool {
+    !matches!(
+        capability.domain,
+        "billing" | "team" | "wallet" | "web3" | "x402"
+    ) && !matches!(
+        capability.id,
+        "workflows.connect_web3_wallet"
+            | "workflows.connect_crypto_exchange"
+            | "workflows.polymarket"
+            | "automation.crypto_agent"
+            | "settings.view_billing"
+            | "settings.manage_subscription"
+            | "settings.add_payment_methods"
+    )
 }
 
 fn searchable_text(capability: &Capability) -> String {

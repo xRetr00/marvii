@@ -1850,6 +1850,42 @@ async fn composio_list_connections_routes_through_direct_mode() {
     }
 }
 
+#[tokio::test]
+async fn composio_list_available_triggers_returns_empty_in_direct_mode() {
+    let tmp = tempfile::tempdir().unwrap();
+    let config = direct_mode_config(&tmp);
+    let outcome = composio_list_available_triggers(&config, "github", Some("ca_test".into()))
+        .await
+        .expect("direct-mode trigger catalog must not call backend");
+    assert!(
+        outcome.value.triggers.is_empty(),
+        "direct mode must not surface backend trigger catalog entries"
+    );
+    assert!(
+        outcome.logs.iter().any(|l| l.contains("direct mode")),
+        "log line must call out direct mode explicitly, got {:?}",
+        outcome.logs
+    );
+}
+
+#[tokio::test]
+async fn composio_list_triggers_returns_empty_in_direct_mode() {
+    let tmp = tempfile::tempdir().unwrap();
+    let config = direct_mode_config(&tmp);
+    let outcome = composio_list_triggers(&config, Some("github".into()))
+        .await
+        .expect("direct-mode active triggers must not call backend");
+    assert!(
+        outcome.value.triggers.is_empty(),
+        "direct mode must not surface backend active trigger entries"
+    );
+    assert!(
+        outcome.logs.iter().any(|l| l.contains("direct mode")),
+        "log line must call out direct mode explicitly, got {:?}",
+        outcome.logs
+    );
+}
+
 // ── Direct mode with no API key yet (Sentry TAURI-RUST-R4) ────────
 //
 // Direct mode selected but no key configured is a valid user *setup*

@@ -26,12 +26,12 @@ export type VoiceWorkloadId = 'stt' | 'tts';
  * Wire grammar:
  *   "cloud" / "openhuman" / empty -> { kind: 'cloud' }
  *   "whisper"                     -> { kind: 'local', engine: 'whisper', model }
- *   "piper"                       -> { kind: 'local', engine: 'piper', model }
+ *   "piper" / "pockettts"         -> { kind: 'local', engine, model }
  *   "<slug>:<model>"              -> { kind: 'external', providerSlug, model }
  */
 export type VoiceProviderRef =
   | { kind: 'cloud' }
-  | { kind: 'local'; engine: 'whisper' | 'piper'; model: string }
+  | { kind: 'local'; engine: 'whisper' | 'piper' | 'pockettts'; model: string }
   | { kind: 'external'; providerSlug: string; model: string };
 
 export type VoiceCapability = 'stt' | 'tts' | 'both';
@@ -87,6 +87,9 @@ export function parseVoiceProviderString(s: string | null | undefined): VoicePro
   if (trimmed === 'piper') {
     return { kind: 'local', engine: 'piper', model: '' };
   }
+  if (trimmed === 'pockettts' || trimmed === 'pocket-tts') {
+    return { kind: 'local', engine: 'pockettts', model: '' };
+  }
   const colonIdx = trimmed.indexOf(':');
   if (colonIdx > 0) {
     const slug = trimmed.slice(0, colonIdx).trim();
@@ -96,6 +99,9 @@ export function parseVoiceProviderString(s: string | null | undefined): VoicePro
     }
     if (slug === 'piper') {
       return { kind: 'local', engine: 'piper', model };
+    }
+    if (slug === 'pockettts' || slug === 'pocket-tts') {
+      return { kind: 'local', engine: 'pockettts', model };
     }
     return { kind: 'external', providerSlug: slug, model };
   }

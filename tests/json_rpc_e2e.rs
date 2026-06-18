@@ -11370,7 +11370,7 @@ async fn json_rpc_channel_web_chat_with_speak_reply_invokes_reply_speech_inner()
 // ── Model resolution + agent profile switching ──────────────────────────
 
 /// E2E: voice-server settings round-trip over JSON-RPC — Phase 2 always-on
-/// toggle + "Hey Tiny" wake word. Regression guard for the bug where the
+/// toggle + "Hey Marvi" wake word. Regression guard for the bug where the
 /// Settings toggle silently did nothing because `always_on_enabled` was absent
 /// from the `update_voice_server_settings` controller param schema (rejected as
 /// "unknown param 'always_on_enabled'" before reaching the handler).
@@ -11392,7 +11392,7 @@ async fn json_rpc_voice_server_settings_roundtrip_always_on_and_wake_word() {
     let rpc_base = format!("http://{}", rpc_addr);
     tokio::time::sleep(Duration::from_millis(100)).await;
 
-    // GET defaults — wake_word "Hey Tiny", always-on off.
+    // GET defaults — wake_word "Hey Marvi", always-on off.
     let initial = post_json_rpc(
         &rpc_base,
         7401,
@@ -11414,8 +11414,8 @@ async fn json_rpc_voice_server_settings_roundtrip_always_on_and_wake_word() {
             .get("result")
             .and_then(|r| r.get("wake_word"))
             .and_then(Value::as_str),
-        Some("Hey Tiny"),
-        "default wake_word should be 'Hey Tiny', envelope: {initial_outer}"
+        Some("Hey Marvi"),
+        "default wake_word should be 'Hey Marvi', envelope: {initial_outer}"
     );
 
     // UPDATE — change the wake word and pass `always_on_enabled` (the param that

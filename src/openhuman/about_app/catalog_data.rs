@@ -11,7 +11,7 @@ const LOCAL_RAW: Option<CapabilityPrivacy> = Some(CapabilityPrivacy {
 const DERIVED_TO_BACKEND: Option<CapabilityPrivacy> = Some(CapabilityPrivacy {
     leaves_device: true,
     data_kind: PrivacyDataKind::Derived,
-    destinations: &["OpenHuman backend", "TinyHumans Neocortex"],
+    destinations: &["User-configured model provider"],
 });
 
 // Vision sub-agent ships the attached image (raw pixels) to the managed
@@ -19,7 +19,7 @@ const DERIVED_TO_BACKEND: Option<CapabilityPrivacy> = Some(CapabilityPrivacy {
 const IMAGE_TO_BACKEND: Option<CapabilityPrivacy> = Some(CapabilityPrivacy {
     leaves_device: true,
     data_kind: PrivacyDataKind::Raw,
-    destinations: &["OpenHuman backend", "TinyHumans Neocortex"],
+    destinations: &["User-configured multimodal provider"],
 });
 
 const LOCAL_CREDENTIALS: Option<CapabilityPrivacy> = Some(CapabilityPrivacy {
@@ -31,7 +31,7 @@ const LOCAL_CREDENTIALS: Option<CapabilityPrivacy> = Some(CapabilityPrivacy {
 const DIAGNOSTICS_TO_BACKEND: Option<CapabilityPrivacy> = Some(CapabilityPrivacy {
     leaves_device: true,
     data_kind: PrivacyDataKind::Diagnostics,
-    destinations: &["OpenHuman backend"],
+    destinations: &["User-configured diagnostics endpoint"],
 });
 
 const MODEL_DOWNLOAD: Option<CapabilityPrivacy> = Some(CapabilityPrivacy {
@@ -107,7 +107,6 @@ const EMBEDDING_PROBE_TO_CONFIGURED_PROVIDER: Option<CapabilityPrivacy> = Some(C
     leaves_device: true,
     data_kind: PrivacyDataKind::Derived,
     destinations: &[
-        "OpenHuman backend / TinyHumans Neocortex (managed cloud default)",
         "OpenAI API (api.openai.com)",
         "Cohere API (api.cohere.com)",
         "User-configured OpenAI-compatible endpoint (custom:<url>)",
@@ -444,8 +443,7 @@ pub(super) const CAPABILITIES: &[Capability] = &[
         category: CapabilityCategory::Intelligence,
         description:
             "Pick which embedding provider drives semantic search across your memory: \
-             managed cloud (default, Voyage-backed via api.tinyhumans.ai), OpenAI, \
-             Cohere, local Ollama, or a custom OpenAI-compatible endpoint. API keys \
+             OpenAI, Cohere, local Ollama, or a custom OpenAI-compatible endpoint. API keys \
              are stored encrypted via the local keyring under `embeddings:<slug>`; \
              model name and embedding dimensions are tunable per provider. The \
              legacy `inference_embed` RPC is aliased to `embeddings_embed` so \
@@ -486,7 +484,7 @@ pub(super) const CAPABILITIES: &[Capability] = &[
         name: "MCP Server",
         domain: "intelligence",
         category: CapabilityCategory::Intelligence,
-        description: "Expose a curated OpenHuman tool surface over stdio MCP or Streamable HTTP/SSE for MCP-compatible clients.",
+        description: "Expose a curated Marvi tool surface over stdio MCP or Streamable HTTP/SSE for MCP-compatible clients.",
         how_to: "Run `openhuman-core mcp` (stdio) or `openhuman-core mcp --transport http --port 9300` for remote clients.",
         status: CapabilityStatus::Beta,
         privacy: LOCAL_RAW,
@@ -506,7 +504,7 @@ pub(super) const CAPABILITIES: &[Capability] = &[
         name: "Tool Registry",
         domain: "intelligence",
         category: CapabilityCategory::Intelligence,
-        description: "Discover OpenHuman's MCP stdio tools and controller-backed tools from one local registry, including versions, routes, input/output schemas, allowed agents, and health state.",
+        description: "Discover Marvi's MCP stdio tools and controller-backed tools from one local registry, including versions, routes, input/output schemas, allowed agents, and health state.",
         how_to: "Call openhuman.tool_registry_list over core JSON-RPC, or openhuman.tool_registry_get with a tool_id such as memory.search.",
         status: CapabilityStatus::Beta,
         privacy: LOCAL_RAW,
@@ -708,9 +706,8 @@ pub(super) const CAPABILITIES: &[Capability] = &[
         domain: "workflows",
         category: CapabilityCategory::Workflows,
         description:
-            "Route Composio tool calls directly to backend.composio.dev with your own API key, \
-             bypassing the OpenHuman backend proxy. Tool execution only — trigger webhooks still \
-             require backend mode.",
+            "Route Composio tool calls directly to backend.composio.dev with your own API key. \
+             Tool execution and locally configured triggers use the direct connection.",
         how_to: "Settings > Skills > Composio > Direct mode",
         status: CapabilityStatus::Beta,
         privacy: COMPOSIO_DIRECT_CREDENTIALS,
@@ -949,7 +946,7 @@ pub(super) const CAPABILITIES: &[Capability] = &[
         domain: "runtime_python",
         category: CapabilityCategory::LocalAI,
         description:
-            "Download and reuse an OpenHuman-managed CPython runtime for Python-backed local integrations such as MCP servers, with a system-Python override reserved for development.",
+            "Download and reuse a Marvi-managed CPython runtime for Python-backed local integrations such as MCP servers, with a system-Python override reserved for development.",
         how_to: "Configured by the core `runtime_python` module; future UI surfaces can expose install state and overrides.",
         status: CapabilityStatus::Beta,
         privacy: MODEL_DOWNLOAD,
@@ -1049,7 +1046,7 @@ pub(super) const CAPABILITIES: &[Capability] = &[
         name: "Configure Tool Access",
         domain: "auth",
         category: CapabilityCategory::Auth,
-        description: "Choose which built-in tools OpenHuman can use on your behalf during setup.",
+        description: "Choose which built-in tools Marvi can use on your behalf during setup.",
         how_to: "Onboarding > Enable Tools",
         status: CapabilityStatus::Stable,
         privacy: None,
@@ -1160,7 +1157,7 @@ pub(super) const CAPABILITIES: &[Capability] = &[
         domain: "channels",
         category: CapabilityCategory::Channels,
         description:
-            "Operate OpenHuman from Telegram with slash commands: /status, /sessions, /new, and /help.",
+            "Operate Marvi from Telegram with slash commands: /status, /sessions, /new, and /help.",
         how_to: "Settings > Messaging Channels > Telegram (connect), then message the bot",
         status: CapabilityStatus::Beta,
         privacy: None,
@@ -1200,7 +1197,7 @@ pub(super) const CAPABILITIES: &[Capability] = &[
         name: "Read WhatsApp Messages",
         domain: "channels",
         category: CapabilityCategory::Channels,
-        description: "Read and search WhatsApp Web conversations and messages after connecting WhatsApp in OpenHuman. Data is stored locally only and never transmitted.",
+        description: "Read and search WhatsApp Web conversations and messages after connecting WhatsApp in Marvi. Data is stored locally only and never transmitted.",
         how_to: "Connect WhatsApp Web via Channels, then ask the agent to read or summarise your messages.",
         status: CapabilityStatus::Beta,
         privacy: LOCAL_RAW,
@@ -1262,7 +1259,7 @@ pub(super) const CAPABILITIES: &[Capability] = &[
         name: "Configure AI",
         domain: "settings",
         category: CapabilityCategory::Settings,
-        description: "Configure managed, local, custom, and built-in BYOK LLM providers, including SumoPod and other OpenAI-compatible gateways, plus per-workload routing preferences.",
+        description: "Configure local, custom, and built-in BYOK LLM providers, including SumoPod and other OpenAI-compatible gateways, plus per-workload routing preferences.",
         how_to: "Settings > AI",
         status: CapabilityStatus::Stable,
         privacy: None,
@@ -1508,7 +1505,7 @@ pub(super) const CAPABILITIES: &[Capability] = &[
         description: "iOS app for chatting with your assistant on the go. Connects to the desktop \
                       core via LAN HTTP, an E2E-encrypted socket.io tunnel, or a cloud HTTP \
                       fallback — no Rust core ships on the device.",
-        how_to: "Pair via Settings > Devices, then open the OpenHuman iOS app.",
+        how_to: "Pair via Settings > Devices, then open the compatible mobile app.",
         status: CapabilityStatus::Beta,
         privacy: None,
     },

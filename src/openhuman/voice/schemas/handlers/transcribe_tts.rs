@@ -147,7 +147,9 @@ pub(crate) fn handle_voice_stt_dispatch(params: Map<String, Value>) -> Controlle
             .map(str::trim)
             .filter(|s| !s.is_empty())
             .map(str::to_string)
-            .unwrap_or_else(|| crate::openhuman::voice::DEFAULT_WHISPER_MODEL.to_string());
+            .unwrap_or_else(|| {
+                crate::openhuman::inference::model_ids::effective_stt_model_id(&config)
+            });
 
         log::debug!(
             "[voice-factory] RPC voice_stt_dispatch provider={provider_name} model={model}"

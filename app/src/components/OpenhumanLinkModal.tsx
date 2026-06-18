@@ -30,8 +30,6 @@ import {
   type AccountStatus,
   PROVIDERS,
 } from '../types/accounts';
-import { BILLING_DASHBOARD_URL } from '../utils/links';
-import { openUrl } from '../utils/openUrl';
 import { ProviderIcon } from './accounts/providerIcons';
 import ChannelSetupModal from './channels/ChannelSetupModal';
 
@@ -43,7 +41,6 @@ export const OPENHUMAN_LINK_EVENT = 'openhuman-link';
 
 const ALLOWED_PATHS = [
   'settings/notifications',
-  'settings/billing',
   'settings/messaging',
   'accounts/setup',
 ] as const;
@@ -162,8 +159,6 @@ function titleForPath(path: AllowedPath, t: (k: string) => string): string {
   switch (path) {
     case 'settings/notifications':
       return t('app.openhumanLink.title.notifications');
-    case 'settings/billing':
-      return t('app.openhumanLink.title.billing');
     case 'settings/messaging':
       return t('app.openhumanLink.title.messaging');
     case 'accounts/setup':
@@ -175,8 +170,6 @@ function renderBody(path: AllowedPath, close: () => void) {
   switch (path) {
     case 'settings/notifications':
       return <NotificationsBody close={close} />;
-    case 'settings/billing':
-      return <BillingBody close={close} />;
     case 'settings/messaging':
       // Routed via the dedicated `MessagingSetupBridge` above; this case
       // is kept to satisfy the path-completeness check but is unreachable
@@ -293,36 +286,6 @@ const NotificationsBody = ({ close }: { close: () => void }) => {
         </p>
       )}
       <DoneFooter close={close} />
-    </div>
-  );
-};
-
-// ── Billing ──────────────────────────────────────────────────────────────
-
-const BillingBody = ({ close }: { close: () => void }) => {
-  const { t } = useT();
-  return (
-    <div className="space-y-4 text-sm text-stone-700 dark:text-neutral-200">
-      <div className="rounded-xl border border-stone-200 dark:border-neutral-800 bg-stone-50 dark:bg-neutral-800/60 p-4">
-        <p className="text-xs uppercase tracking-wide text-stone-500 dark:text-neutral-400">
-          {t('app.openhumanLink.billing.trialCredit')}
-        </p>
-        <p className="mt-1 text-2xl font-semibold text-stone-900 dark:text-neutral-100">
-          {t('onboarding.runtimeChoice.cloud.creditHighlight')}
-        </p>
-        <p className="mt-1 text-xs text-stone-500 dark:text-neutral-400">
-          {t('app.openhumanLink.billing.trialDesc')}
-        </p>
-      </div>
-      <button
-        type="button"
-        onClick={() => {
-          void openUrl(BILLING_DASHBOARD_URL).catch(() => {});
-        }}
-        className="w-full rounded-xl bg-primary-500 text-white text-sm font-medium py-2.5 hover:bg-primary-600 transition-colors">
-        {t('app.openhumanLink.billing.openDashboard')}
-      </button>
-      <DoneFooter close={close} skipLabel={t('app.openhumanLink.billing.stayOnTrial')} />
     </div>
   );
 };

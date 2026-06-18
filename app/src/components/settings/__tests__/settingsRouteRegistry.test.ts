@@ -150,7 +150,7 @@ describe('entriesForSection', () => {
     const homeEntries = entriesForSection('home');
     const ids = homeEntries.map(e => e.id);
     // Surviving home hub entries after the two-pane restructure.
-    expect(ids).not.toContain('account');
+    expect(ids).toContain('account');
     expect(ids).toContain('appearance');
     expect(ids).toContain('personality');
     expect(ids).toContain('automations');

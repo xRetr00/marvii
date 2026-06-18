@@ -1,4 +1,4 @@
-//! Command-line interface for the OpenHuman core binary.
+//! Command-line interface for the Marvi core binary.
 //!
 //! This module handles argument parsing, subcommand dispatching, and help printing
 //! for the CLI. It supports commands for running the server, making RPC calls,
@@ -17,13 +17,13 @@ use crate::core::{ControllerSchema, TypeSchema};
 /// The ASCII banner displayed when the CLI starts.
 const CLI_BANNER: &str = r#"
 
- ▗▄▖ ▄▄▄▄  ▗▞▀▚▖▄▄▄▄  ▗▖ ▗▖█  ▐▌▄▄▄▄  ▗▞▀▜▌▄▄▄▄
-▐▌ ▐▌█   █ ▐▛▀▀▘█   █ ▐▌ ▐▌▀▄▄▞▘█ █ █ ▝▚▄▟▌█   █
-▐▌ ▐▌█▄▄▄▀ ▝▚▄▄▖█   █ ▐▛▀▜▌     █   █      █   █
-▝▚▄▞▘█                ▐▌ ▐▌
-     ▀
+ __  __                  _
+|  \/  | __ _ _ ____   _(_)
+| |\/| |/ _` | '__\ \ / / |
+| |  | | (_| | |   \ V /| |
+|_|  |_|\__,_|_|    \_/ |_|
 
-Contribute & Star us on GitHub: https://github.com/tinyhumansai/openhuman
+Repository: https://github.com/xRetr00/marvii
 
 "#;
 
@@ -543,7 +543,7 @@ fn grouped_schemas() -> BTreeMap<String, Vec<ControllerSchema>> {
 
 /// Prints the general help message listing available commands and namespaces.
 fn print_general_help(grouped: &BTreeMap<String, Vec<ControllerSchema>>) {
-    println!("OpenHuman core CLI\n");
+    println!("Marvi core CLI\n");
     println!("Usage:");
     println!("  openhuman run [--host <addr>] [--port <u16>] [--jsonrpc-only] [--verbose]");
     println!("  openhuman call --method <name> [--params '<json>']");

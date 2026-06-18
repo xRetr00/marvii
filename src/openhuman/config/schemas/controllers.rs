@@ -756,6 +756,9 @@ fn handle_update_voice_server_settings(params: Map<String, Value>) -> Controller
             custom_dictionary: update.custom_dictionary,
             always_on_enabled: update.always_on_enabled,
             wake_word: update.wake_word,
+            wake_word_threshold: update.wake_word_threshold,
+            wake_word_debug: update.wake_word_debug,
+            wake_word_variants: update.wake_word_variants,
         };
         let result = config_rpc::load_and_apply_voice_server_settings(patch).await?;
         // Apply the always-on toggle live (start/idle the capture loop) so the

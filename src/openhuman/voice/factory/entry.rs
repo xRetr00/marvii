@@ -9,7 +9,7 @@ use super::helpers::{
 };
 use super::stt_providers::{CloudSttProvider, WhisperSttProvider};
 use super::traits::{SttProvider, TtsProvider};
-use super::tts_providers::{CloudTtsProvider, PiperTtsProvider};
+use super::tts_providers::{CloudTtsProvider, PiperTtsProvider, PocketTtsProvider};
 use crate::openhuman::config::Config;
 
 /// Default Whisper model. `whisper-large-v3-turbo` is the recommended ship
@@ -54,8 +54,10 @@ pub fn create_stt_provider(
     config: &Config,
 ) -> anyhow::Result<Box<dyn SttProvider>> {
     debug!("{LOG_PREFIX} create_stt_provider provider={provider} model={model}");
+    let configured_model;
     let model = if model.trim().is_empty() {
-        DEFAULT_WHISPER_MODEL
+        configured_model = crate::openhuman::inference::model_ids::effective_stt_model_id(config);
+        configured_model.as_str()
     } else {
         model
     };
@@ -105,6 +107,7 @@ pub fn create_tts_provider(
             Some(voice.to_string())
         }))),
         "piper" => Ok(Box::new(PiperTtsProvider::new(voice))),
+        "pockettts" | "pocket-tts" => Ok(Box::new(PocketTtsProvider::new(voice))),
         other => {
             let (slug, slug_voice) = split_slug_model(other);
             let effective_voice = if slug_voice.is_empty() {

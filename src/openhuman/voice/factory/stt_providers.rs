@@ -35,6 +35,11 @@ impl CloudSttProvider {
 
 #[async_trait]
 impl SttProvider for CloudSttProvider {
+    #[cfg(test)]
+    fn as_any(&self) -> &dyn std::any::Any {
+        self
+    }
+
     fn name(&self) -> &'static str {
         "cloud"
     }
@@ -86,10 +91,20 @@ impl WhisperSttProvider {
             model: model.into(),
         }
     }
+
+    #[cfg(test)]
+    pub(crate) fn model_for_test(&self) -> &str {
+        &self.model
+    }
 }
 
 #[async_trait]
 impl SttProvider for WhisperSttProvider {
+    #[cfg(test)]
+    fn as_any(&self) -> &dyn std::any::Any {
+        self
+    }
+
     fn name(&self) -> &'static str {
         "whisper"
     }
@@ -156,6 +171,11 @@ impl ExternalSttProvider {
 
 #[async_trait]
 impl SttProvider for ExternalSttProvider {
+    #[cfg(test)]
+    fn as_any(&self) -> &dyn std::any::Any {
+        self
+    }
+
     fn name(&self) -> &'static str {
         "external"
     }

@@ -216,7 +216,181 @@ export const BUILTIN_CLOUD_PROVIDERS: BuiltinCloudProvider[] = [
     tone: TONE.amber,
     keyPlaceholder: 'sk-...',
   },
+  {
+    slug: 'opencode-go',
+    label: 'OpenCode Go',
+    endpoint: 'https://opencode.ai/zen/go/v1',
+    authStyle: 'bearer',
+    tone: TONE.sky,
+    keyPlaceholder: 'sk-...',
+  },
 ];
+
+export type OpenCodeGoUsageEstimate = {
+  model: string;
+  requestsPer5Hours: number;
+  requestsPerWeek: number;
+  requestsPerMonth: number;
+  inputUsdPer1m: number;
+  outputUsdPer1m: number;
+  cachedReadUsdPer1m: number;
+  cachedWriteUsdPer1m?: number;
+};
+
+const OPENCODE_GO_USAGE_ESTIMATES: Record<string, OpenCodeGoUsageEstimate> = {
+  'glm-5.2': {
+    model: 'GLM-5.2',
+    requestsPer5Hours: 880,
+    requestsPerWeek: 2150,
+    requestsPerMonth: 4300,
+    inputUsdPer1m: 1.4,
+    outputUsdPer1m: 4.4,
+    cachedReadUsdPer1m: 0.26,
+  },
+  'glm-5.1': {
+    model: 'GLM-5.1',
+    requestsPer5Hours: 880,
+    requestsPerWeek: 2150,
+    requestsPerMonth: 4300,
+    inputUsdPer1m: 1.4,
+    outputUsdPer1m: 4.4,
+    cachedReadUsdPer1m: 0.26,
+  },
+  'kimi-k2.7-code': {
+    model: 'Kimi K2.7 Code',
+    requestsPer5Hours: 1350,
+    requestsPerWeek: 4630,
+    requestsPerMonth: 9250,
+    inputUsdPer1m: 0.95,
+    outputUsdPer1m: 4,
+    cachedReadUsdPer1m: 0.19,
+  },
+  'kimi-k2.7': {
+    model: 'Kimi K2.7',
+    requestsPer5Hours: 1350,
+    requestsPerWeek: 4630,
+    requestsPerMonth: 9250,
+    inputUsdPer1m: 0.95,
+    outputUsdPer1m: 4,
+    cachedReadUsdPer1m: 0.19,
+  },
+  'kimi-k2.6': {
+    model: 'Kimi K2.6',
+    requestsPer5Hours: 1150,
+    requestsPerWeek: 2880,
+    requestsPerMonth: 5750,
+    inputUsdPer1m: 0.95,
+    outputUsdPer1m: 4,
+    cachedReadUsdPer1m: 0.16,
+  },
+  'mimo-v2.5': {
+    model: 'MiMo-V2.5',
+    requestsPer5Hours: 30100,
+    requestsPerWeek: 75200,
+    requestsPerMonth: 150400,
+    inputUsdPer1m: 0.14,
+    outputUsdPer1m: 0.28,
+    cachedReadUsdPer1m: 0.0028,
+  },
+  'mimo-v2.5-pro': {
+    model: 'MiMo-V2.5-Pro',
+    requestsPer5Hours: 3250,
+    requestsPerWeek: 8150,
+    requestsPerMonth: 16300,
+    inputUsdPer1m: 1.74,
+    outputUsdPer1m: 3.48,
+    cachedReadUsdPer1m: 0.0145,
+  },
+  'minimax-m3': {
+    model: 'MiniMax M3',
+    requestsPer5Hours: 3200,
+    requestsPerWeek: 8000,
+    requestsPerMonth: 16000,
+    inputUsdPer1m: 0.3,
+    outputUsdPer1m: 1.2,
+    cachedReadUsdPer1m: 0.06,
+  },
+  'minimax-m2.7': {
+    model: 'MiniMax M2.7',
+    requestsPer5Hours: 3400,
+    requestsPerWeek: 8500,
+    requestsPerMonth: 17000,
+    inputUsdPer1m: 0.3,
+    outputUsdPer1m: 1.2,
+    cachedReadUsdPer1m: 0.06,
+    cachedWriteUsdPer1m: 0.375,
+  },
+  'minimax-m2.5': {
+    model: 'MiniMax M2.5',
+    requestsPer5Hours: 3400,
+    requestsPerWeek: 8500,
+    requestsPerMonth: 17000,
+    inputUsdPer1m: 0.3,
+    outputUsdPer1m: 1.2,
+    cachedReadUsdPer1m: 0.06,
+    cachedWriteUsdPer1m: 0.375,
+  },
+  'qwen3.7-max': {
+    model: 'Qwen3.7 Max',
+    requestsPer5Hours: 950,
+    requestsPerWeek: 2390,
+    requestsPerMonth: 4770,
+    inputUsdPer1m: 2.5,
+    outputUsdPer1m: 7.5,
+    cachedReadUsdPer1m: 0.5,
+    cachedWriteUsdPer1m: 3.125,
+  },
+  'qwen3.7-plus': {
+    model: 'Qwen3.7 Plus',
+    requestsPer5Hours: 4300,
+    requestsPerWeek: 10800,
+    requestsPerMonth: 21600,
+    inputUsdPer1m: 0.4,
+    outputUsdPer1m: 1.6,
+    cachedReadUsdPer1m: 0.04,
+    cachedWriteUsdPer1m: 0.5,
+  },
+  'qwen3.6-plus': {
+    model: 'Qwen3.6 Plus',
+    requestsPer5Hours: 3300,
+    requestsPerWeek: 8200,
+    requestsPerMonth: 16300,
+    inputUsdPer1m: 0.5,
+    outputUsdPer1m: 3,
+    cachedReadUsdPer1m: 0.05,
+    cachedWriteUsdPer1m: 0.625,
+  },
+  'deepseek-v4-pro': {
+    model: 'DeepSeek V4 Pro',
+    requestsPer5Hours: 3450,
+    requestsPerWeek: 8550,
+    requestsPerMonth: 17150,
+    inputUsdPer1m: 1.74,
+    outputUsdPer1m: 3.48,
+    cachedReadUsdPer1m: 0.0145,
+  },
+  'deepseek-v4-flash': {
+    model: 'DeepSeek V4 Flash',
+    requestsPer5Hours: 31650,
+    requestsPerWeek: 79050,
+    requestsPerMonth: 158150,
+    inputUsdPer1m: 0.14,
+    outputUsdPer1m: 0.28,
+    cachedReadUsdPer1m: 0.0028,
+  },
+};
+
+function normalizeOpenCodeGoModelId(modelId: string): string {
+  return modelId
+    .trim()
+    .replace(/^opencode-go\//, '')
+    .replace(/^opencode-go:/, '')
+    .toLowerCase();
+}
+
+export function opencodeGoUsageForModel(modelId: string): OpenCodeGoUsageEstimate | null {
+  return OPENCODE_GO_USAGE_ESTIMATES[normalizeOpenCodeGoModelId(modelId)] ?? null;
+}
 
 // NOTE: Claude Code CLI is intentionally NOT a builtin chip. It is a
 // CLI-backed peer provider surfaced via a dedicated "Sign in with Claude

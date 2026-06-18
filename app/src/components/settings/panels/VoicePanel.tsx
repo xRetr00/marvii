@@ -63,12 +63,14 @@ const BUILTIN_VOICE_PROVIDER_META: Record<
   },
 };
 
-/** Local provider (Whisper/Piper) chip tone — no API key required. */
-const LOCAL_VOICE_PROVIDER_TONE: Record<'whisper' | 'piper', string> = {
+/** Local provider chip tone — no API key required. */
+const LOCAL_VOICE_PROVIDER_TONE: Record<'whisper' | 'piper' | 'pockettts', string> = {
   whisper:
     'bg-amber-50 text-amber-700 ring-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:ring-amber-700',
   piper:
     'bg-teal-50 text-teal-700 ring-teal-200 dark:bg-teal-900/30 dark:text-teal-300 dark:ring-teal-700',
+  pockettts:
+    'bg-sky-50 text-sky-700 ring-sky-200 dark:bg-sky-900/30 dark:text-sky-300 dark:ring-sky-700',
 };
 
 // Curated Piper voice presets — a handful of well-known English voices
@@ -237,7 +239,11 @@ const VoicePanel = ({ embedded = false }: VoicePanelProps = {}) => {
             setSttProvider(prev => prev || seeded);
           }
           if (voiceResponse.tts_provider) {
-            const seeded = voiceResponse.tts_provider === 'piper' ? 'piper' : 'cloud';
+            const seeded = ['piper', 'pockettts', 'pocket-tts'].includes(voiceResponse.tts_provider)
+              ? voiceResponse.tts_provider === 'pocket-tts'
+                ? 'pockettts'
+                : voiceResponse.tts_provider
+              : 'cloud';
             setTtsProvider(prev => prev || seeded);
           }
         });
@@ -574,6 +580,31 @@ const VoicePanel = ({ embedded = false }: VoicePanelProps = {}) => {
                           setPendingKeyValue('');
                         }
                       }}
+                      className={`relative inline-flex h-4 w-7 shrink-0 items-center rounded-full transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${enabled ? 'bg-primary-500' : 'bg-neutral-300 dark:bg-neutral-600'}`}>
+                      <span
+                        aria-hidden
+                        className={`inline-block h-3 w-3 transform rounded-full bg-white shadow transition-transform ${enabled ? 'translate-x-3.5' : 'translate-x-0.5'}`}
+                      />
+                    </button>
+                  </div>
+                );
+              })()}
+
+              {/* PocketTTS — local TTS via `pocket-tts` CLI. */}
+              {(() => {
+                const tone = LOCAL_VOICE_PROVIDER_TONE.pockettts;
+                const enabled = ttsProvider === 'pockettts';
+                return (
+                  <div
+                    className={`inline-flex items-center gap-2 rounded-full px-2.5 py-1 text-xs font-medium ring-1 transition-colors ${tone}`}>
+                    <span>PocketTTS (Local)</span>
+                    <button
+                      type="button"
+                      role="switch"
+                      aria-checked={enabled}
+                      data-testid="voice-provider-chip-pockettts"
+                      aria-label={`${enabled ? t('voice.providers.chip.disableProvider') : t('voice.providers.chip.enableProvider')} PocketTTS`}
+                      onClick={() => onTtsProviderChange(enabled ? '' : 'pockettts')}
                       className={`relative inline-flex h-4 w-7 shrink-0 items-center rounded-full transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${enabled ? 'bg-primary-500' : 'bg-neutral-300 dark:bg-neutral-600'}`}>
                       <span
                         aria-hidden
@@ -1038,6 +1069,7 @@ const VoicePanel = ({ embedded = false }: VoicePanelProps = {}) => {
                         (voiceSettings?.voiceProviders ?? []).some(p => p.slug === 'piper')) && (
                         <option value="piper">{t('voice.providers.localPiper')}</option>
                       )}
+                      <option value="pockettts">PocketTTS (Local)</option>
                       {/* External providers that support TTS */}
                       {ttsExternalProviders.map(p => (
                         <option key={p.slug} value={p.slug}>
@@ -1150,6 +1182,31 @@ const VoicePanel = ({ embedded = false }: VoicePanelProps = {}) => {
                     </label>
                   )}
 
+                  {ttsProvider === 'pockettts' && (
+                    <label className="block space-y-1">
+                      <span className="text-xs font-medium text-neutral-500 dark:text-neutral-300">
+                        PocketTTS Voice
+                      </span>
+                      <SettingsTextField
+                        aria-label="PocketTTS voice"
+                        data-testid="pockettts-voice-input"
+                        value={ttsVoice}
+                        placeholder="default"
+                        disabled={isSavingProviders}
+                        onChange={e => setTtsVoice(e.target.value)}
+                        onBlur={() => {
+                          if (ttsVoice && ttsVoice !== voiceStatus?.tts_voice_id) {
+                            void persistProviders({ tts_voice: ttsVoice });
+                          }
+                        }}
+                        className="mt-1 w-full"
+                      />
+                      <p className="text-[11px] text-neutral-500 dark:text-neutral-400 mt-0.5">
+                        Requires `pocket-tts` on PATH or POCKETTTS_BIN.
+                      </p>
+                    </label>
+                  )}
+
                   {/* ElevenLabs voice picker — shown when ElevenLabs is selected for TTS */}
                   {ttsProvider === 'elevenlabs' && (
                     <label className="block space-y-1">
@@ -1219,7 +1276,7 @@ const VoicePanel = ({ embedded = false }: VoicePanelProps = {}) => {
 
         {/* Mascot voice picker now lives in Mascot settings. Link
             kept here so users hunting in Voice settings can find it. */}
-        {ttsProvider !== 'piper' && (
+        {ttsProvider !== 'piper' && ttsProvider !== 'pockettts' && (
           <section data-testid="mascot-voice-link">
             <SettingsSection>
               <SettingsRow

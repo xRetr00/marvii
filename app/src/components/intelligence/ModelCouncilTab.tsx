@@ -112,7 +112,7 @@ async function loadConnectedModelProviders(): Promise<ConnectedModelProvider[]> 
     loadAISettings(),
     loadLocalProviderSnapshot().catch(() => null),
   ]);
-  const providers: ConnectedModelProvider[] = [{ slug: 'openhuman', label: 'Managed' }];
+  const providers: ConnectedModelProvider[] = [];
   const seen = new Set(providers.map(provider => provider.slug));
 
   for (const provider of settings.cloudProviders) {
@@ -360,7 +360,7 @@ const ModelPickerDialog = ({
               className="rounded-lg border border-stone-200 bg-white px-3 py-2 text-sm text-stone-800 focus:outline-none focus:ring-2 focus:ring-primary-400 disabled:cursor-not-allowed disabled:opacity-50 dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-100">
               {providers.map(item => (
                 <option key={item.slug} value={item.slug}>
-                  {`${item.slug === 'openhuman' ? t('settings.ai.routing.managed') : item.label} (${item.slug})`}
+                  {`${item.label} (${item.slug})`}
                 </option>
               ))}
             </select>

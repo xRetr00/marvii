@@ -577,34 +577,10 @@ async fn fetch_connected_integrations_uncached(
                 "[composio-direct] fetch_connected_integrations: using direct tenant's active set as allowlist (no central allowlist in direct mode)"
             );
 
-            // Best-effort: pull tool schemas via the backend client
-            // (definitional source). Failure is non-fatal — we fall
-            // back to empty tools and let lazy resolution handle it.
-            let tools = match super::client::build_composio_client(config) {
-                Some(backend_client) => {
-                    match backend_client.list_tools(Some(&allowlist), None).await {
-                        Ok(resp) => {
-                            tracing::debug!(
-                            count = resp.tools.len(),
-                            "[composio-direct] fetch_connected_integrations: pulled tool schemas from backend (tenant-agnostic definitional source)"
-                        );
-                            resp.tools
-                        }
-                        Err(e) => {
-                            tracing::info!(
-                            "[composio-direct] fetch_connected_integrations: backend list_tools failed (will use lazy fallback at delegation time): {e:#}"
-                        );
-                            Vec::new()
-                        }
-                    }
-                }
-                None => {
-                    tracing::info!(
-                        "[composio-direct] fetch_connected_integrations: no backend session for schema fetch; lazy fallback at delegation time"
-                    );
-                    Vec::new()
-                }
-            };
+            tracing::debug!(
+                "[composio-direct] fetch_connected_integrations: skipping backend schema fetch; lazy resolver will use direct tenant"
+            );
+            let tools = Vec::new();
             (allowlist, connections, tools)
         }
     };

@@ -2,6 +2,8 @@
 
 use async_trait::async_trait;
 use serde::{Deserialize, Serialize};
+#[cfg(test)]
+use std::any::Any;
 
 use super::super::reply_speech::ReplySpeechResult;
 use crate::openhuman::config::Config;
@@ -30,6 +32,9 @@ pub struct SttResult {
 /// the caller a boxed trait object.
 #[async_trait]
 pub trait SttProvider: Send + Sync {
+    #[cfg(test)]
+    fn as_any(&self) -> &dyn Any;
+
     /// Stable identifier used in logs and config (`"cloud"`, `"whisper"`).
     fn name(&self) -> &'static str;
 
@@ -53,6 +58,9 @@ pub trait SttProvider: Send + Sync {
 /// derives a flat viseme timeline downstream.
 #[async_trait]
 pub trait TtsProvider: Send + Sync {
+    #[cfg(test)]
+    fn as_any(&self) -> &dyn Any;
+
     fn name(&self) -> &'static str;
 
     /// Synthesize speech for `text`. Returns the same envelope shape as

@@ -67,8 +67,10 @@ use base64::{engine::general_purpose::STANDARD as BASE64, Engine};
 use log::debug;
 
 use crate::openhuman::config::Config;
+use crate::openhuman::inference::model_ids;
 use crate::openhuman::inference::paths::{
-    resolve_piper_binary_with_config, resolve_tts_voice_path,
+    resolve_piper_binary_with_config, resolve_pockettts_binary_with_config,
+    resolve_tts_voice_path_by_id,
 };
 use crate::rpc::RpcOutcome;
 
@@ -123,14 +125,16 @@ pub async fn synthesize_piper(
     })?;
     debug!("{LOG_PREFIX} resolved piper binary={}", piper_bin.display());
 
-    let voice_path = resolve_tts_voice_path(config).map_err(|e| format!("{LOG_PREFIX} {e}"))?;
+    let configured_voice = model_ids::effective_tts_voice_id(config);
     let voice_id = opts
         .voice
         .as_deref()
         .map(str::trim)
         .filter(|s| !s.is_empty())
-        .unwrap_or(DEFAULT_PIPER_VOICE)
+        .unwrap_or(&configured_voice)
         .to_string();
+    let voice_path =
+        resolve_tts_voice_path_by_id(&voice_id, config).map_err(|e| format!("{LOG_PREFIX} {e}"))?;
     debug!("{LOG_PREFIX} voice={voice_id} model_path={voice_path}");
 
     let out_dir = std::env::temp_dir().join("openhuman_voice_output");
@@ -228,6 +232,98 @@ pub async fn synthesize_piper(
             alignment: None,
         },
         "local piper TTS completed",
+    ))
+}
+
+pub async fn synthesize_pockettts(
+    config: &Config,
+    text: &str,
+    opts: &PiperOptions,
+) -> Result<RpcOutcome<ReplySpeechResult>, String> {
+    let trimmed = text.trim();
+    if trimmed.is_empty() {
+        return Err("text is required".to_string());
+    }
+
+    let pockettts_bin = resolve_pockettts_binary_with_config(config).ok_or_else(|| {
+        format!(
+            "{LOG_PREFIX} pocket-tts binary not found. Install it with `pip install pocket-tts`, \
+             or set POCKETTTS_BIN to the absolute path of pocket-tts."
+        )
+    })?;
+
+    let configured_voice = model_ids::effective_tts_voice_id(config);
+    let voice_id = opts
+        .voice
+        .as_deref()
+        .map(str::trim)
+        .filter(|s| !s.is_empty())
+        .unwrap_or(&configured_voice)
+        .to_string();
+
+    let out_dir = std::env::temp_dir().join("openhuman_voice_output");
+    tokio::fs::create_dir_all(&out_dir)
+        .await
+        .map_err(|e| format!("{LOG_PREFIX} failed to create voice output directory: {e}"))?;
+    let out_path = out_dir.join(format!(
+        "pockettts-{}-{}.wav",
+        chrono::Utc::now().timestamp_millis(),
+        uuid::Uuid::new_v4()
+    ));
+
+    let spawn_started = std::time::Instant::now();
+    let mut cmd = tokio::process::Command::new(&pockettts_bin);
+    cmd.args([
+        "generate",
+        "--text",
+        trimmed,
+        "--voice",
+        voice_id.as_str(),
+        "--output-path",
+        &out_path.to_string_lossy(),
+        "--device",
+        "cpu",
+        "--quiet",
+    ])
+    .stdout(std::process::Stdio::null())
+    .stderr(std::process::Stdio::piped());
+    #[cfg(windows)]
+    {
+        use std::os::windows::process::CommandExt;
+        cmd.creation_flags(0x08000000);
+    }
+
+    let output = cmd
+        .output()
+        .await
+        .map_err(|e| format!("{LOG_PREFIX} failed to launch pocket-tts: {e}"))?;
+    debug!(
+        "{LOG_PREFIX} pocket-tts exited code={:?} elapsed_ms={} stderr_bytes={}",
+        output.status.code(),
+        spawn_started.elapsed().as_millis(),
+        output.stderr.len()
+    );
+    if !output.status.success() {
+        let _ = tokio::fs::remove_file(&out_path).await;
+        let detail = String::from_utf8_lossy(&output.stderr);
+        return Err(format!(
+            "{LOG_PREFIX} pocket-tts failed (exit={:?}): {}",
+            output.status.code(),
+            detail.trim()
+        ));
+    }
+
+    let audio_bytes = read_and_clean_wav(&out_path).await?;
+    let audio_base64 = BASE64.encode(&audio_bytes);
+    let visemes = synthetic_viseme_timeline(trimmed);
+    Ok(RpcOutcome::single_log(
+        ReplySpeechResult {
+            audio_base64,
+            audio_mime: "audio/wav".to_string(),
+            visemes,
+            alignment: None,
+        },
+        "voice-tts: pockettts synthesis completed",
     ))
 }
 

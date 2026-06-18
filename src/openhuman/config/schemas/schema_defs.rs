@@ -702,8 +702,24 @@ pub fn schemas(function: &str) -> ControllerSchema {
                 ),
                 optional_string(
                     "wake_word",
-                    "Always-on wake word; utterances must contain it (default 'Hey Tiny').",
+                    "Always-on wake word; utterances must contain it (default 'Hey Marvi').",
                 ),
+                FieldSchema {
+                    name: "wake_word_threshold",
+                    ty: TypeSchema::Option(Box::new(TypeSchema::F64)),
+                    comment: "Sherpa wake-word threshold, clamped to 0.0..1.0.",
+                    required: false,
+                },
+                optional_bool(
+                    "wake_word_debug",
+                    "Log detected and rejected wake-word candidates with tuning metrics.",
+                ),
+                FieldSchema {
+                    name: "wake_word_variants",
+                    ty: TypeSchema::Option(Box::new(TypeSchema::Json)),
+                    comment: "Wake-word variants used for tuning and fallback transcript gating.",
+                    required: false,
+                },
             ],
             outputs: vec![json_output("snapshot", "Updated config snapshot.")],
         },

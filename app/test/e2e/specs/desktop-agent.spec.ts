@@ -67,8 +67,8 @@ describe('Desktop Agent settings panel', () => {
     expect(await textExists('Microphone')).toBe(true);
 
     // Seamless "act without asking" toggle + the relocated always-on listening
-    // section with its "Hey Tiny" wake-word hint.
+    // section with its "Hey Marvi" wake-word hint.
     expect(await textExists('Let the agent act without asking')).toBe(true);
-    expect(await textExists('Hey Tiny')).toBe(true);
+    expect(await textExists('Hey Marvi')).toBe(true);
   });
 });

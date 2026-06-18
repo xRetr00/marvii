@@ -156,7 +156,6 @@ fn build_registered_controllers() -> Vec<RegisteredController> {
     // Token usage and billing cost tracking
     controllers.extend(crate::openhuman::cost::all_cost_registered_controllers());
     // x402 machine-payable API payment protocol
-    controllers.extend(crate::openhuman::x402::all_x402_registered_controllers());
     // Inline autocomplete settings
     controllers.extend(crate::openhuman::autocomplete::all_autocomplete_registered_controllers());
     // External messaging channels (Web, Telegram, etc.)
@@ -235,22 +234,12 @@ fn build_registered_controllers() -> Vec<RegisteredController> {
     // Link shortener for long tracking URLs — saves LLM tokens
     controllers
         .extend(crate::openhuman::redirect_links::all_redirect_links_registered_controllers());
-    // Referral and growth tracking
-    controllers.extend(crate::openhuman::referral::all_referral_registered_controllers());
-    // Billing and subscription management
-    controllers.extend(crate::openhuman::billing::all_billing_registered_controllers());
-    // Team and role management
-    controllers.extend(crate::openhuman::team::all_team_registered_controllers());
     // E2E test support — `openhuman.test_reset` wipes sidecar state in-place.
     // Gated behind the `e2e-test-support` cargo feature so shipped binaries
     // never even register the destructive wipe RPC. Flipped on by the E2E
     // build script (app/scripts/e2e-build.sh).
     #[cfg(feature = "e2e-test-support")]
     controllers.extend(crate::openhuman::test_support::all_test_support_registered_controllers());
-    // Local wallet metadata and onboarding status
-    controllers.extend(crate::openhuman::wallet::all_wallet_registered_controllers());
-    // High-level web3 surface (swaps / bridges / dapp calls) over the wallet
-    controllers.extend(crate::openhuman::web3::all_web3_registered_controllers());
     // Local assistive surfaces over third-party provider apps
     controllers.extend(
         crate::openhuman::provider_surfaces::all_provider_surfaces_registered_controllers(),
@@ -357,7 +346,6 @@ fn build_declared_controller_schemas() -> Vec<ControllerSchema> {
     schemas.extend(crate::openhuman::heartbeat::all_heartbeat_controller_schemas());
     schemas.extend(crate::openhuman::http_host::all_http_host_controller_schemas());
     schemas.extend(crate::openhuman::cost::all_cost_controller_schemas());
-    schemas.extend(crate::openhuman::x402::all_x402_controller_schemas());
     schemas.extend(crate::openhuman::autocomplete::all_autocomplete_controller_schemas());
     schemas
         .extend(crate::openhuman::channels::providers::web::all_web_channel_controller_schemas());
@@ -398,13 +386,8 @@ fn build_declared_controller_schemas() -> Vec<ControllerSchema> {
     schemas.extend(crate::openhuman::memory_sources::all_memory_sources_controller_schemas());
     schemas.extend(crate::openhuman::memory_diff::all_memory_diff_controller_schemas());
     schemas.extend(crate::openhuman::redirect_links::all_redirect_links_controller_schemas());
-    schemas.extend(crate::openhuman::referral::all_referral_controller_schemas());
-    schemas.extend(crate::openhuman::billing::all_billing_controller_schemas());
-    schemas.extend(crate::openhuman::team::all_team_controller_schemas());
     #[cfg(feature = "e2e-test-support")]
     schemas.extend(crate::openhuman::test_support::all_test_support_controller_schemas());
-    schemas.extend(crate::openhuman::wallet::all_wallet_controller_schemas());
-    schemas.extend(crate::openhuman::web3::all_web3_controller_schemas());
     schemas.extend(crate::openhuman::provider_surfaces::all_provider_surfaces_controller_schemas());
     schemas.extend(crate::openhuman::text_input::all_text_input_controller_schemas());
     schemas.extend(crate::openhuman::voice::all_voice_controller_schemas());
@@ -525,7 +508,6 @@ pub fn namespace_description(namespace: &str) -> Option<&'static str> {
         "redirect_links" => Some(
             "Shorten long tracking URLs to `openhuman://link/<id>` placeholders (SQLite-backed) to save tokens in prompts, with round-trip rewrite helpers.",
         ),
-        "referral" => Some("Referral codes, stats, and apply flows via the hosted backend API."),
         "run_ledger" => Some(
             "Durable agent and workflow run state, child lineage, events, telemetry, and checkpoint references.",
         ),
@@ -538,18 +520,12 @@ pub fn namespace_description(namespace: &str) -> Option<&'static str> {
         "agent_team" => Some(
             "Durable agent-team coordination: teams, members, dependency-aware task claiming, and teammate messaging.",
         ),
-        "billing" => Some("Subscription plan, payment links, and credit top-up via the backend."),
-        "team" => Some("Team member management, invites, and role changes via the backend."),
         "tool_registry" => Some(
             "Read-only discovery for MCP stdio tools and controller-backed tools, including routes, schemas, version, allowed agents, and health.",
         ),
         "test" => Some(
             "E2E test support — wipe sidecar state in-place between specs.",
         ),
-        "wallet" => Some("Local wallet onboarding status and derived multi-chain account metadata."),
-        "web3_swap" => Some("Single-chain crypto swaps via deBridge, built on the local wallet."),
-        "web3_bridge" => Some("Cross-chain crypto bridges via deBridge DLN, built on the local wallet."),
-        "web3_dapp" => Some("Generic EVM dapp contract calls signed by the local wallet."),
         "provider_surfaces" => Some(
             "Local-first assistive surfaces for provider events, respond queues, and drafts.",
         ),

@@ -373,7 +373,7 @@ async fn transcribe_and_deliver(config: &Config, samples_16k: Vec<f32>) {
     // same factory dispatch the `voice.stt_dispatch` RPC uses — so always-on
     // honors the user's choice instead of forcing local whisper.
     let provider_name = crate::openhuman::voice::effective_stt_provider(config);
-    let model = crate::openhuman::voice::DEFAULT_WHISPER_MODEL.to_string();
+    let model = crate::openhuman::inference::model_ids::effective_stt_model_id(config);
     // Which STT backend is doing the work matters when diagnosing slow/failed
     // transcription across machines (local whisper download state vs cloud).
     log::info!(
@@ -416,7 +416,17 @@ async fn transcribe_and_deliver(config: &Config, samples_16k: Vec<f32>) {
             }
             // Wake-word gate: only act on utterances addressed to the agent
             // ("Hey Tiny, …"). Strip the wake phrase and deliver the command.
-            match extract_command(&text, &config.voice_server.wake_word) {
+            let wake_attempt = extract_command_for_config(&text, &config.voice_server);
+            if config.voice_server.wake_word_debug {
+                log::info!(
+                    "{LOG_PREFIX} wake_debug detected={} confidence={:.3} threshold={:.3} phrase={:?} transcript={text:?}",
+                    wake_attempt.command.is_some(),
+                    wake_attempt.confidence,
+                    config.voice_server.wake_word_threshold,
+                    wake_attempt.phrase
+                );
+            }
+            match wake_attempt.command {
                 Some(cmd) => {
                     // Redacted: never log the raw spoken command (always-on mic PII).
                     log::info!("{LOG_PREFIX} wake word matched → cmd_len={}", cmd.len());
@@ -424,12 +434,7 @@ async fn transcribe_and_deliver(config: &Config, samples_16k: Vec<f32>) {
                     deliver_command(config, cmd).await;
                 }
                 None => {
-                    // Visible at info so the user can see WHAT was heard when the
-                    // wake word didn't match (diagnoses "Hey Tiny not responding").
-                    log::info!(
-                        "{LOG_PREFIX} no wake word ({:?}) in transcript={text:?}; ignored",
-                        config.voice_server.wake_word
-                    );
+                    log::debug!("{LOG_PREFIX} no wake word match; ignored utterance");
                 }
             }
         }
@@ -613,6 +618,69 @@ pub(crate) fn extract_command(transcript: &str, wake_word: &str) -> Option<Strin
         }
     }
     None
+}
+
+struct WakeAttempt {
+    command: Option<String>,
+    phrase: Option<String>,
+    confidence: f32,
+}
+
+fn extract_command_for_config(
+    transcript: &str,
+    config: &crate::openhuman::config::VoiceServerConfig,
+) -> WakeAttempt {
+    let phrases = std::iter::once(config.wake_word.as_str())
+        .chain(config.wake_word_variants.iter().map(String::as_str))
+        .map(str::trim)
+        .filter(|s| !s.is_empty());
+
+    let mut best = WakeAttempt {
+        command: None,
+        phrase: None,
+        confidence: 0.0,
+    };
+    for phrase in phrases {
+        let confidence = wake_phrase_confidence(transcript, phrase);
+        if confidence > best.confidence {
+            best.confidence = confidence;
+            best.phrase = Some(phrase.to_string());
+        }
+        if confidence >= config.wake_word_threshold {
+            if let Some(command) = extract_command(transcript, phrase) {
+                return WakeAttempt {
+                    command: Some(command),
+                    phrase: Some(phrase.to_string()),
+                    confidence,
+                };
+            }
+        }
+    }
+    best
+}
+
+fn wake_phrase_confidence(transcript: &str, wake_word: &str) -> f32 {
+    let tokens = |s: &str| -> Vec<String> {
+        s.to_lowercase()
+            .chars()
+            .map(|c| if c.is_alphanumeric() { c } else { ' ' })
+            .collect::<String>()
+            .split_whitespace()
+            .map(String::from)
+            .collect()
+    };
+    let wake = tokens(wake_word);
+    let t = tokens(transcript);
+    let Some(anchor) = wake.iter().max_by_key(|w| w.len()) else {
+        return if t.is_empty() { 0.0 } else { 1.0 };
+    };
+    let max_window = t.len().min(3);
+    (0..max_window)
+        .map(|i| {
+            let max_len = anchor.chars().count().max(t[i].chars().count()).max(1);
+            1.0 - (levenshtein(&t[i], anchor) as f32 / max_len as f32)
+        })
+        .fold(0.0, f32::max)
 }
 
 /// Classic Levenshtein edit distance (small inputs — wake-word tokens).

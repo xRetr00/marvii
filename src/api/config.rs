@@ -3,7 +3,7 @@
 //! This module is the **single source of truth** for every URL the app uses to
 //! reach either:
 //!
-//! * the **hosted backend** (auth, billing, integrations, voice, sockets, …), or
+//! * an explicitly configured self-hosted backend, or
 //! * the **LLM inference endpoint** (OpenAI-compatible chat completions).
 //!
 //! ## Why two separate URL families?
@@ -37,18 +37,15 @@
 //!    independently so an empty primary does not shadow a valid secondary).
 //! 3. Same keys baked in at compile time via `option_env!` (makes a
 //!    distributed binary resolve to the correct environment without a shell).
-//! 4. Environment-aware default: `staging` env → [`DEFAULT_STAGING_API_BASE_URL`],
-//!    otherwise [`DEFAULT_API_BASE_URL`].
+//! 4. No implicit network fallback. Marvi desktop is local-only by default.
 
 // ─── Public constants ────────────────────────────────────────────────────────
 
-/// Production hosted-API root. Used as the final fallback for non-staging
-/// builds when no override is configured.
-pub const DEFAULT_API_BASE_URL: &str = "https://api.tinyhumans.ai";
+/// Marvi has no implicit hosted API. Network backends must be configured.
+pub const DEFAULT_API_BASE_URL: &str = "";
 
-/// Staging hosted-API root. Activated when `OPENHUMAN_APP_ENV=staging` (or
-/// the Vite equivalent) is set at runtime or baked in at compile time.
-pub const DEFAULT_STAGING_API_BASE_URL: &str = "https://staging-api.tinyhumans.ai";
+/// Staging also has no implicit hosted API in the Marvi distribution.
+pub const DEFAULT_STAGING_API_BASE_URL: &str = "";
 
 /// Runtime env key used by the Tauri/core side to select the app environment.
 pub const APP_ENV_VAR: &str = "OPENHUMAN_APP_ENV";
@@ -109,7 +106,11 @@ pub fn effective_inference_url(
     // Explicit inference override always wins — no normalization applied
     // because the user may intentionally include a full path.
     if let Some(u) = non_empty_str(inference_url_override) {
-        return u.to_string();
+        return if is_legacy_hosted_backend(u) {
+            String::new()
+        } else {
+            u.to_string()
+        };
     }
 
     api_url(
@@ -125,7 +126,11 @@ pub fn effective_inference_url(
 /// The two functions are intentionally separate — see the module-level doc.
 pub fn effective_api_url(api_url: &Option<String>) -> String {
     if let Some(u) = non_empty_str(api_url) {
-        return normalize_api_base_url(u);
+        return if is_legacy_hosted_backend(u) {
+            String::new()
+        } else {
+            normalize_api_base_url(u)
+        };
     }
 
     api_base_from_env()
@@ -153,20 +158,22 @@ pub fn effective_api_url(api_url: &Option<String>) -> String {
 /// used as the integrations base.
 pub fn effective_backend_api_url(api_url: &Option<String>) -> String {
     if let Some(u) = non_empty_str(api_url) {
-        let is_local_ai = looks_like_local_ai_endpoint(u);
-        let is_openhuman = looks_like_openhuman_backend_endpoint(u);
+        if is_legacy_hosted_backend(u) {
+            tracing::warn!(
+                api_url = %redact_url_for_log(u),
+                "[api/config] ignored legacy TinyHumans backend URL in local-only Marvi"
+            );
+            return String::new();
+        }
 
+        let is_local_ai = looks_like_local_ai_endpoint(u);
         tracing::debug!(
             api_url = %redact_url_for_log(u),
             is_local_ai,
-            is_openhuman,
             "[api/config] evaluating backend api_url override"
         );
 
-        // Let the override through only when it is NOT a local-AI endpoint,
-        // OR when it is one of our own hosted backends (user deliberately set
-        // `api_url` to `https://api.tinyhumans.ai/openai/v1/chat/completions`).
-        if !is_local_ai || is_openhuman {
+        if !is_local_ai {
             let normalized = normalize_backend_api_base_url(u);
             tracing::trace!(
                 api_url        = %redact_url_for_log(u),
@@ -187,6 +194,7 @@ pub fn effective_backend_api_url(api_url: &Option<String>) -> String {
     // may have slipped through a misconfigured `BACKEND_URL` (Sentry
     // `OPENHUMAN-TAURI-H6 / -HN`, issue #2075).
     api_base_from_env()
+        .filter(|u| !is_legacy_hosted_backend(u))
         .map(|u| normalize_backend_api_base_url(&u))
         .unwrap_or_else(|| default_api_base_url_for_env(app_env_from_env().as_deref()).to_string())
 }
@@ -422,7 +430,7 @@ pub fn api_base_from_env() -> Option<String> {
     for key in ["BACKEND_URL", "VITE_BACKEND_URL"] {
         if let Ok(v) = std::env::var(key) {
             let url = normalize_api_base_url(&v);
-            if !url.is_empty() {
+            if !url.is_empty() && !is_legacy_hosted_backend(&url) {
                 return Some(url);
             }
         }
@@ -433,7 +441,7 @@ pub fn api_base_from_env() -> Option<String> {
     //    without any shell vars in the user's session.
     for v in compile_time_api_base_env_values().into_iter().flatten() {
         let url = normalize_api_base_url(v);
-        if !url.is_empty() {
+        if !url.is_empty() && !is_legacy_hosted_backend(&url) {
             return Some(url);
         }
     }
@@ -559,6 +567,16 @@ fn warn_backend_url_fallback_once(local_url: &str) {
 #[inline]
 fn non_empty_str(s: &Option<String>) -> Option<&str> {
     s.as_deref().map(str::trim).filter(|s| !s.is_empty())
+}
+
+fn is_legacy_hosted_backend(raw: &str) -> bool {
+    let Ok(parsed) = url::Url::parse(raw.trim()) else {
+        return false;
+    };
+    matches!(
+        parsed.host_str().map(str::to_ascii_lowercase).as_deref(),
+        Some("api.tinyhumans.ai") | Some("staging-api.tinyhumans.ai")
+    )
 }
 
 /// Returns `true` when the parsed URL's host is loopback, unspecified
@@ -829,6 +847,16 @@ mod tests {
     }
 
     #[test]
+    fn local_only_build_has_no_hosted_backend_default() {
+        assert_eq!(DEFAULT_API_BASE_URL, "");
+        assert_eq!(DEFAULT_STAGING_API_BASE_URL, "");
+
+        let _guard = env_lock();
+        let _env = EnvSnapshot::clear_backend_env();
+        assert_eq!(effective_backend_api_url(&None), "");
+    }
+
+    #[test]
     fn app_env_from_env_reads_runtime_var() {
         let _guard = env_lock();
         let prev = std::env::var(APP_ENV_VAR).ok();
@@ -864,13 +892,13 @@ mod tests {
     fn api_base_from_env_reads_runtime_var() {
         let _guard = env_lock();
         let prev = std::env::var("BACKEND_URL").ok();
-        std::env::set_var("BACKEND_URL", "https://staging-api.tinyhumans.ai/");
+        std::env::set_var("BACKEND_URL", "https://backend.example/");
         let result = api_base_from_env();
         match prev {
             Some(v) => std::env::set_var("BACKEND_URL", v),
             None => std::env::remove_var("BACKEND_URL"),
         }
-        assert_eq!(result.as_deref(), Some("https://staging-api.tinyhumans.ai"));
+        assert_eq!(result.as_deref(), Some("https://backend.example"));
     }
 
     #[test]
@@ -879,7 +907,7 @@ mod tests {
         let prev_p = std::env::var("BACKEND_URL").ok();
         let prev_s = std::env::var("VITE_BACKEND_URL").ok();
         std::env::set_var("BACKEND_URL", "");
-        std::env::set_var("VITE_BACKEND_URL", "https://staging-api.tinyhumans.ai/");
+        std::env::set_var("VITE_BACKEND_URL", "https://backend.example/");
         let result = api_base_from_env();
         match prev_p {
             Some(v) => std::env::set_var("BACKEND_URL", v),
@@ -889,7 +917,7 @@ mod tests {
             Some(v) => std::env::set_var("VITE_BACKEND_URL", v),
             None => std::env::remove_var("VITE_BACKEND_URL"),
         }
-        assert_eq!(result.as_deref(), Some("https://staging-api.tinyhumans.ai"));
+        assert_eq!(result.as_deref(), Some("https://backend.example"));
     }
 
     // ── looks_like_local_ai_endpoint ─────────────────────────────────────────
@@ -1013,16 +1041,10 @@ mod tests {
         let fallback = fallback_backend_base_for_current_build();
 
         let cases: &[(&str, &str)] = &[
-            (
-                "https://api.tinyhumans.ai/openai/v1/chat/completions",
-                "https://api.tinyhumans.ai",
-            ),
+            ("https://api.tinyhumans.ai/openai/v1/chat/completions", ""),
             ("http://localhost:11434/v1/chat/completions", &fallback),
-            ("https://api.tinyhumans.ai", "https://api.tinyhumans.ai"),
-            (
-                "https://api.tinyhumans.ai/openai/v1/",
-                "https://api.tinyhumans.ai",
-            ),
+            ("https://api.tinyhumans.ai", ""),
+            ("https://api.tinyhumans.ai/openai/v1/", ""),
             ("https://openrouter.ai/api/v1/chat/completions", &fallback),
         ];
 
@@ -1051,21 +1073,21 @@ mod tests {
     fn backend_url_falls_back_to_env_when_override_is_local_ai() {
         let _guard = env_lock();
         let _env = EnvSnapshot::clear_backend_env();
-        std::env::set_var("BACKEND_URL", "https://staging-api.tinyhumans.ai/");
+        std::env::set_var("BACKEND_URL", "https://backend.example/");
 
         assert_eq!(
             effective_backend_api_url(&Some(
                 "http://127.0.0.1:8080/v1/chat/completions".to_string()
             )),
-            "https://staging-api.tinyhumans.ai"
+            "https://backend.example"
         );
     }
 
     #[test]
-    fn backend_url_keeps_real_backend_override() {
+    fn backend_url_keeps_custom_backend_override() {
         assert_eq!(
-            effective_backend_api_url(&Some("https://staging-api.tinyhumans.ai/".to_string())),
-            "https://staging-api.tinyhumans.ai"
+            effective_backend_api_url(&Some("https://backend.example/".to_string())),
+            "https://backend.example"
         );
     }
 
@@ -1077,8 +1099,7 @@ mod tests {
     }
 
     #[test]
-    fn backend_url_strips_inference_path_from_env() {
-        // Regression: OPENHUMAN-TAURI-H6 / -HN, issue #2075.
+    fn backend_url_rejects_legacy_hosted_backend_from_env() {
         let _guard = env_lock();
         let _env = EnvSnapshot::clear_backend_env();
         std::env::set_var(
@@ -1086,9 +1107,6 @@ mod tests {
             "https://api.tinyhumans.ai/openai/v1/chat/completions",
         );
 
-        assert_eq!(
-            effective_backend_api_url(&None),
-            "https://api.tinyhumans.ai"
-        );
+        assert_eq!(effective_backend_api_url(&None), "");
     }
 }

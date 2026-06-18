@@ -845,7 +845,7 @@ impl TelegramChannel {
             .await
             .map_err(anyhow::Error::msg)?;
         let provider_name = crate::openhuman::voice::effective_stt_provider(&config);
-        let model = crate::openhuman::voice::DEFAULT_WHISPER_MODEL.to_string();
+        let model = crate::openhuman::inference::model_ids::effective_stt_model_id(&config);
         let provider =
             crate::openhuman::voice::create_stt_provider(&provider_name, &model, &config)?;
         let mime_type = voice.mime_type.as_deref().unwrap_or("audio/ogg");

@@ -38,6 +38,14 @@ describe('parseVoiceProviderString', () => {
     });
   });
 
+  it('parses "pockettts" to local', () => {
+    expect(parseVoiceProviderString('pockettts')).toEqual({
+      kind: 'local',
+      engine: 'pockettts',
+      model: '',
+    });
+  });
+
   it('parses "whisper:large-v3-turbo" to local with model', () => {
     expect(parseVoiceProviderString('whisper:large-v3-turbo')).toEqual({
       kind: 'local',
@@ -51,6 +59,14 @@ describe('parseVoiceProviderString', () => {
       kind: 'local',
       engine: 'piper',
       model: 'en_US-lessac-medium',
+    });
+  });
+
+  it('parses "pockettts:jane" to local with voice', () => {
+    expect(parseVoiceProviderString('pockettts:jane')).toEqual({
+      kind: 'local',
+      engine: 'pockettts',
+      model: 'jane',
     });
   });
 
@@ -143,6 +159,12 @@ describe('serializeVoiceProviderRef', () => {
     ).toBe('piper:en_US-lessac-medium');
   });
 
+  it('serializes local pockettts with voice', () => {
+    expect(serializeVoiceProviderRef({ kind: 'local', engine: 'pockettts', model: 'jane' })).toBe(
+      'pockettts:jane'
+    );
+  });
+
   it('serializes external with model', () => {
     expect(
       serializeVoiceProviderRef({ kind: 'external', providerSlug: 'deepgram', model: 'nova-2' })
@@ -161,8 +183,10 @@ describe('parseVoiceProviderString / serializeVoiceProviderRef round-trip', () =
     ['cloud', { kind: 'cloud' }],
     ['whisper', { kind: 'local', engine: 'whisper', model: '' }],
     ['piper', { kind: 'local', engine: 'piper', model: '' }],
+    ['pockettts', { kind: 'local', engine: 'pockettts', model: '' }],
     ['whisper:large-v3-turbo', { kind: 'local', engine: 'whisper', model: 'large-v3-turbo' }],
     ['piper:en_US-lessac-medium', { kind: 'local', engine: 'piper', model: 'en_US-lessac-medium' }],
+    ['pockettts:jane', { kind: 'local', engine: 'pockettts', model: 'jane' }],
     ['deepgram:nova-2', { kind: 'external', providerSlug: 'deepgram', model: 'nova-2' }],
     ['openai:whisper-1', { kind: 'external', providerSlug: 'openai', model: 'whisper-1' }],
     ['openai:alloy', { kind: 'external', providerSlug: 'openai', model: 'alloy' }],

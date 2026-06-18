@@ -13,7 +13,13 @@ import {
 import PanelPage from '../../layout/PanelPage';
 import Button from '../../ui/Button';
 import SettingsBackButton from '../components/SettingsBackButton';
-import { SettingsNumberField, SettingsRow, SettingsSection, SettingsStatusLine } from '../controls';
+import {
+  SettingsNumberField,
+  SettingsRow,
+  SettingsSection,
+  SettingsStatusLine,
+  SettingsSwitch,
+} from '../controls';
 import { useSettingsNavigation } from '../hooks/useSettingsNavigation';
 
 const VoiceDebugPanel = () => {
@@ -105,6 +111,10 @@ const VoiceDebugPanel = () => {
         min_duration_secs: settings.min_duration_secs,
         silence_threshold: settings.silence_threshold,
         custom_dictionary: settings.custom_dictionary,
+        wake_word: settings.wake_word,
+        wake_word_threshold: settings.wake_word_threshold,
+        wake_word_debug: settings.wake_word_debug,
+        wake_word_variants: settings.wake_word_variants,
       });
       setNotice(t('voice.debug.settingsSaved'));
       await loadData(true);
@@ -223,6 +233,35 @@ const VoiceDebugPanel = () => {
                     max={1}
                     step={0.001}
                     aria-label={t('voice.debug.silenceThreshold')}
+                  />
+                }
+              />
+              <SettingsRow
+                label="Wake word debug"
+                description="Logs detected and rejected wake-word candidates for tuning."
+                control={
+                  <SettingsSwitch
+                    id="wake-word-debug-switch"
+                    checked={Boolean(settings.wake_word_debug)}
+                    onCheckedChange={next => updateSetting('wake_word_debug', next)}
+                    aria-label="Wake word debug"
+                  />
+                }
+              />
+              <SettingsRow
+                stacked
+                label="Wake word threshold"
+                description="Higher rejects more false wakes; lower catches more variants."
+                control={
+                  <SettingsNumberField
+                    id="wake-word-threshold-input"
+                    value={String(settings.wake_word_threshold ?? 0.5)}
+                    onChange={val => updateSetting('wake_word_threshold', Number(val) || 0)}
+                    onCommit={() => {}}
+                    min={0}
+                    max={1}
+                    step={0.01}
+                    aria-label="Wake word threshold"
                   />
                 }
               />

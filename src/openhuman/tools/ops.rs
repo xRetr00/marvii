@@ -231,14 +231,6 @@ pub fn all_tools_with_runtime(
         Box::new(CronUpdateTool::new(config.clone(), security.clone())),
         Box::new(CronRunTool::new(config.clone())),
         Box::new(CronRunsTool::new(config.clone())),
-        // Wallet tools — expose wallet operations to the agent tool-call pipeline
-        // so the crypto sub-agent can prepare transfers, check status, etc.
-        Box::new(WalletStatusTool::new()),
-        Box::new(WalletChainStatusTool::new()),
-        Box::new(WalletPrepareTransferTool::new()),
-        Box::new(WalletTxStatusTool::new()),
-        Box::new(WalletTxReceiptTool::new()),
-        Box::new(WalletLookupTxTool::new()),
         Box::new(MemoryStoreTool::new(memory.clone(), security.clone())),
         Box::new(MemoryRecallTool::new(memory.clone())),
         Box::new(MemoryForgetTool::new(memory.clone(), security.clone())),
@@ -441,41 +433,6 @@ pub fn all_tools_with_runtime(
         Box::new(ConfigRuntimeFlagsTool),
         Box::new(ConfigResolveApiUrlTool),
         Box::new(ConfigDataPathsTool),
-        // Account & money. Reads default-ON; billing money-movers (billing_writes)
-        // and team admin ops (team_admin) ship default-OFF via `tools::user_filter`.
-        // credentials exposes only non-secret reads.
-        Box::new(ReferralStatsTool::new(config.clone())),
-        Box::new(ReferralClaimTool::new(config.clone())),
-        Box::new(BillingPlanTool::new(config.clone())),
-        Box::new(BillingBalanceTool::new(config.clone())),
-        Box::new(BillingTransactionsTool::new(config.clone())),
-        Box::new(BillingAutoRechargeTool::new(config.clone())),
-        Box::new(BillingCardsTool::new(config.clone())),
-        Box::new(BillingCouponsTool::new(config.clone())),
-        Box::new(BillingPortalTool::new(config.clone())),
-        Box::new(BillingPurchasePlanTool::new(config.clone())),
-        Box::new(BillingTopUpTool::new(config.clone())),
-        Box::new(BillingCoinbaseChargeTool::new(config.clone())),
-        Box::new(BillingSetupIntentTool::new(config.clone())),
-        Box::new(BillingUpdateCardTool::new(config.clone())),
-        Box::new(BillingDeleteCardTool::new(config.clone())),
-        Box::new(BillingRedeemCouponTool::new(config.clone())),
-        Box::new(BillingUpdateAutoRechargeTool::new(config.clone())),
-        Box::new(TeamListTool::new(config.clone())),
-        Box::new(TeamUsageTool::new(config.clone())),
-        Box::new(TeamGetTool::new(config.clone())),
-        Box::new(TeamListMembersTool::new(config.clone())),
-        Box::new(TeamListInvitesTool::new(config.clone())),
-        Box::new(TeamCreateTool::new(config.clone())),
-        Box::new(TeamUpdateTool::new(config.clone())),
-        Box::new(TeamDeleteTool::new(config.clone())),
-        Box::new(TeamSwitchTool::new(config.clone())),
-        Box::new(TeamJoinTool::new(config.clone())),
-        Box::new(TeamLeaveTool::new(config.clone())),
-        Box::new(TeamCreateInviteTool::new(config.clone())),
-        Box::new(TeamRevokeInviteTool::new(config.clone())),
-        Box::new(TeamRemoveMemberTool::new(config.clone())),
-        Box::new(TeamChangeMemberRoleTool::new(config.clone())),
         Box::new(CredentialListTool::new(config.clone())),
         Box::new(SessionStateTool::new(config.clone())),
         Box::new(SessionGetUserTool::new(config.clone())),
@@ -577,13 +534,6 @@ pub fn all_tools_with_runtime(
         http_config.timeout_secs,
     )));
 
-    // x402 — dedicated tool for making paid HTTP requests to x402-enabled
-    // APIs (Base USDC / Solana USDC). Handles the 402 challenge, EIP-3009
-    // or SPL payment signing, and ledger recording.
-    tools.push(Box::new(
-        crate::openhuman::x402::tools::X402RequestTool::new(),
-    ));
-
     // Coding-harness baseline `web_fetch` (issue #1205) — single-purpose
     // GET-and-read primitive that reuses the same allowed-domains gate
     // as `http_request`. Use this for docs/READMEs; reach for
@@ -606,30 +556,6 @@ pub fn all_tools_with_runtime(
         root_config.curl.max_download_bytes,
         root_config.curl.timeout_secs,
     )));
-
-    // gitbooks — answers questions about OpenHuman by calling the
-    // GitBook MCP server. Two tools mirroring the upstream MCP tools.
-    // Gitbooks is modelled as a legacy MCP server (`McpServerRegistry`), so it
-    // honours the same per-profile `mcp_allowlist`: a profile that scopes its
-    // MCP servers and omits "gitbooks" must not see this surface either.
-    let gitbooks_allowed = mcp_allowlist.is_none_or(|allowed| {
-        allowed
-            .iter()
-            .any(|name| name.eq_ignore_ascii_case("gitbooks"))
-    });
-    if root_config.gitbooks.enabled && gitbooks_allowed {
-        tools.push(Box::new(GitbooksSearchTool::new(
-            root_config.gitbooks.endpoint.clone(),
-            root_config.gitbooks.timeout_secs,
-        )));
-        tools.push(Box::new(GitbooksGetPageTool::new(
-            root_config.gitbooks.endpoint.clone(),
-            root_config.gitbooks.timeout_secs,
-        )));
-        tracing::debug!("[gitbooks] registered gitbooks_search + gitbooks_get_page");
-    } else if root_config.gitbooks.enabled {
-        tracing::debug!("[profiles] gitbooks tools suppressed by profile mcp allowlist");
-    }
 
     // MCP setup-agent tool surface (search/get/request_secret/test/install).
     // Registered unconditionally — the `mcp_setup` sub-agent filters to just
@@ -673,11 +599,6 @@ pub fn all_tools_with_runtime(
     }
 
     tools.extend(crate::openhuman::search::build_search_tools(root_config));
-
-    // High-level web3 tools (swaps / bridges / dapp calls) built on the wallet.
-    // They call the backend deBridge proxy per-invocation and error gracefully
-    // when the user is not signed in, so they register unconditionally.
-    tools.extend(crate::openhuman::web3::all_web3_agent_tools());
 
     // Managed Node.js exec tools — gated on `root_config.node.enabled`.
     // Both share the same `NodeBootstrap` as ShellTool so the download +

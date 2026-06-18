@@ -17,7 +17,6 @@ use super::store;
 use super::types::{SubconsciousStatus, TickResult};
 use crate::openhuman::config::schema::SubconsciousMode;
 use crate::openhuman::config::Config;
-use crate::openhuman::credentials::{AuthService, APP_SESSION_PROVIDER};
 use crate::openhuman::memory_store::MemoryClientRef;
 use anyhow::Result;
 use std::path::PathBuf;
@@ -410,34 +409,15 @@ impl SubconsciousEngine {
 #[derive(Clone, Debug, Eq, PartialEq)]
 enum SubconsciousProviderRoute {
     LocalOllama { model: String },
-    OpenHumanCloud,
+    LegacyHosted,
     Other(String),
 }
 
 pub(crate) fn subconscious_provider_unavailable_reason(config: &Config) -> Option<String> {
     match resolve_subconscious_route(config) {
         SubconsciousProviderRoute::LocalOllama { .. } => None,
-        SubconsciousProviderRoute::OpenHumanCloud => {
-            if crate::openhuman::scheduler_gate::is_signed_out() {
-                return Some(
-                    "Sign in to use the OpenHuman cloud Subconscious provider.".to_string(),
-                );
-            }
-
-            let state_dir = config
-                .config_path
-                .parent()
-                .map(std::path::PathBuf::from)
-                .unwrap_or_else(|| config.workspace_dir.clone());
-            let auth = AuthService::new(&state_dir, config.secrets.encrypt);
-            match auth.get_provider_bearer_token(APP_SESSION_PROVIDER, None) {
-                Ok(Some(token)) if !token.trim().is_empty() => None,
-                Ok(_) => Some(
-                    "Sign in or configure a local Subconscious provider in Settings > AI."
-                        .to_string(),
-                ),
-                Err(e) => Some(format!("Unable to read the OpenHuman session: {e}")),
-            }
+        SubconsciousProviderRoute::LegacyHosted => {
+            Some("Configure a local Subconscious provider in Settings > AI.".to_string())
         }
         SubconsciousProviderRoute::Other(_) => None,
     }
@@ -458,7 +438,7 @@ fn resolve_subconscious_route(config: &Config) -> SubconsciousProviderRoute {
         || raw.eq_ignore_ascii_case("openhuman")
         || raw.to_ascii_lowercase().starts_with("openhuman:");
     if is_openhuman_cloud {
-        SubconsciousProviderRoute::OpenHumanCloud
+        SubconsciousProviderRoute::LegacyHosted
     } else {
         SubconsciousProviderRoute::Other(raw.to_string())
     }
@@ -601,7 +581,7 @@ fn load_identity_context(workspace_dir: &std::path::Path) -> String {
     }
 
     if ctx.is_empty() {
-        "You are OpenHuman, an AI assistant for productivity and collaboration.".to_string()
+        "You are Marvi, the user's local-first AI teammate for Windows desktop work.".to_string()
     } else {
         ctx
     }
