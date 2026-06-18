@@ -202,6 +202,12 @@ describe('McpServerPanel — binary path error', () => {
     await waitFor(() => {
       expect(screen.getByText(/Marvi binary not found/i)).toBeInTheDocument();
     });
+
+    const preEl = document.querySelector('pre');
+    expect(preEl).not.toBeNull();
+    const content = preEl!.textContent ?? '';
+    expect(content).toContain('<path-to-Marvi>');
+    expect(content).not.toContain('binary not found');
   });
 });
 

@@ -7,6 +7,7 @@ use super::entry::{
 use super::helpers::{effective_stt_provider, effective_tts_provider, split_slug_model};
 use super::stt_providers::WhisperSttProvider;
 use super::traits::SttProvider;
+use super::tts_providers::PiperTtsProvider;
 use crate::openhuman::config::schema::voice_providers::{
     SttApiStyle, TtsApiStyle, VoiceCapability,
 };
@@ -139,9 +140,17 @@ fn tts_factory_pockettts_branch() {
 }
 
 #[test]
-fn tts_factory_piper_empty_voice_uses_default() {
-    let p = create_tts_provider("piper", "", &cfg()).unwrap();
+fn tts_factory_piper_empty_voice_uses_configured_voice() {
+    let mut config = cfg();
+    config.local_ai.tts_voice_id = "en_US-lessac-high".to_string();
+
+    let p = create_tts_provider("piper", "", &config).unwrap();
     assert_eq!(p.name(), "piper");
+    let p = p
+        .as_any()
+        .downcast_ref::<PiperTtsProvider>()
+        .expect("piper provider type");
+    assert_eq!(p.voice_for_test(), "en_US-lessac-high");
 }
 
 #[test]

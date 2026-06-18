@@ -20,10 +20,16 @@ export function resolveUserName(user: unknown): string {
     '';
   const username = typeof record.username === 'string' ? record.username.trim() : '';
   const email = typeof record.email === 'string' ? record.email.trim() : '';
+  const displayName =
+    (typeof record.displayName === 'string' && record.displayName.trim()) ||
+    (typeof record.display_name === 'string' && record.display_name.trim()) ||
+    (typeof record.name === 'string' && record.name.trim()) ||
+    '';
 
   const fullName = [firstName, lastName].filter(Boolean).join(' ').trim();
   if (fullName) return fullName;
   if (firstName) return firstName;
+  if (displayName && displayName.toLowerCase() !== 'local') return displayName;
   if (username) return username.startsWith('@') ? username : `@${username}`;
   if (email) return email.split('@')[0] || 'User';
   return 'User';

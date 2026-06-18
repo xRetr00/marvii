@@ -78,6 +78,11 @@ impl PiperTtsProvider {
             voice: voice.into(),
         }
     }
+
+    #[cfg(test)]
+    pub(crate) fn voice_for_test(&self) -> &str {
+        &self.voice
+    }
 }
 
 #[async_trait]

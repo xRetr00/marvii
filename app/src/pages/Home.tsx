@@ -14,6 +14,7 @@ import { applyOpenRouterFreeModels } from '../services/api/openrouterFreeModels'
 import { restartCoreProcess } from '../services/coreProcessControl';
 import { selectBlockingState } from '../store/connectivitySelectors';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { selectPersonaDisplayName } from '../store/personaSlice';
 import { resolveTheme, setThemeMode, type ThemeMode } from '../store/themeSlice';
 import { APP_VERSION } from '../utils/config';
 import { resolveUserName } from '../utils/userName';
@@ -26,7 +27,8 @@ const Home = () => {
   const { user } = useUser();
   const navigate = useNavigate();
   const { shouldShowBudgetCompletedMessage } = useUsageState();
-  const _userName = resolveHomeUserName(user);
+  const personaDisplayName = useAppSelector(selectPersonaDisplayName);
+  const _userName = personaDisplayName || resolveHomeUserName(user);
   const userName = _userName.split(' ')[0]; // Get first name only
   const promoCredits = user?.usage?.promotionBalanceUsd ?? 0;
   const isFreeTier =
@@ -130,6 +132,14 @@ const Home = () => {
 
   return (
     <div className="min-h-full flex flex-col items-center justify-center p-4">
+      {/* Welcome title */}
+      <h1 className="min-h-[3.5rem] text-32l font-bold text-stone-900 dark:text-neutral-100 text-center">
+        {typedWelcome}
+        <span aria-hidden="true" className="ml-0.5 inline-block text-primary-500 animate-pulse">
+          |
+        </span>
+      </h1>
+
       <div className="max-w-md w-full">
         {shouldShowBudgetCompletedMessage && (
           <UsageLimitBanner
@@ -205,14 +215,6 @@ const Home = () => {
               )}
             </button>
           </div>
-
-          {/* Welcome title */}
-          <h1 className="min-h-[3.5rem] text-32l font-bold text-stone-900 dark:text-neutral-100 text-center">
-            {typedWelcome}
-            <span aria-hidden="true" className="ml-0.5 inline-block text-primary-500 animate-pulse">
-              |
-            </span>
-          </h1>
 
           {/* Connection status */}
           <div className="flex justify-center mb-3">

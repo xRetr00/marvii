@@ -79,6 +79,14 @@ describe('resolveHomeUserName', () => {
     expect(resolveHomeUserName({ username: 'openhuman' })).toBe('@openhuman');
   });
 
+  it('uses local displayName before username', () => {
+    expect(resolveHomeUserName({ displayName: 'xRetro', username: 'local' })).toBe('xRetro');
+  });
+
+  it('uses local name before username', () => {
+    expect(resolveHomeUserName({ name: 'xRetro Labs', username: 'local' })).toBe('xRetro Labs');
+  });
+
   it('falls back to the email local-part when no explicit name exists', () => {
     expect(resolveHomeUserName({ email: 'ada@example.com' })).toBe('ada');
   });

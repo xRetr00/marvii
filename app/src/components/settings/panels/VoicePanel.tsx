@@ -90,6 +90,35 @@ const PIPER_VOICE_PRESET_IDS = [
   'en_GB-northern_english_male-medium',
 ] as const;
 
+const POCKETTTS_VOICE_PRESETS = [
+  'alba',
+  'jane',
+  'michael',
+  'eve',
+  'anna',
+  'vera',
+  'mary',
+  'cosette',
+  'marius',
+  'javert',
+  'jean',
+  'fantine',
+  'charles',
+  'paul',
+  'eponine',
+  'azelma',
+  'george',
+  'bill_boerst',
+  'peter_yearsley',
+  'stuart_bell',
+  'caro_davy',
+  'giovanni',
+  'lola',
+  'juergen',
+  'rafael',
+  'estelle',
+] as const;
+
 interface VoicePanelProps {
   /** When true, render without the SettingsHeader chrome (used when embedded
    *  inside the onboarding custom wizard). */
@@ -1187,22 +1216,69 @@ const VoicePanel = ({ embedded = false }: VoicePanelProps = {}) => {
                       <span className="text-xs font-medium text-neutral-500 dark:text-neutral-300">
                         PocketTTS Voice
                       </span>
-                      <SettingsTextField
+                      <SettingsSelect
                         aria-label="PocketTTS voice"
-                        data-testid="pockettts-voice-input"
-                        value={ttsVoice}
-                        placeholder="default"
+                        data-testid="pockettts-voice-select"
+                        value={
+                          POCKETTTS_VOICE_PRESETS.some(v => v === ttsVoice)
+                            ? ttsVoice
+                            : ttsVoice.trim() === ''
+                              ? 'default'
+                              : '__custom__'
+                        }
                         disabled={isSavingProviders}
-                        onChange={e => setTtsVoice(e.target.value)}
-                        onBlur={() => {
-                          if (ttsVoice && ttsVoice !== voiceStatus?.tts_voice_id) {
-                            void persistProviders({ tts_voice: ttsVoice });
-                          }
+                        onChange={e => {
+                          const next = e.target.value;
+                          if (next === '__custom__') return;
+                          const persisted = next === 'default' ? '' : next;
+                          setTtsVoice(persisted);
+                          void persistProviders({ tts_voice: persisted });
                         }}
-                        className="mt-1 w-full"
-                      />
+                        className="w-full">
+                        <option value="default">Default</option>
+                        {POCKETTTS_VOICE_PRESETS.map(voice => (
+                          <option key={voice} value={voice}>
+                            {voice}
+                          </option>
+                        ))}
+                        <option value="__custom__">{t('voice.providers.customVoiceOption')}</option>
+                      </SettingsSelect>
+                      {!POCKETTTS_VOICE_PRESETS.some(v => v === ttsVoice) &&
+                        ttsVoice.trim() !== '' && (
+                          <SettingsTextField
+                            aria-label="PocketTTS custom voice or prompt"
+                            data-testid="pockettts-voice-input"
+                            value={ttsVoice}
+                            placeholder="jane or hf://..."
+                            disabled={isSavingProviders}
+                            onChange={e => setTtsVoice(e.target.value)}
+                            onBlur={() => {
+                              if (ttsVoice !== voiceStatus?.tts_voice_id) {
+                                void persistProviders({ tts_voice: ttsVoice });
+                              }
+                            }}
+                            className="mt-1 w-full"
+                          />
+                        )}
+                      {ttsVoice.trim() === '' && (
+                        <SettingsTextField
+                          aria-label="PocketTTS custom voice or prompt"
+                          data-testid="pockettts-voice-input"
+                          value={ttsVoice}
+                          placeholder="jane or hf://..."
+                          disabled={isSavingProviders}
+                          onChange={e => setTtsVoice(e.target.value)}
+                          onBlur={() => {
+                            if (ttsVoice !== voiceStatus?.tts_voice_id) {
+                              void persistProviders({ tts_voice: ttsVoice });
+                            }
+                          }}
+                          className="mt-1 w-full"
+                        />
+                      )}
                       <p className="text-[11px] text-neutral-500 dark:text-neutral-400 mt-0.5">
-                        Requires `pocket-tts` on PATH or POCKETTTS_BIN.
+                        Catalog voices work without voice cloning. Custom audio prompts require
+                        voice-cloning access.
                       </p>
                     </label>
                   )}

@@ -253,13 +253,14 @@ pub async fn synthesize_pockettts(
     })?;
 
     let configured_voice = model_ids::effective_tts_voice_id(config);
-    let voice_id = opts
+    let requested_voice = opts
         .voice
         .as_deref()
         .map(str::trim)
         .filter(|s| !s.is_empty())
         .unwrap_or(&configured_voice)
         .to_string();
+    let voice_arg = pockettts_voice_arg(&requested_voice);
 
     let out_dir = std::env::temp_dir().join("openhuman_voice_output");
     tokio::fs::create_dir_all(&out_dir)
@@ -277,16 +278,21 @@ pub async fn synthesize_pockettts(
         "generate",
         "--text",
         trimmed,
-        "--voice",
-        voice_id.as_str(),
         "--output-path",
         &out_path.to_string_lossy(),
         "--device",
         "cpu",
         "--quiet",
-    ])
-    .stdout(std::process::Stdio::null())
-    .stderr(std::process::Stdio::piped());
+    ]);
+    if let Some(voice) = voice_arg {
+        cmd.args(["--voice", voice]);
+    } else {
+        debug!(
+            "{LOG_PREFIX} pocket-tts voice={requested_voice:?} is not a catalog voice or prompt path; using PocketTTS default"
+        );
+    }
+    cmd.stdout(std::process::Stdio::null())
+        .stderr(std::process::Stdio::piped());
     #[cfg(windows)]
     {
         use std::os::windows::process::CommandExt;
@@ -327,6 +333,52 @@ pub async fn synthesize_pockettts(
     ))
 }
 
+fn pockettts_voice_arg(voice: &str) -> Option<&str> {
+    let trimmed = voice.trim();
+    if trimmed.is_empty() || trimmed.eq_ignore_ascii_case("default") {
+        return None;
+    }
+    const CATALOG: &[&str] = &[
+        "cosette",
+        "marius",
+        "javert",
+        "alba",
+        "jean",
+        "anna",
+        "vera",
+        "fantine",
+        "charles",
+        "paul",
+        "eponine",
+        "azelma",
+        "george",
+        "mary",
+        "jane",
+        "michael",
+        "eve",
+        "bill_boerst",
+        "peter_yearsley",
+        "stuart_bell",
+        "caro_davy",
+        "giovanni",
+        "lola",
+        "juergen",
+        "rafael",
+        "estelle",
+    ];
+    if CATALOG
+        .iter()
+        .any(|known| known.eq_ignore_ascii_case(trimmed))
+    {
+        return Some(trimmed);
+    }
+    let looks_like_prompt = trimmed.starts_with("hf://")
+        || trimmed.starts_with("http://")
+        || trimmed.starts_with("https://")
+        || std::path::Path::new(trimmed).is_file();
+    looks_like_prompt.then_some(trimmed)
+}
+
 async fn read_and_clean_wav(path: &std::path::Path) -> Result<Vec<u8>, String> {
     let bytes = tokio::fs::read(path)
         .await
@@ -363,6 +415,24 @@ fn synthetic_viseme_timeline(text: &str) -> Vec<VisemeFrame> {
             end_ms: total_ms.max(80),
         },
     ]
+}
+
+#[cfg(test)]
+mod tests {
+    use super::pockettts_voice_arg;
+
+    #[test]
+    fn pockettts_voice_arg_only_passes_catalog_or_prompt_paths() {
+        assert_eq!(pockettts_voice_arg("jane"), Some("jane"));
+        assert_eq!(pockettts_voice_arg("JANE"), Some("JANE"));
+        assert_eq!(
+            pockettts_voice_arg("hf://kyutai/tts-voices/alba.wav"),
+            Some("hf://kyutai/tts-voices/alba.wav")
+        );
+        assert_eq!(pockettts_voice_arg(""), None);
+        assert_eq!(pockettts_voice_arg("default"), None);
+        assert_eq!(pockettts_voice_arg("en_US-lessac-medium"), None);
+    }
 }
 
 /// Resolves [`PathBuf`] inputs to absolute paths so logs/errors don't show

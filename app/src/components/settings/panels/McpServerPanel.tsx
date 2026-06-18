@@ -44,6 +44,8 @@ const MCP_TOOLS: { name: string; description: string }[] = [
   { name: 'tree.list_sources', description: 'List memory tree sources' },
 ];
 
+const MCP_BINARY_PLACEHOLDER = '<path-to-Marvi>';
+
 // ---------------------------------------------------------------------------
 // Config path helpers (mirrored from Rust for display only)
 // ---------------------------------------------------------------------------
@@ -138,7 +140,7 @@ const McpServerPanel = ({ embedded = false }: McpServerPanelProps = {}) => {
       : /linux/i.test(navigator.userAgent)
         ? 'linux'
         : 'macos');
-  const displayPath = binaryPath ?? t('settings.mcpServer.binaryPathNotFound');
+  const displayPath = binaryPath ?? MCP_BINARY_PLACEHOLDER;
   const snippet = buildSnippet(activeClient, displayPath);
   const configPath = configFilePathFor(activeClient, os);
 

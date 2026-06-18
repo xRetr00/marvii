@@ -95,8 +95,10 @@ pub fn create_tts_provider(
     config: &Config,
 ) -> anyhow::Result<Box<dyn TtsProvider>> {
     debug!("{LOG_PREFIX} create_tts_provider provider={provider} voice={voice}");
+    let configured_voice;
     let voice = if voice.trim().is_empty() {
-        DEFAULT_PIPER_VOICE
+        configured_voice = crate::openhuman::inference::model_ids::effective_tts_voice_id(config);
+        configured_voice.as_str()
     } else {
         voice
     };

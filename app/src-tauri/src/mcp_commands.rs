@@ -1,7 +1,7 @@
 //! Tauri commands for MCP server configuration.
 //!
 //! Exposes two commands to the frontend:
-//! - `mcp_resolve_binary_path` — locate the `openhuman-core` binary on disk.
+//! - `mcp_resolve_binary_path` — locate the Marvi binary on disk.
 //! - `mcp_open_client_config` — open a supported MCP client's config file in
 //!   the system default editor so the user can paste the generated snippet.
 
@@ -10,7 +10,7 @@ use std::path::PathBuf;
 /// Information returned to the frontend about the MCP server binary.
 #[derive(Debug, Clone, serde::Serialize)]
 pub struct McpBinaryInfo {
-    /// Absolute path to the `openhuman-core` binary.
+    /// Absolute path to the Marvi binary that can run `mcp`.
     pub path: String,
     /// OS string: `"macos"` | `"windows"` | `"linux"`.
     pub os: String,
@@ -27,13 +27,13 @@ fn current_os() -> &'static str {
 }
 
 /// Walk up from `start` until we find a directory containing
-/// `target/debug/openhuman-core[.exe]`. Returns the full path to the binary
+/// `target/debug/Marvi[.exe]`. Returns the full path to the binary
 /// when found, or `None` if the tree is exhausted.
 fn find_debug_binary_walking_up(start: &std::path::Path) -> Option<PathBuf> {
     #[cfg(target_os = "windows")]
-    let bin_name = "openhuman-core.exe";
+    let bin_name = "Marvi.exe";
     #[cfg(not(target_os = "windows"))]
-    let bin_name = "openhuman-core";
+    let bin_name = "Marvi";
 
     let mut dir = start.to_path_buf();
     loop {
@@ -47,49 +47,57 @@ fn find_debug_binary_walking_up(start: &std::path::Path) -> Option<PathBuf> {
     }
 }
 
-/// Resolve the absolute path to the `openhuman-core` binary.
+/// Resolve the absolute path to a binary that can run Marvi's stdio MCP server.
 ///
 /// In dev builds (`cfg!(debug_assertions)`) we:
-/// 1. Check `OPENHUMAN_CORE_BINARY_PATH` env var first.
-/// 2. Walk up from `current_exe()` looking for `target/debug/openhuman-core`.
+/// 1. Check `MARVI_BINARY_PATH` / legacy `OPENHUMAN_CORE_BINARY_PATH` env vars first.
+/// 2. Use the running desktop binary itself when available.
+/// 3. Walk up from `current_exe()` looking for `target/debug/Marvi`.
 ///
-/// In release builds the binary is a sibling of the shell executable:
-/// - macOS: `../MacOS/openhuman-core` relative to the host exe.
-/// - Windows / Linux: same directory as the host exe.
+/// In release builds the desktop binary itself handles the `mcp` subcommand,
+/// so the current executable is the correct MCP command path.
 fn resolve_binary_path() -> Result<PathBuf, String> {
     log::debug!("[mcp_commands] mcp_resolve_binary_path: resolving binary path");
 
-    #[cfg(target_os = "windows")]
-    let bin_name = "openhuman-core.exe";
-    #[cfg(not(target_os = "windows"))]
-    let bin_name = "openhuman-core";
+    let exe = std::env::current_exe().map_err(|e| format!("current_exe failed: {e}"))?;
 
     if cfg!(debug_assertions) {
         // Dev mode: env override takes priority.
-        if let Ok(env_path) = std::env::var("OPENHUMAN_CORE_BINARY_PATH") {
-            if !env_path.is_empty() {
-                let p = PathBuf::from(&env_path);
+        for env_key in ["MARVI_BINARY_PATH", "OPENHUMAN_CORE_BINARY_PATH"] {
+            if let Ok(env_path) = std::env::var(env_key) {
+                if env_path.trim().is_empty() {
+                    continue;
+                }
+                let p = PathBuf::from(env_path.trim());
                 if p.exists() {
                     log::debug!(
-                        "[mcp_commands] mcp_resolve_binary_path: using OPENHUMAN_CORE_BINARY_PATH={}",
-                        env_path
+                        "[mcp_commands] mcp_resolve_binary_path: using {env_key}={}",
+                        p.display()
                     );
                     return Ok(p);
                 }
                 log::warn!(
-                    "[mcp_commands] OPENHUMAN_CORE_BINARY_PATH set to {env_path} but file not found; falling back to walk"
+                    "[mcp_commands] {env_key} set to {} but file not found; falling back",
+                    p.display()
                 );
             }
         }
 
-        let exe = std::env::current_exe().map_err(|e| format!("current_exe failed: {e}"))?;
+        if exe.exists() {
+            log::debug!(
+                "[mcp_commands] mcp_resolve_binary_path: using current dev exe {}",
+                exe.display()
+            );
+            return Ok(exe);
+        }
+
         let start = exe
             .parent()
             .ok_or_else(|| "current_exe has no parent directory".to_string())?;
 
         let candidate = find_debug_binary_walking_up(start).ok_or_else(|| {
             format!(
-                "could not find target/debug/{bin_name} walking up from {}",
+                "could not find target/debug/Marvi walking up from {}",
                 start.display()
             )
         })?;
@@ -101,38 +109,21 @@ fn resolve_binary_path() -> Result<PathBuf, String> {
         return Ok(candidate);
     }
 
-    // Release mode: sibling binary.
-    let exe = std::env::current_exe().map_err(|e| format!("current_exe failed: {e}"))?;
-
-    #[cfg(target_os = "macos")]
-    let candidate = {
-        // macOS .app: Contents/MacOS/<host> → Contents/MacOS/openhuman-core
-        exe.parent()
-            .map(|p| p.join(bin_name))
-            .ok_or_else(|| "current_exe has no parent directory".to_string())?
-    };
-
-    #[cfg(not(target_os = "macos"))]
-    let candidate = exe
-        .parent()
-        .map(|p| p.join(bin_name))
-        .ok_or_else(|| "current_exe has no parent directory".to_string())?;
-
-    if !candidate.exists() {
+    if !exe.exists() {
         return Err(format!(
-            "openhuman-core binary not found at expected path: {}",
-            candidate.display()
+            "Marvi binary not found at expected path: {}",
+            exe.display()
         ));
     }
 
     log::debug!(
-        "[mcp_commands] mcp_resolve_binary_path: release binary at {}",
-        candidate.display()
+        "[mcp_commands] mcp_resolve_binary_path: using current release exe {}",
+        exe.display()
     );
-    Ok(candidate)
+    Ok(exe)
 }
 
-/// Tauri command — resolve the `openhuman-core` binary path and OS name.
+/// Tauri command — resolve the Marvi binary path and OS name.
 ///
 /// The frontend uses the returned path to generate client config JSON snippets
 /// that tell MCP clients (Claude Desktop, Cursor, Codex, Zed) how to spawn the

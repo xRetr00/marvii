@@ -340,7 +340,12 @@ pub(crate) fn handle_voice_test_provider(params: Map<String, Value>) -> Controll
             }
             "tts" => {
                 let trimmed = p.provider.trim();
-                if p.validate_only && !matches!(trimmed, "cloud" | "openhuman" | "piper" | "") {
+                if p.validate_only
+                    && !matches!(
+                        trimmed,
+                        "cloud" | "openhuman" | "piper" | "pockettts" | "pocket-tts" | ""
+                    )
+                {
                     match validate_tts_provider_key(trimmed, &config).await {
                         Ok(detail) => {
                             let elapsed = start.elapsed().as_millis();

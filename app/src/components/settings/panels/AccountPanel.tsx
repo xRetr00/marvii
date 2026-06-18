@@ -26,7 +26,17 @@ const AccountPanel = () => {
     : null;
   const localUserName = user && 'name' in user && typeof user.name === 'string' ? user.name : null;
   const name = personaDisplayName || hostedName || localUserName || 'Marvi Local';
-  const username = user?.username ? `@${user.username}` : '@local';
+  const localHandle = name
+    .trim()
+    .toLowerCase()
+    .replace(/^@/, '')
+    .replace(/[^a-z0-9]+/g, '_')
+    .replace(/^_+|_+$/g, '');
+  const username = user?.username
+    ? `@${user.username}`
+    : localHandle
+      ? `@${localHandle}`
+      : '@marvi_local';
   const description =
     personaDescription || 'Local Windows desktop profile. Your settings stay on this device.';
 

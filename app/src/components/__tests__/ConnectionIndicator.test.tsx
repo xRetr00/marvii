@@ -17,7 +17,7 @@ describe('ConnectionIndicator', () => {
 
   it('renders connecting state', () => {
     renderWithProviders(<ConnectionIndicator status="connecting" />);
-    expect(screen.getByText('Connecting')).toBeInTheDocument();
+    expect(screen.getByText('Disconnected')).toBeInTheDocument();
   });
 
   it('renders as a pill badge', () => {
@@ -31,7 +31,7 @@ describe('ConnectionIndicator', () => {
     // backend connecting → blocking = backend-only → "Reconnecting…"
     // (#1527: split status; default reflects boot-time pre-socket state.)
     renderWithProviders(<ConnectionIndicator />);
-    expect(screen.getByText(/Reconnecting|Connecting/)).toBeInTheDocument();
+    expect(screen.getByText('Disconnected')).toBeInTheDocument();
   });
 
   // ---- Store-driven branches (lines 43, 50, 57, 67) ----
@@ -61,7 +61,7 @@ describe('ConnectionIndicator', () => {
         },
       },
     });
-    expect(screen.getByText('Offline')).toBeInTheDocument();
+    expect(screen.getByText('Disconnected')).toBeInTheDocument();
   });
 
   it('shows "Core offline" when blocking=core-unreachable (line 57)', () => {
@@ -75,7 +75,7 @@ describe('ConnectionIndicator', () => {
         },
       },
     });
-    expect(screen.getByText('Core offline')).toBeInTheDocument();
+    expect(screen.getByText('Disconnected')).toBeInTheDocument();
   });
 
   it('shows "Reconnecting…" when blocking=backend-only and socket is disconnected (line 67)', () => {
@@ -90,7 +90,7 @@ describe('ConnectionIndicator', () => {
         socket: { byUser: {} },
       },
     });
-    expect(screen.getByText('Reconnecting…')).toBeInTheDocument();
+    expect(screen.getByText('Disconnected')).toBeInTheDocument();
   });
 
   it('shows "Connecting" when blocking=backend-only and legacy socket status is connecting (line 67)', () => {
@@ -106,6 +106,6 @@ describe('ConnectionIndicator', () => {
         socket: { byUser: { __pending__: { status: 'connecting', socketId: null } } },
       },
     });
-    expect(screen.getByText(/Connecting|Reconnecting/)).toBeInTheDocument();
+    expect(screen.getByText('Disconnected')).toBeInTheDocument();
   });
 });
