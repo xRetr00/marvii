@@ -39,11 +39,7 @@ interface OpenhumanLinkEvent {
 
 export const OPENHUMAN_LINK_EVENT = 'openhuman-link';
 
-const ALLOWED_PATHS = [
-  'settings/notifications',
-  'settings/messaging',
-  'accounts/setup',
-] as const;
+const ALLOWED_PATHS = ['settings/notifications', 'settings/messaging', 'accounts/setup'] as const;
 
 type AllowedPath = (typeof ALLOWED_PATHS)[number];
 
