@@ -18,6 +18,26 @@ use crate::openhuman::voice::schemas::params::{
 // Provider configuration handlers
 // ---------------------------------------------------------------------------
 
+pub(crate) fn handle_voice_runtime_status(_params: Map<String, Value>) -> ControllerFuture {
+    Box::pin(async move {
+        let config = config_rpc::load_config_with_timeout().await?;
+        serde_json::to_value(crate::openhuman::voice::workers::voice_runtime_status(
+            &config,
+        ))
+        .map_err(|e| format!("serialize voice runtime status: {e}"))
+    })
+}
+
+pub(crate) fn handle_voice_runtime_setup(_params: Map<String, Value>) -> ControllerFuture {
+    Box::pin(async move {
+        let config = config_rpc::load_config_with_timeout().await?;
+        serde_json::to_value(crate::openhuman::voice::workers::begin_voice_runtime_setup(
+            config,
+        ))
+        .map_err(|e| format!("serialize voice runtime setup status: {e}"))
+    })
+}
+
 pub(crate) fn handle_voice_set_providers(params: Map<String, Value>) -> ControllerFuture {
     Box::pin(async move {
         let p = deserialize_params::<SetProvidersParams>(params)?;

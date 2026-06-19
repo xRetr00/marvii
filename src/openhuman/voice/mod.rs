@@ -24,6 +24,7 @@ mod schemas;
 pub mod server;
 pub mod text_input;
 mod types;
+pub(crate) mod workers;
 
 // Re-export the inference-side voice modules so `voice::local_speech`,
 // `voice::local_transcribe`, etc. continue to resolve for existing callers.

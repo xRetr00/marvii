@@ -6,7 +6,10 @@ import {
   installPiper,
   installWhisper,
   piperInstallStatus,
+  setupVoiceRuntime,
   type VoiceInstallStatus,
+  type VoiceRuntimeStatus,
+  voiceRuntimeStatus,
   whisperInstallStatus,
 } from '../../../services/api/voiceInstallApi';
 import {
@@ -144,8 +147,10 @@ const VoicePanel = ({ embedded = false }: VoicePanelProps = {}) => {
   const [isSavingProviders, setIsSavingProviders] = useState(false);
   const [whisperInstall, setWhisperInstall] = useState<VoiceInstallStatus | null>(null);
   const [piperInstall, setPiperInstall] = useState<VoiceInstallStatus | null>(null);
+  const [voiceRuntime, setVoiceRuntime] = useState<VoiceRuntimeStatus | null>(null);
   const [isInstallingWhisper, setIsInstallingWhisper] = useState(false);
   const [isInstallingPiper, setIsInstallingPiper] = useState(false);
+  const [isInstallingVoiceRuntime, setIsInstallingVoiceRuntime] = useState(false);
   const [, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
@@ -187,28 +192,40 @@ const VoicePanel = ({ embedded = false }: VoicePanelProps = {}) => {
 
   const loadData = async (forceSettings = false) => {
     try {
-      const [settingsResponse, voiceResponse, whisperStatusResponse, piperStatusResponse] =
-        await Promise.all([
-          openhumanGetVoiceServerSettings(),
-          openhumanVoiceStatus(),
-          whisperInstallStatus().catch(err => {
-            // Status polls happen on a 2s loop; a single transient error
-            // shouldn't blow up the entire settings panel. Log + keep the
-            // previous snapshot.
-            if (process.env.NODE_ENV !== 'production') {
-              console.debug('[voice-install:whisper] status poll failed', err);
-            }
-            return null;
-          }),
-          piperInstallStatus().catch(err => {
-            if (process.env.NODE_ENV !== 'production') {
-              console.debug('[voice-install:piper] status poll failed', err);
-            }
-            return null;
-          }),
-        ]);
+      const [
+        settingsResponse,
+        voiceResponse,
+        whisperStatusResponse,
+        piperStatusResponse,
+        voiceRuntimeResponse,
+      ] = await Promise.all([
+        openhumanGetVoiceServerSettings(),
+        openhumanVoiceStatus(),
+        whisperInstallStatus().catch(err => {
+          // Status polls happen on a 2s loop; a single transient error
+          // shouldn't blow up the entire settings panel. Log + keep the
+          // previous snapshot.
+          if (process.env.NODE_ENV !== 'production') {
+            console.debug('[voice-install:whisper] status poll failed', err);
+          }
+          return null;
+        }),
+        piperInstallStatus().catch(err => {
+          if (process.env.NODE_ENV !== 'production') {
+            console.debug('[voice-install:piper] status poll failed', err);
+          }
+          return null;
+        }),
+        voiceRuntimeStatus().catch(err => {
+          if (process.env.NODE_ENV !== 'production') {
+            console.debug('[voice-runtime] status poll failed', err);
+          }
+          return null;
+        }),
+      ]);
       if (whisperStatusResponse) setWhisperInstall(whisperStatusResponse);
       if (piperStatusResponse) setPiperInstall(piperStatusResponse);
+      if (voiceRuntimeResponse) setVoiceRuntime(voiceRuntimeResponse);
       const currentSettings = settingsRef.current;
       const currentSavedSettings = savedSettingsRef.current;
       if (
@@ -288,6 +305,12 @@ const VoicePanel = ({ embedded = false }: VoicePanelProps = {}) => {
   useEffect(() => {
     void loadData(true);
   }, []);
+
+  useEffect(() => {
+    if (voiceRuntime?.state !== 'installing') return;
+    const timer = window.setInterval(() => void loadData(false), 2000);
+    return () => window.clearInterval(timer);
+  }, [voiceRuntime?.state]);
 
   const persistProviders = async (
     update: Partial<VoiceProvidersSnapshot> & {
@@ -515,6 +538,21 @@ const VoicePanel = ({ embedded = false }: VoicePanelProps = {}) => {
     }
   };
 
+  const handleSetupVoiceRuntime = async () => {
+    setIsInstallingVoiceRuntime(true);
+    setError(null);
+    setNotice(null);
+    try {
+      const result = await setupVoiceRuntime();
+      setVoiceRuntime(result);
+      setNotice('Local voice runtime setup started.');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to install local voice runtime.');
+    } finally {
+      setIsInstallingVoiceRuntime(false);
+    }
+  };
+
   const whisperReady = whisperInstall?.state === 'installed';
   const piperReady = piperInstall?.state === 'installed';
   const sttRouteValue = sttProvider === 'cloud' ? '' : sttProvider;
@@ -702,6 +740,37 @@ const VoicePanel = ({ embedded = false }: VoicePanelProps = {}) => {
                   </div>
                 );
               })}
+            </div>
+            <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
+              <Button
+                type="button"
+                variant={voiceRuntime?.state === 'installed' ? 'secondary' : 'primary'}
+                size="xs"
+                data-testid="voice-runtime-setup"
+                disabled={isInstallingVoiceRuntime || voiceRuntime?.state === 'installing'}
+                onClick={() => void handleSetupVoiceRuntime()}>
+                {voiceRuntime?.state === 'installing'
+                  ? 'Installing local voice runtime...'
+                  : voiceRuntime?.state === 'installed'
+                    ? 'Reinstall local voice runtime'
+                    : voiceRuntime?.state === 'error'
+                      ? 'Retry local voice runtime'
+                      : 'Install local voice runtime'}
+              </Button>
+              <span
+                className={
+                  voiceRuntime?.state === 'installed'
+                    ? 'text-emerald-600 dark:text-emerald-300'
+                    : voiceRuntime?.state === 'error'
+                      ? 'text-red-600 dark:text-red-300'
+                      : 'text-neutral-500 dark:text-neutral-400'
+                }>
+                {voiceRuntime?.state === 'installed'
+                  ? 'Sherpa wake word and PocketTTS are ready.'
+                  : (voiceRuntime?.error_detail ??
+                    voiceRuntime?.stage ??
+                    'Required for Sherpa wake word and warm PocketTTS.')}
+              </span>
             </div>
           </div>
         </SettingsSection>

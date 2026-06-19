@@ -115,6 +115,10 @@ const VoiceDebugPanel = () => {
         wake_word_threshold: settings.wake_word_threshold,
         wake_word_debug: settings.wake_word_debug,
         wake_word_variants: settings.wake_word_variants,
+        vad_onset_threshold: settings.vad_onset_threshold,
+        vad_hangover_ms: settings.vad_hangover_ms,
+        vad_min_speech_ms: settings.vad_min_speech_ms,
+        vad_max_utterance_secs: settings.vad_max_utterance_secs,
       });
       setNotice(t('voice.debug.settingsSaved'));
       await loadData(true);
@@ -262,6 +266,73 @@ const VoiceDebugPanel = () => {
                     max={1}
                     step={0.01}
                     aria-label="Wake word threshold"
+                  />
+                }
+              />
+              <SettingsRow
+                stacked
+                label="Always-on speech threshold"
+                description="RMS level that starts capturing a command."
+                control={
+                  <SettingsNumberField
+                    id="vad-onset-threshold-input"
+                    value={String(settings.vad_onset_threshold ?? 0.01)}
+                    onChange={val => updateSetting('vad_onset_threshold', Number(val) || 0.0001)}
+                    onCommit={() => {}}
+                    min={0.0001}
+                    max={1}
+                    step={0.001}
+                    aria-label="Always-on speech threshold"
+                  />
+                }
+              />
+              <SettingsRow
+                stacked
+                label="Silence hangover (ms)"
+                description="How long silence must continue before the command ends."
+                control={
+                  <SettingsNumberField
+                    id="vad-hangover-input"
+                    value={String(settings.vad_hangover_ms ?? 700)}
+                    onChange={val => updateSetting('vad_hangover_ms', Number(val) || 100)}
+                    onCommit={() => {}}
+                    min={100}
+                    max={5000}
+                    step={20}
+                    aria-label="Silence hangover"
+                  />
+                }
+              />
+              <SettingsRow
+                stacked
+                label="Minimum speech (ms)"
+                description="Shorter sounds are ignored instead of sent to Whisper."
+                control={
+                  <SettingsNumberField
+                    id="vad-min-speech-input"
+                    value={String(settings.vad_min_speech_ms ?? 120)}
+                    onChange={val => updateSetting('vad_min_speech_ms', Number(val) || 20)}
+                    onCommit={() => {}}
+                    min={20}
+                    max={5000}
+                    step={20}
+                    aria-label="Minimum speech"
+                  />
+                }
+              />
+              <SettingsRow
+                stacked
+                label="Maximum command length (seconds)"
+                control={
+                  <SettingsNumberField
+                    id="vad-max-utterance-input"
+                    value={String(settings.vad_max_utterance_secs ?? 30)}
+                    onChange={val => updateSetting('vad_max_utterance_secs', Number(val) || 1)}
+                    onCommit={() => {}}
+                    min={1}
+                    max={120}
+                    step={1}
+                    aria-label="Maximum command length"
                   />
                 }
               />

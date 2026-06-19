@@ -46,6 +46,7 @@
     ],
     "resources": [
       "../../src/openhuman/agent/prompts",
+      "../../scripts/voice",
       "recipes/**/*"
     ],
     "linux": {

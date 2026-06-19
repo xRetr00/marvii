@@ -6,7 +6,7 @@ use super::dirs::{
 use super::env::{EnvLookup, ProcessEnv, ProcessEnvWithoutWorkspace};
 use super::migrate::{
     migrate_cloud_provider_slugs, migrate_legacy_autocomplete_disabled_apps,
-    migrate_legacy_inference_url,
+    migrate_legacy_inference_url, migrate_marvi_voice_defaults,
 };
 use super::secrets::{decrypt_config_secrets, encrypt_config_secrets};
 use anyhow::{Context, Result};
@@ -198,6 +198,7 @@ impl Config {
             migrate_legacy_autocomplete_disabled_apps(&mut config);
             migrate_legacy_inference_url(&mut config);
             migrate_cloud_provider_slugs(&mut config);
+            migrate_marvi_voice_defaults(&mut config);
             config.apply_env_overrides_from(env);
 
             if config_was_corrupted {
@@ -358,6 +359,7 @@ impl Config {
         migrate_legacy_autocomplete_disabled_apps(&mut config);
         migrate_legacy_inference_url(&mut config);
         migrate_cloud_provider_slugs(&mut config);
+        migrate_marvi_voice_defaults(&mut config);
         config.apply_env_overrides_from(&ProcessEnvWithoutWorkspace);
 
         if config_was_corrupted {
