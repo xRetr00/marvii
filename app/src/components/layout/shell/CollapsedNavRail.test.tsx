@@ -21,13 +21,7 @@ describe('CollapsedNavRail', () => {
 
   it('renders Home plus every primary nav destination as an icon button', () => {
     renderWithProviders(<CollapsedNavRail />, { initialEntries: ['/home'] });
-    for (const key of [
-      'nav.home',
-      'nav.chat',
-      'nav.human',
-      'nav.brain',
-      'nav.connections',
-    ]) {
+    for (const key of ['nav.home', 'nav.chat', 'nav.human', 'nav.brain', 'nav.connections']) {
       expect(screen.getByRole('button', { name: key })).toBeInTheDocument();
     }
   });
@@ -47,7 +41,10 @@ describe('CollapsedNavRail', () => {
 
   it('marks the active destination with aria-current', () => {
     renderWithProviders(<CollapsedNavRail />, { initialEntries: ['/brain'] });
-    expect(screen.getByRole('button', { name: 'nav.brain' })).toHaveAttribute('aria-current', 'page');
+    expect(screen.getByRole('button', { name: 'nav.brain' })).toHaveAttribute(
+      'aria-current',
+      'page'
+    );
     expect(screen.getByRole('button', { name: 'nav.chat' })).not.toHaveAttribute('aria-current');
   });
 

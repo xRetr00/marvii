@@ -87,7 +87,9 @@ describe('Marvi local-only guard', () => {
     for (const relativePath of files) {
       const source = readRepoFile(relativePath);
       expect(source, `${relativePath} does not expose the Marvi meeting identity`).toMatch(/Marvi/);
-      expect(source, `${relativePath} exposes the old meeting identity`).not.toMatch(/you are openhuman/i);
+      expect(source, `${relativePath} exposes the old meeting identity`).not.toMatch(
+        /you are openhuman/i
+      );
       expect(source, `${relativePath} advertises the old wake word`).not.toMatch(
         /gate \(\\"hey openhuman\\"\)/i
       );
