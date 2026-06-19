@@ -2644,12 +2644,12 @@ const messages: TranslationMap = {
   'app.openhumanLink.notifications.desktopOnly':
     'Las notificaciones nativas solo están disponibles en la aplicación de escritorio (ejecuta `pnpm dev:app`).',
   'app.openhumanLink.notifications.permissionOff':
-    'El permiso de notificaciones está desactivado. Habilita OpenHuman en Configuración del sistema → Notificaciones y vuelve a intentarlo.',
+    'El permiso de notificaciones está desactivado. Habilita Marvi en Configuración del sistema → Notificaciones y vuelve a intentarlo.',
   'app.openhumanLink.notifications.triggerFailed':
-    'OpenHuman no pudo activar una notificación del sistema. Revisa la configuración de notificaciones del sistema operativo y vuelve a intentarlo.',
+    'Marvi no pudo activar una notificación del sistema. Revisa la configuración de notificaciones del sistema operativo y vuelve a intentarlo.',
   'app.openhumanLink.notifications.welcomeBody':
     'Recibirás avisos aquí cuando algo necesite tu atención.',
-  'app.openhumanLink.notifications.welcomeTitle': 'OpenHuman está listo',
+  'app.openhumanLink.notifications.welcomeTitle': 'Marvi está listo',
   'app.openhumanLink.status.closed': 'Cerrado',
   'app.openhumanLink.status.connected': 'Conectado',
   'app.openhumanLink.status.error': 'Error',

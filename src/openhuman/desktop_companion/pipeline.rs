@@ -251,7 +251,7 @@ async fn stt(samples: &[i16], sample_rate: u32) -> Result<String, String> {
 
 /// System prompt for the desktop companion LLM.
 const COMPANION_SYSTEM_PROMPT: &str = "\
-You are OpenHuman, a helpful desktop AI companion. The user is talking to you \
+You are Marvi, a personal local AI assistant by NeuRetro Labs. The user is talking to you \
 via voice or text while using their computer. You can see their screen \
 (a screenshot and foreground app info may be provided).\n\
 \n\

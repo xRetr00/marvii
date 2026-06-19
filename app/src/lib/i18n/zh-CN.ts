@@ -2471,11 +2471,11 @@ const messages: TranslationMap = {
   'app.openhumanLink.notifications.desktopOnly':
     '原生通知仅在桌面应用中可用（运行 `pnpm dev:app`）。',
   'app.openhumanLink.notifications.permissionOff':
-    '通知权限已关闭。请在“系统设置 → 通知”中启用 OpenHuman，然后重试。',
+    '通知权限已关闭。请在“系统设置 → 通知”中启用 Marvi，然后重试。',
   'app.openhumanLink.notifications.triggerFailed':
-    'OpenHuman 无法触发系统通知。请检查操作系统的通知设置，然后重试。',
+    'Marvi 无法触发系统通知。请检查操作系统的通知设置，然后重试。',
   'app.openhumanLink.notifications.welcomeBody': '当有事情需要您关注时，您将在此处收到提醒。',
-  'app.openhumanLink.notifications.welcomeTitle': 'OpenHuman 已准备就绪',
+  'app.openhumanLink.notifications.welcomeTitle': 'Marvi 已准备就绪',
   'app.openhumanLink.status.closed': '已关闭',
   'app.openhumanLink.status.connected': '已连接',
   'app.openhumanLink.status.error': '错误',

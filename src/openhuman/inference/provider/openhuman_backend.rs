@@ -200,7 +200,7 @@ impl Provider for OpenHumanBackendProvider {
         // model guard as the non-streaming methods (TAURI-RUST-RS).
         stream::once(async move {
             Ok(StreamChunk::error(
-                "streaming is not supported for OpenHuman backend provider",
+                "streaming is not supported for this backend provider",
             ))
         })
         .boxed()

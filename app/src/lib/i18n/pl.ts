@@ -2622,12 +2622,12 @@ const messages: TranslationMap = {
   'app.openhumanLink.notifications.desktopOnly':
     'Natywne powiadomienia są dostępne tylko w aplikacji desktopowej (uruchom `pnpm dev:app`).',
   'app.openhumanLink.notifications.permissionOff':
-    'Uprawnienie do powiadomień jest wyłączone. Włącz OpenHuman w Ustawieniach systemu → Powiadomienia, a następnie spróbuj ponownie.',
+    'Uprawnienie do powiadomień jest wyłączone. Włącz Marvi w Ustawieniach systemu → Powiadomienia, a następnie spróbuj ponownie.',
   'app.openhumanLink.notifications.triggerFailed':
-    'OpenHuman nie mógł wywołać powiadomienia systemowego. Sprawdź ustawienia powiadomień systemu operacyjnego i spróbuj ponownie.',
+    'Marvi nie mógł wywołać powiadomienia systemowego. Sprawdź ustawienia powiadomień systemu operacyjnego i spróbuj ponownie.',
   'app.openhumanLink.notifications.welcomeBody':
     'Otrzymasz tutaj powiadomienia, gdy coś będzie wymagać Twojej uwagi.',
-  'app.openhumanLink.notifications.welcomeTitle': 'OpenHuman jest gotowy do pracy',
+  'app.openhumanLink.notifications.welcomeTitle': 'Marvi jest gotowy do pracy',
   'app.openhumanLink.status.closed': 'Zamknięte',
   'app.openhumanLink.status.connected': 'Połączono',
   'app.openhumanLink.status.error': 'Błąd',

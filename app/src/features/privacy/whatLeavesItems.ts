@@ -12,8 +12,8 @@ export interface PrivacyLeaveItem {
 export const WHAT_LEAVES_ITEMS: PrivacyLeaveItem[] = [
   {
     id: 'cloud-providers',
-    title: 'Cloud AI Inference',
-    body: 'Core assistant features run locally by default. Cloud inference is only used when a feature explicitly needs stronger hosted models or network-backed services.',
+    title: 'User-configured AI providers',
+    body: 'Marvi runs its core locally. Content leaves the device only when you explicitly configure and use an external AI provider.',
   },
   {
     id: 'skill-integrations',
@@ -27,5 +27,5 @@ export const WHAT_LEAVES_ITEMS: PrivacyLeaveItem[] = [
   },
 ];
 
-export const WHAT_LEAVES_HEADLINE = 'Local by default. Cloud when you ask.';
+export const WHAT_LEAVES_HEADLINE = 'Local core. External services only when you configure them.';
 export const WHAT_LEAVES_SUBHEAD = "For full transparency, here's exactly what does, and when.";

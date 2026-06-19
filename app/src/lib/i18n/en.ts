@@ -3112,12 +3112,12 @@ const en: TranslationMap = {
   'app.openhumanLink.notifications.desktopOnly':
     'Native notifications are only available in the desktop app (run `pnpm dev:app`).',
   'app.openhumanLink.notifications.permissionOff':
-    'Notification permission is off. Enable OpenHuman in System Settings → Notifications, then retry.',
+    'Notification permission is off. Enable Marvi in System Settings → Notifications, then retry.',
   'app.openhumanLink.notifications.triggerFailed':
-    'OpenHuman could not trigger a system notification. Check OS notification settings and retry.',
+    'Marvi could not trigger a system notification. Check OS notification settings and retry.',
   'app.openhumanLink.notifications.welcomeBody':
     'You will get pings here when something needs your attention.',
-  'app.openhumanLink.notifications.welcomeTitle': 'OpenHuman is good to go',
+  'app.openhumanLink.notifications.welcomeTitle': 'Marvi is good to go',
   'app.openhumanLink.status.closed': 'Closed',
   'app.openhumanLink.status.connected': 'Connected',
   'app.openhumanLink.status.error': 'Error',

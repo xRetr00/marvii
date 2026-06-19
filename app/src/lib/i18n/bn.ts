@@ -2596,12 +2596,12 @@ const messages: TranslationMap = {
   'app.openhumanLink.notifications.desktopOnly':
     'নেটিভ বিজ্ঞপ্তি শুধুমাত্র ডেস্কটপ অ্যাপে উপলব্ধ (`pnpm dev:app` চালান)।',
   'app.openhumanLink.notifications.permissionOff':
-    'বিজ্ঞপ্তির অনুমতি বন্ধ আছে। সিস্টেম সেটিংস → বিজ্ঞপ্তি-তে OpenHuman সক্রিয় করুন, তারপর পুনরায় চেষ্টা করুন।',
+    'বিজ্ঞপ্তির অনুমতি বন্ধ আছে। সিস্টেম সেটিংস → বিজ্ঞপ্তি-তে Marvi সক্রিয় করুন, তারপর পুনরায় চেষ্টা করুন।',
   'app.openhumanLink.notifications.triggerFailed':
-    'OpenHuman একটি সিস্টেম বিজ্ঞপ্তি চালু করতে পারেনি। OS-এর বিজ্ঞপ্তি সেটিংস যাচাই করুন এবং পুনরায় চেষ্টা করুন।',
+    'Marvi একটি সিস্টেম বিজ্ঞপ্তি চালু করতে পারেনি। OS-এর বিজ্ঞপ্তি সেটিংস যাচাই করুন এবং পুনরায় চেষ্টা করুন।',
   'app.openhumanLink.notifications.welcomeBody':
     'যখন কোনো কিছুতে আপনার মনোযোগ প্রয়োজন হবে, তখন আপনি এখানে পিং পাবেন।',
-  'app.openhumanLink.notifications.welcomeTitle': 'OpenHuman ব্যবহারের জন্য প্রস্তুত',
+  'app.openhumanLink.notifications.welcomeTitle': 'Marvi ব্যবহারের জন্য প্রস্তুত',
   'app.openhumanLink.status.closed': 'বন্ধ',
   'app.openhumanLink.status.connected': 'সংযুক্ত',
   'app.openhumanLink.status.error': 'ত্রুটি',

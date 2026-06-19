@@ -177,7 +177,7 @@ fn schema_push_caption() -> ControllerSchema {
         namespace: "meet_agent",
         function: "push_caption",
         description: "Push a caption line scraped from Meet's live captions DOM. The wake-word \
-                      gate (\"hey openhuman\") triggers an LLM/TTS turn when fired.",
+                      gate (\"hey Marvi\") triggers an LLM/TTS turn when fired.",
         inputs: vec![
             FieldSchema {
                 name: "request_id",

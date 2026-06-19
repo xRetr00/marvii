@@ -18,9 +18,13 @@ use crate::openhuman::meet_agent::types::SessionEventKind;
 pub(crate) fn classify_unauthorized_intent(caption_text: &str) -> UnauthorizedIntent {
     // Lift the bit of text that comes after the matched wake
     // phrase so we don't get fooled by the wake itself ("hey
-    // openhuman" obviously contains "hey").
+    // marvi" obviously contains "hey").
     let lower = caption_text.to_ascii_lowercase();
     let wake_phrases = [
+        "hey marvi",
+        "hi marvi",
+        "hello marvi",
+        "marvi",
         "hey open human",
         "hi open human",
         "hello open human",
@@ -103,7 +107,7 @@ pub(super) fn non_owner_system_prompt(owner: &str) -> String {
     };
     format!(
         "\
-You are openhuman, an AI participant in a live Google Meet call. The speaker is NOT the call \
+You are Marvi, a personal local AI assistant by NeuRetro Labs participating in a live Google Meet call. The speaker is NOT the call \
 owner — the owner is {owner_label}.\n\
 \n\
 WHAT YOU MAY DO:\n\

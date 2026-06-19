@@ -58,7 +58,7 @@ pub fn skill_registry_schemas(function: &str) -> ControllerSchema {
         "browse" => ControllerSchema {
             namespace: "skill_registry",
             function: "browse",
-            description: "Browse the skill registry catalog (aggregated from HermesHub). Returns cached results unless force_refresh is true.",
+            description: "Browse the aggregated community skill registry. Returns cached results unless force_refresh is true.",
             inputs: vec![FieldSchema {
                 name: "force_refresh",
                 ty: TypeSchema::Bool,

@@ -23,7 +23,7 @@ impl Tool for SkillRegistryBrowseTool {
     }
 
     fn description(&self) -> &str {
-        "Browse the aggregated skill catalog (HermesHub, ClawHub, skills.sh, \
+        "Browse the aggregated community skill catalog (ClawHub, skills.sh, \
          LobeHub, browse.sh). Returns all available skills with metadata. \
          Use `force_refresh: true` to bypass the cache."
     }

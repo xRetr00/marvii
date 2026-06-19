@@ -2570,12 +2570,12 @@ const messages: TranslationMap = {
   'app.openhumanLink.notifications.desktopOnly':
     '기본 알림은 데스크톱 앱에서만 사용할 수 있습니다 (`pnpm dev:app` 실행).',
   'app.openhumanLink.notifications.permissionOff':
-    '알림 권한이 꺼져 있습니다. 시스템 설정 → 알림에서 OpenHuman을 활성화한 후 다시 시도하세요.',
+    '알림 권한이 꺼져 있습니다. 시스템 설정 → 알림에서 Marvi을 활성화한 후 다시 시도하세요.',
   'app.openhumanLink.notifications.triggerFailed':
-    'OpenHuman이 시스템 알림을 발생시킬 수 없습니다. 운영체제 알림 설정을 확인한 후 다시 시도하세요.',
+    'Marvi이 시스템 알림을 발생시킬 수 없습니다. 운영체제 알림 설정을 확인한 후 다시 시도하세요.',
   'app.openhumanLink.notifications.welcomeBody':
     '주의가 필요한 일이 생기면 여기에서 알림을 받게 됩니다.',
-  'app.openhumanLink.notifications.welcomeTitle': 'OpenHuman 준비 완료',
+  'app.openhumanLink.notifications.welcomeTitle': 'Marvi 준비 완료',
   'app.openhumanLink.status.closed': '닫힘',
   'app.openhumanLink.status.connected': '연결됨',
   'app.openhumanLink.status.error': '오류',

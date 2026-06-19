@@ -2598,12 +2598,12 @@ const messages: TranslationMap = {
   'app.openhumanLink.notifications.desktopOnly':
     'Notifikasi native hanya tersedia di aplikasi desktop (jalankan `pnpm dev:app`).',
   'app.openhumanLink.notifications.permissionOff':
-    'Izin notifikasi nonaktif. Aktifkan OpenHuman di Pengaturan Sistem → Notifikasi, lalu coba lagi.',
+    'Izin notifikasi nonaktif. Aktifkan Marvi di Pengaturan Sistem → Notifikasi, lalu coba lagi.',
   'app.openhumanLink.notifications.triggerFailed':
-    'OpenHuman tidak dapat memicu notifikasi sistem. Periksa pengaturan notifikasi OS dan coba lagi.',
+    'Marvi tidak dapat memicu notifikasi sistem. Periksa pengaturan notifikasi OS dan coba lagi.',
   'app.openhumanLink.notifications.welcomeBody':
     'Anda akan menerima pemberitahuan di sini saat ada hal yang memerlukan perhatian Anda.',
-  'app.openhumanLink.notifications.welcomeTitle': 'OpenHuman siap digunakan',
+  'app.openhumanLink.notifications.welcomeTitle': 'Marvi siap digunakan',
   'app.openhumanLink.status.closed': 'Tertutup',
   'app.openhumanLink.status.connected': 'Terhubung',
   'app.openhumanLink.status.error': 'Kesalahan',

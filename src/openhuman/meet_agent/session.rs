@@ -524,6 +524,10 @@ impl MeetAgentSession {
         // Ordered longest-first so the tail offset is calculated against
         // the actual matched phrase.
         const WAKE_PHRASES: &[&str] = &[
+            "hey marvi",
+            "hi marvi",
+            "hello marvi",
+            "marvi",
             "hey open human",
             "hi open human",
             "hello open human",

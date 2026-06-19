@@ -2636,12 +2636,12 @@ const messages: TranslationMap = {
   'app.openhumanLink.notifications.desktopOnly':
     "Le notifiche native sono disponibili solo nell'app desktop (esegui `pnpm dev:app`).",
   'app.openhumanLink.notifications.permissionOff':
-    "L'autorizzazione alle notifiche è disattivata. Abilita OpenHuman in Impostazioni di sistema → Notifiche, quindi riprova.",
+    "L'autorizzazione alle notifiche è disattivata. Abilita Marvi in Impostazioni di sistema → Notifiche, quindi riprova.",
   'app.openhumanLink.notifications.triggerFailed':
-    'OpenHuman non è riuscito ad attivare una notifica di sistema. Controlla le impostazioni di notifica del sistema operativo e riprova.',
+    'Marvi non è riuscito ad attivare una notifica di sistema. Controlla le impostazioni di notifica del sistema operativo e riprova.',
   'app.openhumanLink.notifications.welcomeBody':
     'Riceverai avvisi qui quando qualcosa richiederà la tua attenzione.',
-  'app.openhumanLink.notifications.welcomeTitle': "OpenHuman è pronto all'uso",
+  'app.openhumanLink.notifications.welcomeTitle': "Marvi è pronto all'uso",
   'app.openhumanLink.status.closed': 'Chiuso',
   'app.openhumanLink.status.connected': 'Connesso',
   'app.openhumanLink.status.error': 'Errore',

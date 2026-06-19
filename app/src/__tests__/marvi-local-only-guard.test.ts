@@ -18,14 +18,14 @@ describe('Marvi local-only guard', () => {
     expect(source).not.toContain('value="backend"');
   });
 
-  test('bottom tab bar does not reintroduce hosted account menu surfaces', () => {
-    const source = readRepoFile('src/components/BottomTabBar.tsx');
+  test('desktop navigation does not reintroduce hosted account menu surfaces', () => {
+    const source = readRepoFile('src/config/navConfig.ts');
 
-    expect(source).not.toContain('aria-haspopup');
-    expect(source).not.toContain('Invite a friend');
-    expect(source).not.toContain('Wallet');
-    expect(source).not.toContain('Billing');
-    expect(source).not.toContain('Rewards');
+    expect(source).not.toContain("id: 'billing'");
+    expect(source).not.toContain("id: 'wallet'");
+    expect(source).not.toContain("id: 'rewards'");
+    expect(source).not.toContain("id: 'invites'");
+    expect(source).not.toContain("id: 'agent-world'");
   });
 
   test('desktop routes do not import hosted rewards or invites pages', () => {
@@ -48,5 +48,49 @@ describe('Marvi local-only guard', () => {
     expect(analytics).toContain('const MARVI_OUTBOUND_TELEMETRY_ENABLED = false');
     expect(linkModal).not.toContain("'community/discord'");
     expect(linkModal).not.toContain("'community/discord-report'");
+  });
+
+  test('runtime prompts identify the assistant only as Marvi', () => {
+    const runtimePromptFiles = [
+      '../src/openhuman/agent/prompts/IDENTITY.md',
+      '../src/openhuman/agent/prompts/SOUL.md',
+      'src/SOUL.md',
+      '../src/openhuman/desktop_companion/pipeline.rs',
+      '../src/openhuman/meet_agent/brain/access.rs',
+      '../src/openhuman/meet_agent/brain/constants.rs',
+      '../src/openhuman/skill_registry/agent/skill_setup/prompt.md',
+      '../src/openhuman/skill_runtime/agent/skill_executor/prompt.md',
+    ];
+
+    const forbiddenIdentity = [
+      /you are openhuman/i,
+      /you are hermes/i,
+      /\bhermeshub\b/i,
+      /\bopenhuman (?:node|python) runtime\b/i,
+    ];
+
+    for (const relativePath of runtimePromptFiles) {
+      const source = readRepoFile(relativePath);
+      for (const pattern of forbiddenIdentity) {
+        expect(source, `${relativePath} contains ${pattern}`).not.toMatch(pattern);
+      }
+    }
+  });
+
+  test('meeting identity defaults and wake words stay Marvi-facing', () => {
+    const files = [
+      '../src/openhuman/meet_agent/brain/constants.rs',
+      '../src/openhuman/meet_agent/brain/access.rs',
+      '../src/openhuman/meet_agent/schemas.rs',
+    ];
+
+    for (const relativePath of files) {
+      const source = readRepoFile(relativePath);
+      expect(source, `${relativePath} does not expose the Marvi meeting identity`).toMatch(/Marvi/);
+      expect(source, `${relativePath} exposes the old meeting identity`).not.toMatch(/you are openhuman/i);
+      expect(source, `${relativePath} advertises the old wake word`).not.toMatch(
+        /gate \(\\"hey openhuman\\"\)/i
+      );
+    }
   });
 });

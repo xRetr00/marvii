@@ -2655,12 +2655,12 @@ const messages: TranslationMap = {
   'app.openhumanLink.notifications.desktopOnly':
     'Native Benachrichtigungen sind nur in der Desktop-App verfügbar (führe `pnpm dev:app` aus).',
   'app.openhumanLink.notifications.permissionOff':
-    'Die Benachrichtigungsberechtigung ist deaktiviert. Aktiviere OpenHuman in den Systemeinstellungen → Benachrichtigungen und versuche es erneut.',
+    'Die Benachrichtigungsberechtigung ist deaktiviert. Aktiviere Marvi in den Systemeinstellungen → Benachrichtigungen und versuche es erneut.',
   'app.openhumanLink.notifications.triggerFailed':
-    'OpenHuman konnte keine Systembenachrichtigung auslösen. Überprüfe die Benachrichtigungseinstellungen des Betriebssystems und versuche es erneut.',
+    'Marvi konnte keine Systembenachrichtigung auslösen. Überprüfe die Benachrichtigungseinstellungen des Betriebssystems und versuche es erneut.',
   'app.openhumanLink.notifications.welcomeBody':
     'Du erhältst hier Hinweise, wenn etwas deine Aufmerksamkeit erfordert.',
-  'app.openhumanLink.notifications.welcomeTitle': 'OpenHuman ist startklar',
+  'app.openhumanLink.notifications.welcomeTitle': 'Marvi ist startklar',
   'app.openhumanLink.status.closed': 'Geschlossen',
   'app.openhumanLink.status.connected': 'Verbunden',
   'app.openhumanLink.status.error': 'Fehler',

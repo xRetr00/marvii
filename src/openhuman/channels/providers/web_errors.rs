@@ -47,7 +47,7 @@ pub(crate) fn inference_budget_exceeded_user_message() -> &'static str {
 }
 
 pub(crate) fn generic_inference_error_user_message() -> &'static str {
-    "Something went wrong. Please try again.\nThis error has been reported. You can also report it on Discord.\n<openhuman-link path=\"community/discord-report\">Report on Discord</openhuman-link>"
+    "Something went wrong. Please try again. Check Marvi's local logs for details if the problem continues."
 }
 
 /// Pull the structured provider error message out of a raw error string.
@@ -519,8 +519,8 @@ pub(crate) fn classify_inference_error(err: &str) -> ClassifiedError {
         // `auth_error`.
         ClassifiedError {
             error_type: "session_expired",
-            message: "Your OpenHuman session expired while the app was idle. \
-                 Please sign in again to resume."
+            message: "Your Marvi session expired while the app was idle. \
+                 Restart the local session to resume."
                 .to_string(),
             source: "auth",
             retryable: false,
@@ -534,7 +534,7 @@ pub(crate) fn classify_inference_error(err: &str) -> ClassifiedError {
         ClassifiedError {
             error_type: "action_budget_exceeded",
             message: with_provider_detail(
-                "You've hit OpenHuman's per-hour action budget — this is a local safety cap, \
+                "You've hit Marvi's per-hour action budget — this is a local safety cap, \
                  not your AI provider. The window decays gradually; you can keep chatting in \
                  this thread and tool-heavy steps will resume as the budget refills.",
                 err,

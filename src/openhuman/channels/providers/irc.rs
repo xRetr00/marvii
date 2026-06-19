@@ -393,11 +393,7 @@ impl Channel for IrcChannel {
 
         // --- Nick/User registration ---
         Self::send_raw(&mut writer, &format!("NICK {current_nick}")).await?;
-        Self::send_raw(
-            &mut writer,
-            &format!("USER {} 0 * :OpenHuman", self.username),
-        )
-        .await?;
+        Self::send_raw(&mut writer, &format!("USER {} 0 * :Marvi", self.username)).await?;
 
         // Store writer for send()
         {
@@ -642,7 +638,7 @@ pub mod test_support {
         IrcChannel::new(IrcChannelConfig {
             server: "irc.example.test".to_string(),
             port: 6697,
-            nickname: "openhuman".to_string(),
+            nickname: "marvi".to_string(),
             username: None,
             channels: vec!["#ops".to_string()],
             allowed_users,
