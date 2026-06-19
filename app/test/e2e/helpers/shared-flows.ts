@@ -81,14 +81,7 @@ export async function waitForHomePage(timeout = 15_000) {
   // Home page (Home.tsx) renders t('home.askAssistant') = 'Ask your assistant anything...'
   // as a stable CTA button. The animated typewriter heading ('Welcome, <name> 👋' etc.)
   // and old strings ('Good morning', 'Message OpenHuman', 'Upgrade to Premium') are gone.
-  // After the /home → /chat redirect (AppRoutes.tsx), the chat new-window hero renders
-  // t('home.statusOk') instead, so include both the old CTA text and the new status copy.
-  const candidates = [
-    'Ask your assistant anything',
-    'Your device is connected',
-    'Your assistant is ready when you are',
-    'Type something below to get started',
-  ];
+  const candidates = ['Ask your assistant anything', 'Your device is connected'];
   const deadline = Date.now() + timeout;
   while (Date.now() < deadline) {
     for (const text of candidates) {
@@ -129,15 +122,14 @@ export async function clickFirstMatch(candidates, timeout = 5_000) {
  * Appium Mac2 cannot run W3C Execute Script in WKWebView — use sidebar labels
  * instead.
  *
- * Current IA (bottom-tab bar, see app/src/config/navConfig.ts): the four tabs
- * are Chat, Human, Brain, Connections. Settings is reached via the gear icon in
- * the sidebar header. Home no longer has its own tab (it was merged into Chat in
- * Phase 6 — /home redirects to /chat via HASH_REDIRECTS below). The earlier
+ * Current IA (bottom-tab bar, see app/src/config/navConfig.ts): the six tabs
+ * are Home, Chat, Human, Brain, Connections, Settings. The earlier
  * "Assistant"/"Activity"/"Alerts" labels are gone. Only real tabs belong here;
- * routes that redirect (e.g. /home, /activity, /intelligence, /skills, /channels)
- * are resolved through HASH_REDIRECTS below — they have no sidebar button.
+ * routes that redirect (e.g. /activity, /intelligence, /skills, /channels) are
+ * resolved through HASH_REDIRECTS below — they have no sidebar button.
  */
 const HASH_TO_SIDEBAR_LABEL = {
+  '/home': 'Home',
   '/chat': 'Chat',
   '/human': 'Human',
   '/brain': 'Brain',
@@ -152,7 +144,6 @@ const HASH_TO_SIDEBAR_LABEL = {
  * app/src/AppRoutes.tsx.
  */
 const HASH_REDIRECTS = {
-  '/home': '/chat',
   '/skills': '/connections',
   '/channels': '/connections',
   '/activity': '/settings/notifications',
@@ -348,8 +339,7 @@ export async function navigateViaHash(hash) {
     return;
   }
 
-  // Resolve redirect before label lookup so that e.g. /home → Chat works on Mac2.
-  const label = HASH_TO_SIDEBAR_LABEL[resolveRedirect(normalized)];
+  const label = HASH_TO_SIDEBAR_LABEL[normalized];
   if (label) {
     try {
       await clickText(label, 12_000);
@@ -367,23 +357,20 @@ export async function navigateViaHash(hash) {
 }
 
 export async function navigateToHome() {
-  // /home redirects to /chat (AppRoutes.tsx). Navigate directly to /chat so
-  // the sidebar button click path uses the 'Chat' label which exists, rather
-  // than 'Home' which no longer has a dedicated tab.
-  await navigateViaHash('/chat');
+  await navigateViaHash('/home');
   const homeText = await waitForHomePage(10_000);
   if (!homeText) {
     if (supportsExecuteScript()) {
       try {
         await browser.execute(() => {
-          window.location.hash = '/chat';
+          window.location.hash = '/home';
         });
       } catch {
         /* ignore */
       }
     } else {
       try {
-        await clickText('Chat', 8_000);
+        await clickText('Home', 8_000);
       } catch {
         /* ignore */
       }

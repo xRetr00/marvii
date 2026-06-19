@@ -34,21 +34,10 @@ interface RouteCheck {
 
 const ROUTES: RouteCheck[] = [
   // Chat composer header: "New" thread button, agent-profile "Reasoning" pill.
-  { hash: '/chat', markers: ['New', 'Chat', 'Message', 'Reasoning', 'Your assistant is ready'] },
+  { hash: '/chat', markers: ['New', 'Chat', 'Message', 'Reasoning'] },
   // Connections page (was /skills) — tabs: Apps, Messaging, Tools, Explorer
   { hash: '/connections', markers: ['Apps', 'Messaging', 'Tools', 'Connections'] },
-  // /home redirects to /chat (AppRoutes.tsx Phase 6); markers cover both old
-  // Home.tsx CTA text and the new chat new-window hero status copy.
-  {
-    hash: '/home',
-    markers: [
-      'Ask your assistant anything',
-      'Your device is connected',
-      'Your assistant is ready',
-      'Home',
-      'Chat',
-    ],
-  },
+  { hash: '/home', markers: ['Ask your assistant anything', 'Your device is connected', 'Home'] },
   {
     hash: '/notifications',
     markers: ['Notifications', 'Alerts', 'Notification', 'No notifications'],
@@ -59,16 +48,7 @@ const ROUTES: RouteCheck[] = [
   // Subconscious surface and memory live here now). Tabs: Graph, Memory,
   // Sources, Subconscious, Sync.
   { hash: '/brain', markers: ['Graph', 'Memory', 'Subconscious', 'Sources'] },
-  {
-    hash: '/home',
-    markers: [
-      'Ask your assistant anything',
-      'Your device is connected',
-      'Your assistant is ready',
-      'Home',
-      'Chat',
-    ],
-  },
+  { hash: '/home', markers: ['Ask your assistant anything', 'Your device is connected', 'Home'] },
 ];
 
 async function rootTextLength(): Promise<number> {
@@ -149,16 +129,14 @@ describe('Navigation smoothness', () => {
     console.log(`${LOG_PREFIX} N1.2: passed — rapid cycle complete`);
   });
 
-  it('N1.3 — final state is /home (or /chat redirect) with correct content', async () => {
+  it('N1.3 — final state is /home with correct content', async () => {
     console.log(`${LOG_PREFIX} N1.3: navigating to /home for final check`);
     await navigateViaHash('/home');
     const homeText = await waitForHomePage(ROUTE_TIMEOUT);
     expect(homeText).toBeTruthy();
 
-    // AppRoutes.tsx redirects /home → /chat, so the settled hash is #/chat.
-    // Accept either form to keep the test resilient across routing changes.
     const hash = await browser.execute(() => window.location.hash);
-    expect(hash).toMatch(/^#\/(home|chat)(\/|$)/);
-    console.log(`${LOG_PREFIX} N1.3: passed — on ${hash}, content: "${homeText}"`);
+    expect(hash).toMatch(/^#\/home/);
+    console.log(`${LOG_PREFIX} N1.3: passed — on /home, content: "${homeText}"`);
   });
 });
