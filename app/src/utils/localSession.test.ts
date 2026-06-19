@@ -44,8 +44,8 @@ describe('localSession', () => {
     expect(LOCAL_SESSION_USER).toEqual({
       _id: LOCAL_SESSION_USER_ID,
       id: LOCAL_SESSION_USER_ID,
-      name: 'Local User',
-      email: 'local@openhuman.local',
+      name: 'Marvi Local',
+      email: 'local@marvi.local',
     });
   });
 });

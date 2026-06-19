@@ -326,7 +326,7 @@ impl TelegramChannel {
                                 Ok(()) => {
                                     let _ = self
                                         .send(&SendMessage::new(
-                                            "✅ Telegram account bound successfully. You can talk to OpenHuman now.",
+                                            "✅ Telegram account bound successfully. You can talk to Marvi now.",
                                             &chat_id,
                                         ))
                                         .await;

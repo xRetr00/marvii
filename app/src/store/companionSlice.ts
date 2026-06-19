@@ -111,7 +111,7 @@ export const { setCompanionState, setSessionActive, setConfig, setLastError, cle
   companionSlice.actions;
 
 // ── Selectors ────────────────────────────────────────────────────────
-// Selectors tolerate a missing `companion` slice so consumers (e.g. BottomTabBar)
+// Selectors tolerate a missing `companion` slice so consumers
 // don't crash inside test harnesses that mock the store without this slice.
 
 type MaybeCompanionRoot = { companion?: CompanionSliceState };

@@ -2,8 +2,8 @@
  * Single source of truth for bottom-tab-bar navigation entries and the
  * avatar-menu items that appear in the agent-profile popover.
  *
- * This module is pure data — no JSX, no React imports.  Icons are owned by
- * BottomTabBar.tsx and mapped from tab.id.
+ * This module is pure data — no JSX, no React imports. Icons are mapped from
+ * tab.id by the sidebar navigation components.
  */
 
 // ── Tab bar ──────────────────────────────────────────────────────────────────

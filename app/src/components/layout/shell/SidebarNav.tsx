@@ -11,7 +11,7 @@ import { NavIcon } from './navIcons';
 
 /**
  * Active-route matching for a nav entry. Mirrors the rules the former
- * `BottomTabBar` used so deep links keep their tab highlighted:
+ * the primary navigation uses so deep links keep their tab highlighted:
  *   - `/chat`     → any `/chat...` route
  *   - `/settings` → the settings index and every `/settings/*` panel
  *   - `/home`     → exact match (so `/` redirects don't light it up)

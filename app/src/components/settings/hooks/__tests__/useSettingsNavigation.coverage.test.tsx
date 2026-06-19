@@ -80,13 +80,6 @@ describe('notifications', () => {
     expectRoute('/settings/notifications', 'notifications'));
 });
 
-describe('crypto section leaves', () => {
-  test('recovery-phrase resolves to recovery-phrase', () =>
-    expectRoute('/settings/recovery-phrase', 'recovery-phrase'));
-  test('wallet-balances resolves to wallet-balances', () =>
-    expectRoute('/settings/wallet-balances', 'wallet-balances'));
-});
-
 describe('developer section leaves', () => {
   test('cron-jobs resolves to cron-jobs', () => expectRoute('/settings/cron-jobs', 'cron-jobs'));
   test('intelligence resolves to intelligence', () =>
@@ -112,6 +105,10 @@ describe('retired hub slugs resolve to home', () => {
 describe('unknown / removed routes', () => {
   test('"messaging" route (removed) resolves to home', () =>
     expectRoute('/settings/messaging', 'home'));
+  test('"recovery-phrase" route (removed) resolves to home', () =>
+    expectRoute('/settings/recovery-phrase', 'home'));
+  test('"wallet-balances" route (removed) resolves to home', () =>
+    expectRoute('/settings/wallet-balances', 'home'));
   test('completely unknown slug resolves to home', () =>
     expectRoute('/settings/not-a-real-route', 'home'));
 });

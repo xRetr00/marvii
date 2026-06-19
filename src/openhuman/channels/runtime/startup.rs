@@ -625,7 +625,7 @@ pub async fn start_channels(mut config: Config) -> Result<()> {
         return Ok(());
     }
 
-    println!("🦀 OpenHuman Channel Server");
+    println!("🦀 Marvi Channel Server");
     println!("  🤖 Model:    {model}");
     let effective_backend = memory_store::effective_memory_backend_name(
         &config.memory.backend,

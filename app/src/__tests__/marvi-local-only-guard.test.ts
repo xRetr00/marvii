@@ -93,4 +93,21 @@ describe('Marvi local-only guard', () => {
       );
     }
   });
+
+  test('channel startup and success messages stay Marvi-facing', () => {
+    const files = [
+      '../src/openhuman/channels/runtime/startup.rs',
+      '../src/openhuman/channels/providers/dingtalk.rs',
+      '../src/openhuman/channels/providers/telegram/channel_recv.rs',
+    ];
+
+    const sources = files.map(readRepoFile);
+
+    expect(sources[0]).not.toContain('OpenHuman Channel Server');
+    expect(sources[0]).toContain('Marvi Channel Server');
+    expect(sources[1]).not.toContain('unwrap_or("OpenHuman")');
+    expect(sources[1]).toContain('unwrap_or("Marvi")');
+    expect(sources[2]).not.toContain('You can talk to OpenHuman now.');
+    expect(sources[2]).toContain('You can talk to Marvi now.');
+  });
 });
