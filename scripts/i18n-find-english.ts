@@ -64,7 +64,6 @@ const INTENTIONAL_ENGLISH = new Set([
   "memorySources.globPatternPlaceholder",
   "modelCouncil.editCouncilAria",
   "modelCouncil.jurorLabel",
-  "nav.agentWorld",
   "memorySources.searchQueryPlaceholder",
   "migration.vendor.hermes",
   "namespaceOverview.entitiesShort",
