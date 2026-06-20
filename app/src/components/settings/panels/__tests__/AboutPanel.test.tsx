@@ -135,7 +135,7 @@ describe('AboutPanel', () => {
 
     expect(mockOpenUrl).toHaveBeenCalledTimes(1);
     expect(mockOpenUrl.mock.calls[0][0]).toEqual(
-      expect.stringContaining('github.com/tinyhumansai/openhuman')
+      expect.stringContaining('github.com/xRetr00/marvii')
     );
   });
 

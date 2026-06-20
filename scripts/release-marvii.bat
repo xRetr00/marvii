@@ -65,13 +65,13 @@ node scripts\release\verify-version-sync.js %VERSION%
 if errorlevel 1 exit /b 1
 
 echo [release-marvii] Running focused validation...
-pnpm --dir app test -- src/__tests__/marvi-local-only-guard.test.ts src/hooks/useAppUpdate.test.ts src/components/__tests__/AppUpdatePrompt.test.tsx --reporter=dot
+call pnpm --dir app test -- src/__tests__/marvi-local-only-guard.test.ts src/hooks/useAppUpdate.test.ts src/components/__tests__/AppUpdatePrompt.test.tsx --reporter=dot
 if errorlevel 1 exit /b 1
 
-pnpm --dir app compile
+call pnpm --dir app compile
 if errorlevel 1 exit /b 1
 
-pnpm --dir app build
+call pnpm --dir app build
 if errorlevel 1 exit /b 1
 
 pwsh -NoProfile -File scripts\tests\OpenHumanWindowsInstall.Tests.ps1

@@ -20,7 +20,7 @@ vi.mock('../../../utils/config', () => ({
   CORE_CARGO_VERSION: '0.0.0-test',
   GA_MEASUREMENT_ID: undefined,
   IS_DEV: true,
-  LATEST_APP_DOWNLOAD_URL: 'https://github.com/tinyhumansai/openhuman/releases/latest',
+  LATEST_APP_DOWNLOAD_URL: 'https://github.com/xRetr00/marvii/releases/latest',
   OPENPANEL_API_URL: 'https://panel.tinyhumans.ai/api',
   OPENPANEL_CLIENT_ID: undefined,
   SENTRY_DSN: undefined,
@@ -83,9 +83,7 @@ describe('ServiceBlockingGate', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Download Latest Version' }));
 
     await waitFor(() => {
-      expect(mockOpenUrl).toHaveBeenCalledWith(
-        'https://github.com/tinyhumansai/openhuman/releases/latest'
-      );
+      expect(mockOpenUrl).toHaveBeenCalledWith('https://github.com/xRetr00/marvii/releases/latest');
     });
   });
 
