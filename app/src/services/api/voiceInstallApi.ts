@@ -57,6 +57,16 @@ export interface InstallPiperParams {
   force?: boolean;
 }
 
+export type VoiceRuntimeState = 'missing' | 'installing' | 'installed' | 'error';
+
+export interface VoiceRuntimeStatus {
+  state: VoiceRuntimeState;
+  stage: string | null;
+  error_detail: string | null;
+  python_path: string | null;
+  kws_model_path: string | null;
+}
+
 /**
  * Kick off (or re-kick) a Whisper install. Resolves with the post-install
  * status snapshot — the renderer should also poll `whisperInstallStatus`
@@ -108,6 +118,20 @@ export async function whisperInstallStatus(): Promise<VoiceInstallStatus> {
 export async function piperInstallStatus(): Promise<VoiceInstallStatus> {
   return await callCoreRpc<VoiceInstallStatus>({
     method: 'openhuman.inference_piper_install_status',
+    params: {},
+  });
+}
+
+export async function voiceRuntimeStatus(): Promise<VoiceRuntimeStatus> {
+  return await callCoreRpc<VoiceRuntimeStatus>({
+    method: 'openhuman.voice_runtime_status',
+    params: {},
+  });
+}
+
+export async function setupVoiceRuntime(): Promise<VoiceRuntimeStatus> {
+  return await callCoreRpc<VoiceRuntimeStatus>({
+    method: 'openhuman.voice_runtime_setup',
     params: {},
   });
 }

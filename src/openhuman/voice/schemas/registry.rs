@@ -5,11 +5,11 @@ use crate::core::{ControllerSchema, FieldSchema, TypeSchema};
 
 use super::handlers::{
     handle_overlay_stt_notify, handle_voice_cloud_transcribe, handle_voice_list_models,
-    handle_voice_reply_synthesize, handle_voice_server_start, handle_voice_server_status,
-    handle_voice_server_stop, handle_voice_set_providers, handle_voice_status,
-    handle_voice_stt_dispatch, handle_voice_test_provider, handle_voice_transcribe,
-    handle_voice_transcribe_bytes, handle_voice_tts, handle_voice_tts_dispatch,
-    handle_voice_update_provider_settings,
+    handle_voice_reply_synthesize, handle_voice_runtime_setup, handle_voice_runtime_status,
+    handle_voice_server_start, handle_voice_server_status, handle_voice_server_stop,
+    handle_voice_set_providers, handle_voice_status, handle_voice_stt_dispatch,
+    handle_voice_test_provider, handle_voice_transcribe, handle_voice_transcribe_bytes,
+    handle_voice_tts, handle_voice_tts_dispatch, handle_voice_update_provider_settings,
 };
 use super::helpers::{json_output, optional_bool, optional_string, required_string};
 
@@ -30,6 +30,8 @@ pub fn all_voice_controller_schemas() -> Vec<ControllerSchema> {
         voice_schemas("voice_server_start"),
         voice_schemas("voice_server_stop"),
         voice_schemas("voice_server_status"),
+        voice_schemas("voice_runtime_status"),
+        voice_schemas("voice_runtime_setup"),
         voice_schemas("overlay_stt_notify"),
     ]
 }
@@ -95,6 +97,14 @@ pub fn all_voice_registered_controllers() -> Vec<RegisteredController> {
         RegisteredController {
             schema: voice_schemas("voice_server_status"),
             handler: handle_voice_server_status,
+        },
+        RegisteredController {
+            schema: voice_schemas("voice_runtime_status"),
+            handler: handle_voice_runtime_status,
+        },
+        RegisteredController {
+            schema: voice_schemas("voice_runtime_setup"),
+            handler: handle_voice_runtime_setup,
         },
         RegisteredController {
             schema: voice_schemas("overlay_stt_notify"),
@@ -370,6 +380,21 @@ pub fn voice_schemas(function: &str) -> ControllerSchema {
             description: "Get the current voice dictation server status.",
             inputs: vec![],
             outputs: vec![json_output("status", "Current voice server status.")],
+        },
+        "voice_runtime_status" => ControllerSchema {
+            namespace: "voice",
+            function: "runtime_status",
+            description: "Get the managed Sherpa KWS and PocketTTS runtime installation status.",
+            inputs: vec![],
+            outputs: vec![json_output("status", "Managed voice runtime status.")],
+        },
+        "voice_runtime_setup" => ControllerSchema {
+            namespace: "voice",
+            function: "runtime_setup",
+            description:
+                "Install the managed CPU voice Python runtime, PocketTTS, Sherpa-ONNX, and KWS assets.",
+            inputs: vec![],
+            outputs: vec![json_output("status", "Managed voice runtime installation status.")],
         },
         "overlay_stt_notify" => ControllerSchema {
             namespace: "voice",

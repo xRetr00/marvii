@@ -804,6 +804,10 @@ fn handle_update_voice_server_settings(params: Map<String, Value>) -> Controller
             wake_word_threshold: update.wake_word_threshold,
             wake_word_debug: update.wake_word_debug,
             wake_word_variants: update.wake_word_variants,
+            vad_onset_threshold: update.vad_onset_threshold,
+            vad_hangover_ms: update.vad_hangover_ms,
+            vad_min_speech_ms: update.vad_min_speech_ms,
+            vad_max_utterance_secs: update.vad_max_utterance_secs,
         };
         let result = config_rpc::load_and_apply_voice_server_settings(patch).await?;
         // Apply the always-on toggle live (start/idle the capture loop) so the

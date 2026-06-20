@@ -98,6 +98,10 @@ pub struct VoiceServerSettingsPatch {
     pub wake_word_threshold: Option<f32>,
     pub wake_word_debug: Option<bool>,
     pub wake_word_variants: Option<Vec<String>>,
+    pub vad_onset_threshold: Option<f32>,
+    pub vad_hangover_ms: Option<u32>,
+    pub vad_min_speech_ms: Option<u32>,
+    pub vad_max_utterance_secs: Option<f32>,
 }
 
 /// Updates the browser-related settings in the configuration.
@@ -589,6 +593,10 @@ pub async fn get_voice_server_settings() -> Result<RpcOutcome<serde_json::Value>
         "wake_word_threshold": config.voice_server.wake_word_threshold,
         "wake_word_debug": config.voice_server.wake_word_debug,
         "wake_word_variants": config.voice_server.wake_word_variants,
+        "vad_onset_threshold": config.voice_server.vad_onset_threshold,
+        "vad_hangover_ms": config.voice_server.vad_hangover_ms,
+        "vad_min_speech_ms": config.voice_server.vad_min_speech_ms,
+        "vad_max_utterance_secs": config.voice_server.vad_max_utterance_secs,
     });
     Ok(RpcOutcome::new(
         result,
@@ -654,6 +662,18 @@ pub async fn load_and_apply_voice_server_settings(
             .map(|v| v.trim().to_string())
             .filter(|v| !v.is_empty())
             .collect();
+    }
+    if let Some(value) = update.vad_onset_threshold {
+        config.voice_server.vad_onset_threshold = value.clamp(0.0001, 1.0);
+    }
+    if let Some(value) = update.vad_hangover_ms {
+        config.voice_server.vad_hangover_ms = value.clamp(100, 5_000);
+    }
+    if let Some(value) = update.vad_min_speech_ms {
+        config.voice_server.vad_min_speech_ms = value.clamp(20, 5_000);
+    }
+    if let Some(value) = update.vad_max_utterance_secs {
+        config.voice_server.vad_max_utterance_secs = value.clamp(1.0, 120.0);
     }
     config.save().await.map_err(|e| e.to_string())?;
     let snapshot = snapshot_config_json(&config)?;

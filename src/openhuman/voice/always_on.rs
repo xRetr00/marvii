@@ -146,9 +146,13 @@ impl VadSegmenter {
                 // Close on a silence hangover.
                 if silence_run_ms >= self.cfg.hangover_ms {
                     self.state = State::Silent;
-                    let emit = voiced_ms >= self.cfg.min_speech_ms;
+                    // RMS dips inside connected speech are normal, especially
+                    // for quiet consonants. Count the active span and exclude
+                    // only the final silence hangover.
+                    let speech_span_ms = total_ms.saturating_sub(silence_run_ms);
+                    let emit = speech_span_ms >= self.cfg.min_speech_ms;
                     return Some(VadEvent::SpeechEnd {
-                        voiced_ms,
+                        voiced_ms: speech_span_ms,
                         emit,
                         forced: false,
                     });
@@ -181,7 +185,9 @@ use crate::openhuman::config::Config;
 use crate::openhuman::voice::audio_capture::{
     chunk_rms, encode_wav_16k, resample, to_mono, TARGET_SAMPLE_RATE,
 };
-use std::sync::atomic::{AtomicBool, Ordering};
+use base64::Engine as _;
+use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
+use std::time::Duration;
 
 /// The capture thread + processor have been spawned (once per process).
 static RUNNING: AtomicBool = AtomicBool::new(false);
@@ -196,10 +202,20 @@ static ENABLED: AtomicBool = AtomicBool::new(false);
 /// screen locked). Driven by [`spawn_lock_watcher`] on macOS.
 static PAUSED: AtomicBool = AtomicBool::new(false);
 
+/// Latest voice configuration and a monotonic revision. Settings RPCs call
+/// [`start_if_enabled`] after saving, so the long-lived capture task can apply
+/// VAD and KWS tuning without reopening the microphone or restarting the app.
+static ACTIVE_CONFIG: once_cell::sync::Lazy<std::sync::RwLock<Option<Config>>> =
+    once_cell::sync::Lazy::new(|| std::sync::RwLock::new(None));
+static CONFIG_REVISION: AtomicU64 = AtomicU64::new(0);
+
 /// VAD frame size. 20 ms at 16 kHz = 320 samples — small enough for responsive
 /// onset/hangover detection, large enough for a stable RMS estimate.
 const FRAME_MS: u32 = 20;
 const FRAME_SAMPLES: usize = (TARGET_SAMPLE_RATE as usize / 1000) * FRAME_MS as usize;
+const KWS_BATCH_SAMPLES: usize = TARGET_SAMPLE_RATE as usize / 10;
+const KWS_PREROLL_SAMPLES: usize = TARGET_SAMPLE_RATE as usize;
+const WAKE_COMMAND_TIMEOUT: Duration = Duration::from_secs(8);
 
 /// Hard cap on a buffered utterance (defensive — the segmenter's
 /// `max_utterance_ms` should flush first; this bounds memory if it doesn't).
@@ -216,6 +232,10 @@ const MAX_UTTERANCE_SAMPLES: usize = TARGET_SAMPLE_RATE as usize * 60;
 /// it reaches the agent exactly like a hotkey dictation, and lights up the notch).
 pub async fn start_if_enabled(app_config: &Config) {
     let on = app_config.voice_server.always_on_enabled;
+    *ACTIVE_CONFIG
+        .write()
+        .expect("always-on config lock poisoned") = Some(app_config.clone());
+    CONFIG_REVISION.fetch_add(1, Ordering::SeqCst);
     ENABLED.store(on, Ordering::SeqCst);
     if !on {
         log::info!("{LOG_PREFIX} disabled — capture idle (toggle off)");
@@ -248,11 +268,20 @@ pub async fn start_if_enabled(app_config: &Config) {
     // Privacy hook: pause capture while the screen is locked.
     spawn_lock_watcher();
 
-    let onset_threshold = vad.onset_threshold;
     tokio::spawn(async move {
+        let mut config = config;
+        let mut applied_revision = CONFIG_REVISION.load(Ordering::SeqCst);
         let mut seg = VadSegmenter::new(vad);
+        let mut onset_threshold = vad.onset_threshold;
         let mut pending: Vec<f32> = Vec::new();
         let mut utterance: Vec<f32> = Vec::new();
+        let mut kws = start_kws_worker(&config).await;
+        let mut kws_batch: Vec<f32> = Vec::with_capacity(KWS_BATCH_SAMPLES);
+        let mut kws_preroll: std::collections::VecDeque<f32> =
+            std::collections::VecDeque::with_capacity(KWS_PREROLL_SAMPLES);
+        let mut wake_armed = false;
+        let mut wake_armed_at: Option<std::time::Instant> = None;
+        let mut last_kws_debug = std::time::Instant::now();
         // Test-build diagnostics: confirm audio actually flows from the mic and
         // surface live input levels vs the onset threshold (every ~5s) so the VAD
         // can be tuned per mic/room without guessing. Levels are loudness, not PII.
@@ -262,6 +291,35 @@ pub async fn start_if_enabled(app_config: &Config) {
         let mut last_level_log = std::time::Instant::now();
 
         while let Some(chunk) = rx.recv().await {
+            let current_revision = CONFIG_REVISION.load(Ordering::SeqCst);
+            if current_revision != applied_revision {
+                if let Some(latest) = ACTIVE_CONFIG
+                    .read()
+                    .expect("always-on config lock poisoned")
+                    .clone()
+                {
+                    config = latest;
+                    let next_vad = VadConfig::from_server_config(&config.voice_server);
+                    onset_threshold = next_vad.onset_threshold;
+                    seg = VadSegmenter::new(next_vad);
+                    pending.clear();
+                    utterance.clear();
+                    kws_batch.clear();
+                    kws_preroll.clear();
+                    wake_armed = false;
+                    wake_armed_at = None;
+                    kws = start_kws_worker(&config).await;
+                    while rx.try_recv().is_ok() {}
+                    log::info!(
+                        "{LOG_PREFIX} applied live config revision={current_revision} onset={:.4} hangover={}ms min_speech={}ms",
+                        next_vad.onset_threshold,
+                        next_vad.hangover_ms,
+                        next_vad.min_speech_ms
+                    );
+                }
+                applied_revision = current_revision;
+                continue;
+            }
             if !first_chunk_logged {
                 first_chunk_logged = true;
                 log::info!(
@@ -277,12 +335,34 @@ pub async fn start_if_enabled(app_config: &Config) {
                 }
                 pending.clear();
                 utterance.clear();
+                kws_batch.clear();
+                kws_preroll.clear();
+                wake_armed = false;
+                wake_armed_at = None;
                 continue;
             }
             pending.extend_from_slice(&chunk);
             while pending.len() >= FRAME_SAMPLES {
                 let frame: Vec<f32> = pending.drain(..FRAME_SAMPLES).collect();
                 let rms = chunk_rms(&frame);
+                if wake_armed
+                    && wake_armed_at
+                        .is_some_and(|armed_at| armed_at.elapsed() >= WAKE_COMMAND_TIMEOUT)
+                {
+                    log::info!(
+                        "{LOG_PREFIX} wake command window expired; returning to keyword listening"
+                    );
+                    wake_armed = false;
+                    wake_armed_at = None;
+                    seg.reset();
+                    utterance.clear();
+                    kws_preroll.clear();
+                    if let Some(worker) = kws.as_mut() {
+                        let _ = worker
+                            .request(serde_json::json!({"op": "reset"}), Duration::from_secs(1))
+                            .await;
+                    }
+                }
                 level_peak = level_peak.max(rms);
                 level_frames += 1;
                 if last_level_log.elapsed() >= std::time::Duration::from_secs(5) {
@@ -298,12 +378,78 @@ pub async fn start_if_enabled(app_config: &Config) {
                     level_frames = 0;
                     last_level_log = std::time::Instant::now();
                 }
+
+                if kws.is_some() && !wake_armed {
+                    for sample in &frame {
+                        if kws_preroll.len() == KWS_PREROLL_SAMPLES {
+                            kws_preroll.pop_front();
+                        }
+                        kws_preroll.push_back(*sample);
+                    }
+                    kws_batch.extend_from_slice(&frame);
+                    if kws_batch.len() >= KWS_BATCH_SAMPLES {
+                        let samples = std::mem::take(&mut kws_batch);
+                        let mut pcm =
+                            Vec::with_capacity(samples.len() * std::mem::size_of::<f32>());
+                        for sample in samples {
+                            pcm.extend_from_slice(&sample.to_le_bytes());
+                        }
+                        let result = kws
+                            .as_mut()
+                            .expect("checked above")
+                            .request(
+                                serde_json::json!({
+                                    "op": "audio",
+                                    "audio_f32le_base64": base64::engine::general_purpose::STANDARD.encode(pcm),
+                                }),
+                                Duration::from_secs(2),
+                            )
+                            .await;
+                        match result {
+                            Ok(response) if !response.keyword.is_empty() => {
+                                wake_armed = true;
+                                wake_armed_at = Some(std::time::Instant::now());
+                                seg.reset();
+                                utterance.clear();
+                                utterance.extend(kws_preroll.iter().copied());
+                                log::info!(
+                                    "{LOG_PREFIX} kws detected keyword_len={} threshold={:.3}",
+                                    response.keyword.len(),
+                                    config.voice_server.wake_word_threshold
+                                );
+                                notch_status("Waked", 3000);
+                            }
+                            Ok(_) => {
+                                if config.voice_server.wake_word_debug
+                                    && last_kws_debug.elapsed() >= Duration::from_secs(1)
+                                {
+                                    log::info!(
+                                        "{LOG_PREFIX} wake_debug backend=sherpa detected=false threshold={:.3} batch_ms=100 rms={rms:.4}",
+                                        config.voice_server.wake_word_threshold
+                                    );
+                                    last_kws_debug = std::time::Instant::now();
+                                }
+                                continue;
+                            }
+                            Err(error) => {
+                                log::warn!(
+                                    "{LOG_PREFIX} kws worker degraded: {error}; switching to transcript fallback"
+                                );
+                                kws = None;
+                                kws_batch.clear();
+                                kws_preroll.clear();
+                            }
+                        }
+                    } else {
+                        continue;
+                    }
+                }
+
                 match seg.push_frame(rms, FRAME_MS) {
                     Some(VadEvent::SpeechStart) => {
                         log::info!(
                             "{LOG_PREFIX} speech onset rms={rms:.4} (onset={onset_threshold:.4})"
                         );
-                        utterance.clear();
                         utterance.extend_from_slice(&frame);
                         notch_status("Listening", 2500); // pill: capturing speech
                     }
@@ -317,8 +463,22 @@ pub async fn start_if_enabled(app_config: &Config) {
                         );
                         if emit {
                             let cfg = config.clone();
+                            let wake_already_matched = kws.is_some() && wake_armed;
+                            if wake_already_matched {
+                                wake_armed = false;
+                                wake_armed_at = None;
+                                kws_preroll.clear();
+                                if let Some(worker) = kws.as_mut() {
+                                    let _ = worker
+                                        .request(
+                                            serde_json::json!({"op": "reset"}),
+                                            Duration::from_secs(1),
+                                        )
+                                        .await;
+                                }
+                            }
                             tokio::spawn(async move {
-                                transcribe_and_deliver(&cfg, captured).await;
+                                transcribe_and_deliver(&cfg, captured, wake_already_matched).await;
                             });
                         }
                     }
@@ -359,8 +519,11 @@ fn notch_status(status: &str, ttl_ms: u32) {
 /// Transcribe a finished utterance and hand the text to the dictation bus,
 /// which delivers it to the agent (auto-send) and the notch — the same path the
 /// hotkey dictation uses.
-async fn transcribe_and_deliver(config: &Config, samples_16k: Vec<f32>) {
-    use base64::Engine as _;
+async fn transcribe_and_deliver(
+    config: &Config,
+    samples_16k: Vec<f32>,
+    wake_already_matched: bool,
+) {
     let sample_count = samples_16k.len();
     let wav = match encode_wav_16k(&samples_16k) {
         Ok(w) => w,
@@ -380,31 +543,10 @@ async fn transcribe_and_deliver(config: &Config, samples_16k: Vec<f32>) {
         "{LOG_PREFIX} transcribing utterance: provider={provider_name} model={model} samples={sample_count} wav_bytes={}",
         wav.len()
     );
-    let provider =
-        match crate::openhuman::voice::create_stt_provider(&provider_name, &model, config) {
-            Ok(p) => p,
-            Err(e) => {
-                log::warn!("{LOG_PREFIX} STT provider '{provider_name}' unavailable: {e}");
-                return;
-            }
-        };
-    let audio_b64 = base64::engine::general_purpose::STANDARD.encode(&wav);
     let stt_started = std::time::Instant::now();
-    // Force English transcription. Auto-detect was rendering the English wake
-    // word "Hey Tiny" in Hindi/Bengali/etc. script ("हे टाइनी"), which could never
-    // match the Latin wake word. The wake word + commands here are English.
-    match provider
-        .transcribe(
-            config,
-            &audio_b64,
-            Some("audio/wav"),
-            Some("utterance.wav"),
-            Some("en"),
-        )
-        .await
-    {
-        Ok(outcome) => {
-            let text = outcome.value.text.trim().to_string();
+    match transcribe_always_on_wav(config, &provider_name, &model, &wav).await {
+        Ok(text) => {
+            let text = text.trim().to_string();
             log::info!(
                 "{LOG_PREFIX} transcription ok in {}ms (provider={provider_name}, chars={})",
                 stt_started.elapsed().as_millis(),
@@ -416,7 +558,16 @@ async fn transcribe_and_deliver(config: &Config, samples_16k: Vec<f32>) {
             }
             // Wake-word gate: only act on utterances addressed to the agent
             // ("Hey Tiny, …"). Strip the wake phrase and deliver the command.
-            let wake_attempt = extract_command_for_config(&text, &config.voice_server);
+            let wake_attempt = if wake_already_matched {
+                let stripped = extract_command_for_config(&text, &config.voice_server);
+                WakeAttempt {
+                    command: stripped.command.or_else(|| Some(text.clone())),
+                    phrase: stripped.phrase,
+                    confidence: 1.0,
+                }
+            } else {
+                extract_command_for_config(&text, &config.voice_server)
+            };
             if config.voice_server.wake_word_debug {
                 log::info!(
                     "{LOG_PREFIX} wake_debug detected={} confidence={:.3} threshold={:.3} phrase={:?} transcript={text:?}",
@@ -443,6 +594,128 @@ async fn transcribe_and_deliver(config: &Config, samples_16k: Vec<f32>) {
             stt_started.elapsed().as_millis()
         ),
     }
+}
+
+async fn start_kws_worker(
+    config: &Config,
+) -> Option<crate::openhuman::voice::workers::JsonLineWorker> {
+    let python = crate::openhuman::voice::workers::resolve_voice_python()?;
+    let script = crate::openhuman::voice::workers::resolve_worker_script("sherpa_kws_worker.py")?;
+    let model_dir = match crate::openhuman::voice::workers::find_kws_model_dir(config) {
+        Some(path) => path,
+        None => {
+            log::warn!(
+                "{LOG_PREFIX} Sherpa KWS assets unavailable; using transcript wake fallback"
+            );
+            return None;
+        }
+    };
+    let phrases = std::iter::once(config.voice_server.wake_word.as_str())
+        .chain(
+            config
+                .voice_server
+                .wake_word_variants
+                .iter()
+                .map(String::as_str),
+        )
+        .filter(|phrase| !phrase.trim().is_empty())
+        .collect::<Vec<_>>();
+    let args = vec![
+        "--model-dir".to_string(),
+        model_dir.to_string_lossy().to_string(),
+        "--threshold".to_string(),
+        config.voice_server.wake_word_threshold.to_string(),
+        "--keywords-json".to_string(),
+        serde_json::to_string(&phrases).ok()?,
+    ];
+    match crate::openhuman::voice::workers::JsonLineWorker::spawn(
+        "sherpa-kws",
+        &python,
+        &script,
+        &args,
+        Duration::from_secs(20),
+    )
+    .await
+    {
+        Ok(worker) => Some(worker),
+        Err(error) => {
+            log::warn!(
+                "{LOG_PREFIX} Sherpa KWS worker failed to start: {error}; using transcript wake fallback"
+            );
+            None
+        }
+    }
+}
+
+async fn transcribe_always_on_wav(
+    config: &Config,
+    provider_name: &str,
+    model: &str,
+    wav: &[u8],
+) -> Result<String, String> {
+    if provider_name.eq_ignore_ascii_case("whisper") && config.local_ai.whisper_in_process {
+        let input_dir = std::env::temp_dir().join("openhuman_voice_input");
+        tokio::fs::create_dir_all(&input_dir)
+            .await
+            .map_err(|e| format!("failed to create STT input directory: {e}"))?;
+        let input_path = input_dir.join(format!("always-on-{}.wav", uuid::Uuid::new_v4()));
+        tokio::fs::write(&input_path, wav)
+            .await
+            .map_err(|e| format!("failed to stage always-on WAV: {e}"))?;
+
+        let prompt = std::iter::once(config.voice_server.wake_word.as_str())
+            .chain(
+                config
+                    .voice_server
+                    .wake_word_variants
+                    .iter()
+                    .map(String::as_str),
+            )
+            .chain(
+                config
+                    .voice_server
+                    .custom_dictionary
+                    .iter()
+                    .map(String::as_str),
+            )
+            .filter(|value| !value.trim().is_empty())
+            .collect::<Vec<_>>()
+            .join(", ");
+        log::info!(
+            "{LOG_PREFIX} STT backend=in_process_whisper model={model} prompt_terms={}",
+            prompt.split(',').filter(|v| !v.trim().is_empty()).count()
+        );
+        let result = crate::openhuman::inference::local::global(config)
+            .transcribe_with_prompt(
+                config,
+                input_path.to_string_lossy().as_ref(),
+                (!prompt.is_empty()).then_some(prompt.as_str()),
+            )
+            .await
+            .map(|result| result.text);
+        if let Err(e) = tokio::fs::remove_file(&input_path).await {
+            log::debug!(
+                "{LOG_PREFIX} failed to remove staged always-on WAV path={} error={e}",
+                input_path.display()
+            );
+        }
+        return result;
+    }
+
+    let provider = crate::openhuman::voice::create_stt_provider(provider_name, model, config)
+        .map_err(|e| format!("STT provider '{provider_name}' unavailable: {e}"))?;
+    log::info!("{LOG_PREFIX} STT backend=provider_factory provider={provider_name} model={model}");
+    let audio_b64 = base64::engine::general_purpose::STANDARD.encode(wav);
+    provider
+        .transcribe(
+            config,
+            &audio_b64,
+            Some("audio/wav"),
+            Some("utterance.wav"),
+            Some("en"),
+        )
+        .await
+        .map(|outcome| outcome.value.text)
 }
 
 /// Route a recognized command: run high-confidence intents locally (the fast
@@ -1050,6 +1323,32 @@ mod tests {
         assert_eq!(v.max_utterance_ms, 2500);
         assert_eq!(v.hangover_ms, 750);
         assert_eq!(v.onset_threshold, c.vad_onset_threshold);
+    }
+
+    #[test]
+    fn vad_counts_connected_low_energy_frames_as_speech_duration() {
+        let mut vad = VadSegmenter::new(VadConfig {
+            onset_threshold: 0.01,
+            hangover_ms: 300,
+            min_speech_ms: 300,
+            max_utterance_ms: 10_000,
+        });
+
+        assert_eq!(vad.push_frame(0.02, 20), Some(VadEvent::SpeechStart));
+        for _ in 0..19 {
+            assert_eq!(vad.push_frame(0.006, 20), None);
+        }
+        for _ in 0..14 {
+            assert_eq!(vad.push_frame(0.0, 20), None);
+        }
+        assert_eq!(
+            vad.push_frame(0.0, 20),
+            Some(VadEvent::SpeechEnd {
+                voiced_ms: 400,
+                emit: true,
+                forced: false,
+            })
+        );
     }
 
     #[test]

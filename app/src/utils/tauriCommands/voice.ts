@@ -64,6 +64,10 @@ export interface VoiceServerSettings {
   wake_word_threshold?: number;
   wake_word_debug?: boolean;
   wake_word_variants?: string[];
+  vad_onset_threshold?: number;
+  vad_hangover_ms?: number;
+  vad_min_speech_ms?: number;
+  vad_max_utterance_secs?: number;
 }
 
 export async function openhumanVoiceStatus(): Promise<VoiceStatus> {
@@ -117,6 +121,10 @@ export async function openhumanUpdateVoiceServerSettings(update: {
   wake_word_threshold?: number;
   wake_word_debug?: boolean;
   wake_word_variants?: string[];
+  vad_onset_threshold?: number;
+  vad_hangover_ms?: number;
+  vad_min_speech_ms?: number;
+  vad_max_utterance_secs?: number;
 }): Promise<CommandResponse<ConfigSnapshot>> {
   return await callCoreRpc<CommandResponse<ConfigSnapshot>>({
     method: 'openhuman.config_update_voice_server_settings',

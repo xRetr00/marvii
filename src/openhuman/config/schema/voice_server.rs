@@ -124,7 +124,7 @@ fn default_vad_hangover_ms() -> u32 {
 }
 
 fn default_vad_min_speech_ms() -> u32 {
-    300
+    120
 }
 
 fn default_vad_max_utterance_secs() -> f32 {
@@ -186,6 +186,32 @@ impl Default for VoiceServerConfig {
     }
 }
 
+impl VoiceServerConfig {
+    /// Normalize Marvii's legacy wake defaults without overwriting a
+    /// deliberately configured custom wake phrase.
+    pub(crate) fn normalize_marvi_defaults(&mut self) -> bool {
+        let mut changed = false;
+        if self.wake_word.trim().eq_ignore_ascii_case("hey tiny") {
+            self.wake_word = default_wake_word();
+            self.wake_word_variants = default_wake_word_variants();
+            changed = true;
+        }
+
+        let mut normalized = Vec::with_capacity(self.wake_word_variants.len());
+        for raw in &self.wake_word_variants {
+            let value = raw.trim().to_lowercase();
+            if !value.is_empty() && !normalized.contains(&value) {
+                normalized.push(value);
+            }
+        }
+        if normalized != self.wake_word_variants {
+            self.wake_word_variants = normalized;
+            changed = true;
+        }
+        changed
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -210,5 +236,52 @@ mod tests {
         assert!(!c.always_on_enabled);
         assert_eq!(c.vad_hangover_ms, default_vad_hangover_ms());
         assert_eq!(c.vad_min_speech_ms, default_vad_min_speech_ms());
+    }
+
+    #[test]
+    fn normalizes_legacy_tiny_wake_word_to_marvi() {
+        let mut c = VoiceServerConfig {
+            wake_word: "Hey Tiny".to_string(),
+            wake_word_variants: vec!["hey tiny".to_string(), "tiny".to_string()],
+            ..VoiceServerConfig::default()
+        };
+
+        assert!(c.normalize_marvi_defaults());
+        assert_eq!(c.wake_word, "Hey Marvi");
+        assert!(!c
+            .wake_word_variants
+            .iter()
+            .any(|value| value.contains("tiny")));
+        assert!(c
+            .wake_word_variants
+            .iter()
+            .any(|value| value == "hey marvi"));
+    }
+
+    #[test]
+    fn preserves_custom_wake_word() {
+        let mut c = VoiceServerConfig {
+            wake_word: "Computer".to_string(),
+            ..VoiceServerConfig::default()
+        };
+
+        assert!(!c.normalize_marvi_defaults());
+        assert_eq!(c.wake_word, "Computer");
+    }
+
+    #[test]
+    fn normalizes_and_deduplicates_wake_variants() {
+        let mut c = VoiceServerConfig {
+            wake_word_variants: vec![
+                " hey marvi ".to_string(),
+                "HEY MARVI".to_string(),
+                "marvy".to_string(),
+                "".to_string(),
+            ],
+            ..VoiceServerConfig::default()
+        };
+
+        assert!(c.normalize_marvi_defaults());
+        assert_eq!(c.wake_word_variants, vec!["hey marvi", "marvy"]);
     }
 }

@@ -8,9 +8,10 @@ mod provider_server;
 mod transcribe_tts;
 
 pub(super) use provider_server::{
-    handle_overlay_stt_notify, handle_voice_list_models, handle_voice_server_start,
-    handle_voice_server_status, handle_voice_server_stop, handle_voice_set_providers,
-    handle_voice_test_provider, handle_voice_update_provider_settings,
+    handle_overlay_stt_notify, handle_voice_list_models, handle_voice_runtime_setup,
+    handle_voice_runtime_status, handle_voice_server_start, handle_voice_server_status,
+    handle_voice_server_stop, handle_voice_set_providers, handle_voice_test_provider,
+    handle_voice_update_provider_settings,
 };
 pub(super) use transcribe_tts::{
     handle_voice_cloud_transcribe, handle_voice_reply_synthesize, handle_voice_status,

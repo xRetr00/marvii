@@ -202,6 +202,10 @@ pub(super) struct VoiceServerSettingsUpdate {
     pub(super) wake_word_threshold: Option<f32>,
     pub(super) wake_word_debug: Option<bool>,
     pub(super) wake_word_variants: Option<Vec<String>>,
+    pub(super) vad_onset_threshold: Option<f32>,
+    pub(super) vad_hangover_ms: Option<u32>,
+    pub(super) vad_min_speech_ms: Option<u32>,
+    pub(super) vad_max_utterance_secs: Option<f32>,
 }
 
 #[derive(Debug, Deserialize)]

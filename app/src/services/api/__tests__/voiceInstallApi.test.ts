@@ -4,7 +4,9 @@ import {
   installPiper,
   installWhisper,
   piperInstallStatus,
+  setupVoiceRuntime,
   type VoiceInstallStatus,
+  voiceRuntimeStatus,
   whisperInstallStatus,
 } from '../voiceInstallApi';
 
@@ -111,6 +113,32 @@ describe('voiceInstallApi', () => {
       });
       expect(result.state).toBe('error');
       expect(result.error_detail).toBe('network down');
+    });
+  });
+
+  it('queries and starts the managed local voice runtime', async () => {
+    const { callCoreRpc } = await import('../../coreRpcClient');
+    const status = {
+      state: 'installed' as const,
+      stage: null,
+      error_detail: null,
+      python_path: 'python.exe',
+      kws_model_path: 'kws',
+    };
+    vi.mocked(callCoreRpc)
+      .mockResolvedValueOnce(status)
+      .mockResolvedValueOnce({ ...status, state: 'installing' });
+
+    await expect(voiceRuntimeStatus()).resolves.toEqual(status);
+    expect(callCoreRpc).toHaveBeenNthCalledWith(1, {
+      method: 'openhuman.voice_runtime_status',
+      params: {},
+    });
+
+    await expect(setupVoiceRuntime()).resolves.toMatchObject({ state: 'installing' });
+    expect(callCoreRpc).toHaveBeenNthCalledWith(2, {
+      method: 'openhuman.voice_runtime_setup',
+      params: {},
     });
   });
 });

@@ -245,13 +245,6 @@ pub async fn synthesize_pockettts(
         return Err("text is required".to_string());
     }
 
-    let pockettts_bin = resolve_pockettts_binary_with_config(config).ok_or_else(|| {
-        format!(
-            "{LOG_PREFIX} pocket-tts binary not found. Install it with `pip install pocket-tts`, \
-             or set POCKETTTS_BIN to the absolute path of pocket-tts."
-        )
-    })?;
-
     let configured_voice = model_ids::effective_tts_voice_id(config);
     let requested_voice = opts
         .voice
@@ -271,6 +264,40 @@ pub async fn synthesize_pockettts(
         chrono::Utc::now().timestamp_millis(),
         uuid::Uuid::new_v4()
     ));
+
+    let warm_voice = voice_arg.unwrap_or("jane");
+    match synthesize_pockettts_warm(trimmed, warm_voice, &out_path).await {
+        Ok(metrics) => {
+            log::info!(
+                "{LOG_PREFIX} pockettts backend=warm_worker voice={} cache_hit={:?} voice_ms={:?} synth_ms={:?}",
+                warm_voice,
+                metrics.cache_hit,
+                metrics.voice_ms,
+                metrics.synth_ms
+            );
+            let audio_bytes = read_and_clean_wav(&out_path).await?;
+            let audio_base64 = BASE64.encode(&audio_bytes);
+            return Ok(RpcOutcome::single_log(
+                ReplySpeechResult {
+                    audio_base64,
+                    audio_mime: "audio/wav".to_string(),
+                    visemes: synthetic_viseme_timeline(trimmed),
+                    alignment: None,
+                },
+                "voice-tts: pockettts warm synthesis completed",
+            ));
+        }
+        Err(error) => {
+            log::warn!("{LOG_PREFIX} pockettts warm worker failed: {error}; falling back to CLI");
+        }
+    }
+
+    let pockettts_bin = resolve_pockettts_binary_with_config(config).ok_or_else(|| {
+        format!(
+            "{LOG_PREFIX} PocketTTS warm worker failed and the pocket-tts CLI was not found. \
+             Install the local voice runtime from Voice settings, or set POCKETTTS_BIN."
+        )
+    })?;
 
     let spawn_started = std::time::Instant::now();
     let mut cmd = tokio::process::Command::new(&pockettts_bin);
@@ -331,6 +358,50 @@ pub async fn synthesize_pockettts(
         },
         "voice-tts: pockettts synthesis completed",
     ))
+}
+
+static POCKETTTS_WORKER: once_cell::sync::Lazy<
+    tokio::sync::Mutex<Option<crate::openhuman::voice::workers::JsonLineWorker>>,
+> = once_cell::sync::Lazy::new(|| tokio::sync::Mutex::new(None));
+
+async fn synthesize_pockettts_warm(
+    text: &str,
+    voice: &str,
+    out_path: &std::path::Path,
+) -> Result<crate::openhuman::voice::workers::WorkerResponse, String> {
+    let mut guard = POCKETTTS_WORKER.lock().await;
+    if guard.is_none() {
+        let python = crate::openhuman::voice::workers::resolve_voice_python()
+            .ok_or_else(|| "voice Python runtime not found".to_string())?;
+        let script = crate::openhuman::voice::workers::resolve_worker_script("pockettts_worker.py")
+            .ok_or_else(|| "PocketTTS worker script not found".to_string())?;
+        let worker = crate::openhuman::voice::workers::JsonLineWorker::spawn(
+            "pockettts",
+            &python,
+            &script,
+            &["--language".to_string(), "english".to_string()],
+            std::time::Duration::from_secs(90),
+        )
+        .await?;
+        *guard = Some(worker);
+    }
+    let result = guard
+        .as_mut()
+        .expect("worker initialized")
+        .request(
+            serde_json::json!({
+                "op": "synthesize",
+                "text": text,
+                "voice": voice,
+                "output_path": out_path.to_string_lossy(),
+            }),
+            std::time::Duration::from_secs(120),
+        )
+        .await;
+    if result.is_err() {
+        *guard = None;
+    }
+    result
 }
 
 fn pockettts_voice_arg(voice: &str) -> Option<&str> {

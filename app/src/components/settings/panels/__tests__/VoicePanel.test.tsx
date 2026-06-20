@@ -5,7 +5,10 @@ import {
   installPiper,
   installWhisper,
   piperInstallStatus,
+  setupVoiceRuntime,
   type VoiceInstallStatus,
+  type VoiceRuntimeStatus,
+  voiceRuntimeStatus,
   whisperInstallStatus,
 } from '../../../../services/api/voiceInstallApi';
 import {
@@ -41,6 +44,8 @@ vi.mock('../../../../services/api/voiceInstallApi', () => ({
   installPiper: vi.fn(),
   whisperInstallStatus: vi.fn(),
   piperInstallStatus: vi.fn(),
+  voiceRuntimeStatus: vi.fn(),
+  setupVoiceRuntime: vi.fn(),
 }));
 
 vi.mock('../../../../services/api/voiceSettingsApi', async () => {
@@ -97,6 +102,7 @@ type RuntimeHarness = {
   voiceStatus: VoiceStatus;
   whisperStatus: VoiceInstallStatus;
   piperStatus: VoiceInstallStatus;
+  voiceRuntimeStatus: VoiceRuntimeStatus;
   voiceSettings: VoiceSettings;
 };
 
@@ -133,6 +139,13 @@ describe('VoicePanel', () => {
       },
       whisperStatus: makeInstallStatus('whisper'),
       piperStatus: makeInstallStatus('piper'),
+      voiceRuntimeStatus: {
+        state: 'missing',
+        stage: null,
+        error_detail: null,
+        python_path: null,
+        kws_model_path: null,
+      },
       voiceSettings: makeVoiceSettings(),
     };
 
@@ -172,6 +185,17 @@ describe('VoicePanel', () => {
     // a real install cycle.
     vi.mocked(whisperInstallStatus).mockImplementation(async () => ({ ...runtime.whisperStatus }));
     vi.mocked(piperInstallStatus).mockImplementation(async () => ({ ...runtime.piperStatus }));
+    vi.mocked(voiceRuntimeStatus).mockImplementation(async () => ({
+      ...runtime.voiceRuntimeStatus,
+    }));
+    vi.mocked(setupVoiceRuntime).mockImplementation(async () => {
+      runtime.voiceRuntimeStatus = {
+        ...runtime.voiceRuntimeStatus,
+        state: 'installing',
+        stage: 'installing',
+      };
+      return { ...runtime.voiceRuntimeStatus };
+    });
     vi.mocked(installWhisper).mockImplementation(async () => {
       runtime.whisperStatus = makeInstallStatus('whisper', {
         state: 'installed',
@@ -199,6 +223,16 @@ describe('VoicePanel', () => {
     const ttsSelect = (await screen.findByTestId('tts-provider-select')) as HTMLSelectElement;
     await waitFor(() => expect(sttSelect.value).toBe(''));
     expect(ttsSelect.value).toBe('');
+  });
+
+  it('starts managed Sherpa and PocketTTS runtime setup', async () => {
+    renderWithProviders(<VoicePanel />);
+
+    const button = await screen.findByTestId('voice-runtime-setup');
+    fireEvent.click(button);
+
+    await waitFor(() => expect(setupVoiceRuntime).toHaveBeenCalledTimes(1));
+    expect(await screen.findByText('Local voice runtime setup started.')).toBeInTheDocument();
   });
 
   it('renders the STT and TTS provider dropdowns seeded from loadVoiceSettings', async () => {

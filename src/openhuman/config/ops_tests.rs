@@ -1155,6 +1155,10 @@ async fn load_and_apply_voice_server_settings_rejects_invalid_activation_mode() 
         wake_word_threshold: None,
         wake_word_debug: None,
         wake_word_variants: None,
+        vad_onset_threshold: None,
+        vad_hangover_ms: None,
+        vad_min_speech_ms: None,
+        vad_max_utterance_secs: None,
     };
     let err = load_and_apply_voice_server_settings(patch)
         .await
@@ -1212,6 +1216,10 @@ async fn load_and_apply_voice_server_settings_accepts_valid_modes_and_clamps() {
         wake_word_threshold: Some(2.0),
         wake_word_debug: Some(true),
         wake_word_variants: Some(vec!["hey marvi".to_string(), " marvy ".to_string()]),
+        vad_onset_threshold: Some(0.02),
+        vad_hangover_ms: Some(700),
+        vad_min_speech_ms: Some(120),
+        vad_max_utterance_secs: Some(20.0),
     };
     let outcome = load_and_apply_voice_server_settings(patch)
         .await

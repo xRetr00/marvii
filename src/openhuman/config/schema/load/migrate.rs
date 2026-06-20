@@ -195,6 +195,15 @@ pub(crate) fn migrate_cloud_provider_slugs(config: &mut Config) {
     }
 }
 
+pub(crate) fn migrate_marvi_voice_defaults(config: &mut Config) {
+    if config.voice_server.normalize_marvi_defaults() {
+        log::info!(
+            "[config][migrate] normalized Marvii wake word and variants (variant_count={})",
+            config.voice_server.wake_word_variants.len()
+        );
+    }
+}
+
 pub(super) fn migrate_legacy_autocomplete_disabled_apps(config: &mut Config) {
     let mut normalized: Vec<String> = config
         .autocomplete
