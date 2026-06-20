@@ -128,7 +128,7 @@ mod tests {
             "profiles": [{
                 "id": "default",
                 "name": "Default",
-                "description": "The standard OpenHuman orchestrator.",
+                "description": "The standard marvi orchestrator.",
                 "agentId": "orchestrator",
                 "builtIn": true
             }]

@@ -418,7 +418,7 @@ pub(crate) fn built_in_default_profile() -> AgentProfile {
     AgentProfile {
         id: DEFAULT_PROFILE_ID.to_string(),
         name: "Default".to_string(),
-        description: "The standard OpenHuman orchestrator.".to_string(),
+        description: "The standard Marvi orchestrator.".to_string(),
         agent_id: "orchestrator".to_string(),
         model_override: None,
         temperature: None,
