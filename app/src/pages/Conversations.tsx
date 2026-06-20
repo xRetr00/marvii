@@ -2445,7 +2445,14 @@ const Conversations = ({
               // transcript is silently dropped — the user spoke into the void.
               disabled={composerInteractionBlocked || isSending || !selectedThreadId}
               onSubmit={text => handleSendMessage(text)}
-              onError={message => setSendError(chatSendError('voice_transcription', message))}
+              onError={(message, reason) =>
+                setSendError(
+                  chatSendError(
+                    reason === 'no_speech' ? 'voice_no_speech' : 'voice_transcription',
+                    message
+                  )
+                )
+              }
               showDeviceSelector
               onSwitchToText={() => setComposerOverride('text')}
             />

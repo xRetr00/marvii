@@ -22,6 +22,8 @@ if sys.platform == "win32":
 import sentencepiece as spm
 import sherpa_onnx
 
+from kws_diagnostics import KeywordVariant, diagnostic_response
+
 
 def emit(payload):
     sys.stdout.write(json.dumps(payload, separators=(",", ":")) + "\n")
@@ -30,14 +32,23 @@ def emit(payload):
 
 def build_keywords(model_dir, phrases):
     processor = spm.SentencePieceProcessor(model_file=str(model_dir / "bpe.model"))
-    lines = []
+    variants = []
+    encoded_lines = []
+    seen = set()
     for phrase in phrases:
         normalized = " ".join(str(phrase).strip().upper().split())
-        if normalized:
-            lines.append(" ".join(processor.encode(normalized, out_type=str)))
+        if not normalized:
+            continue
+        tokens = tuple(processor.encode(normalized, out_type=str))
+        encoded = " ".join(tokens)
+        if not encoded or encoded in seen:
+            continue
+        seen.add(encoded)
+        variants.append(KeywordVariant(normalized, tokens))
+        encoded_lines.append(encoded)
     path = model_dir / "openhuman-keywords.txt"
-    path.write_text("\n".join(dict.fromkeys(lines)) + "\n", encoding="utf-8")
-    return path
+    path.write_text("\n".join(encoded_lines) + "\n", encoding="utf-8")
+    return path, variants
 
 
 def main():
@@ -45,10 +56,13 @@ def main():
     parser.add_argument("--model-dir", required=True)
     parser.add_argument("--threshold", type=float, default=0.5)
     parser.add_argument("--keywords-json", required=True)
+    parser.add_argument("--debug", action="store_true")
     args = parser.parse_args()
 
     model_dir = Path(args.model_dir)
-    keywords_file = build_keywords(model_dir, json.loads(args.keywords_json))
+    keywords_file, keyword_variants = build_keywords(
+        model_dir, json.loads(args.keywords_json)
+    )
     started = time.perf_counter()
     spotter = sherpa_onnx.KeywordSpotter(
         tokens=str(model_dir / "tokens.txt"),
@@ -82,14 +96,48 @@ def main():
                 samples.byteswap()
             stream.accept_waveform(16000, samples)
             keyword = ""
+            tokens = []
+            timestamps = []
             while spotter.is_ready(stream):
                 spotter.decode_stream(stream)
-                result = spotter.get_result(stream)
-                if result:
-                    keyword = str(result)
+                if args.debug:
+                    try:
+                        result = spotter.keyword_spotter.get_result(stream)
+                        keyword = str(result.keyword).strip()
+                        tokens = list(result.tokens)
+                        timestamps = list(result.timestamps)
+                    except Exception:
+                        keyword = str(spotter.get_result(stream))
+                        tokens = []
+                        timestamps = []
+                else:
+                    keyword = str(spotter.get_result(stream))
+                if keyword:
                     spotter.reset_stream(stream)
                     break
-            emit({"id": request_id, "ok": True, "keyword": keyword})
+            response = {"id": request_id, "ok": True, "keyword": keyword}
+            if args.debug:
+                try:
+                    response = diagnostic_response(
+                        request_id=request_id,
+                        keyword=keyword,
+                        tokens=tokens,
+                        timestamps=timestamps,
+                        variants=keyword_variants,
+                    )
+                except Exception:
+                    response.update(
+                        {
+                            "tokens": tokens,
+                            "timestamps": timestamps,
+                            "candidate": "",
+                            "matched_tokens": 0,
+                            "total_tokens": 0,
+                            "token_progress": 0.0,
+                            "confidence_estimate": 0.0,
+                        }
+                    )
+            emit(response)
         except Exception as exc:
             emit({"id": request.get("id"), "ok": False, "error": str(exc)})
 

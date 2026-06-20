@@ -26,6 +26,29 @@ use crate::openhuman::config::VoiceServerConfig as CfgVoiceServer;
 
 const LOG_PREFIX: &str = "[voice::always_on]";
 
+fn format_kws_debug(
+    response: &crate::openhuman::voice::workers::WorkerResponse,
+    detected: bool,
+    threshold: f32,
+    rms: f32,
+) -> String {
+    format!(
+        "{LOG_PREFIX} wake_debug backend=sherpa detected={detected} keyword={:?} \
+         candidate={:?} tokens={:?} timestamps={:?} matched_tokens={} total_tokens={} \
+         token_progress={:.3} confidence_estimate={:.3} \
+         confidence_kind=derived_token_progress threshold={threshold:.3} \
+         batch_ms=100 rms={rms:.4}",
+        response.keyword,
+        response.candidate,
+        response.tokens,
+        response.timestamps,
+        response.matched_tokens,
+        response.total_tokens,
+        response.token_progress.clamp(0.0, 1.0),
+        response.confidence_estimate.clamp(0.0, 1.0),
+    )
+}
+
 /// Tuning for the VAD segmenter, distilled from [`CfgVoiceServer`].
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct VadConfig {
@@ -414,20 +437,37 @@ pub async fn start_if_enabled(app_config: &Config) {
                                 seg.reset();
                                 utterance.clear();
                                 utterance.extend(kws_preroll.iter().copied());
-                                log::info!(
-                                    "{LOG_PREFIX} kws detected keyword_len={} threshold={:.3}",
-                                    response.keyword.len(),
-                                    config.voice_server.wake_word_threshold
-                                );
+                                if config.voice_server.wake_word_debug {
+                                    log::info!(
+                                        "{}",
+                                        format_kws_debug(
+                                            &response,
+                                            true,
+                                            config.voice_server.wake_word_threshold,
+                                            rms,
+                                        )
+                                    );
+                                } else {
+                                    log::info!(
+                                        "{LOG_PREFIX} kws detected keyword_len={} threshold={:.3}",
+                                        response.keyword.len(),
+                                        config.voice_server.wake_word_threshold
+                                    );
+                                }
                                 notch_status("Waked", 3000);
                             }
-                            Ok(_) => {
+                            Ok(response) => {
                                 if config.voice_server.wake_word_debug
                                     && last_kws_debug.elapsed() >= Duration::from_secs(1)
                                 {
                                     log::info!(
-                                        "{LOG_PREFIX} wake_debug backend=sherpa detected=false threshold={:.3} batch_ms=100 rms={rms:.4}",
-                                        config.voice_server.wake_word_threshold
+                                        "{}",
+                                        format_kws_debug(
+                                            &response,
+                                            false,
+                                            config.voice_server.wake_word_threshold,
+                                            rms,
+                                        )
                                     );
                                     last_kws_debug = std::time::Instant::now();
                                 }
@@ -622,7 +662,7 @@ async fn start_kws_worker(
         )
         .filter(|phrase| !phrase.trim().is_empty())
         .collect::<Vec<_>>();
-    let args = vec![
+    let mut args = vec![
         "--model-dir".to_string(),
         model_dir.to_string_lossy().to_string(),
         "--threshold".to_string(),
@@ -630,6 +670,9 @@ async fn start_kws_worker(
         "--keywords-json".to_string(),
         serde_json::to_string(&phrases).ok()?,
     ];
+    if config.voice_server.wake_word_debug {
+        args.push("--debug".to_string());
+    }
     match crate::openhuman::voice::workers::JsonLineWorker::spawn(
         "sherpa-kws",
         &python,
@@ -1188,6 +1231,52 @@ mod macos_lock {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::openhuman::voice::workers::WorkerResponse;
+
+    fn worker_response() -> WorkerResponse {
+        WorkerResponse {
+            id: Some(1),
+            ok: true,
+            keyword: String::new(),
+            tokens: vec!["▁HEY".into(), "▁MAR".into()],
+            timestamps: vec![0.1, 0.2],
+            candidate: "HEY MARVII".into(),
+            matched_tokens: 2,
+            total_tokens: 3,
+            token_progress: 2.0 / 3.0,
+            confidence_estimate: 2.0 / 3.0,
+            error: None,
+            load_ms: None,
+            cache_hit: None,
+            voice_ms: None,
+            synth_ms: None,
+            kind: None,
+        }
+    }
+
+    #[test]
+    fn kws_debug_summary_labels_derived_confidence() {
+        let summary = format_kws_debug(&worker_response(), false, 0.5, 0.0248);
+        assert!(summary.contains("detected=false"));
+        assert!(summary.contains("candidate=\"HEY MARVII\""));
+        assert!(summary.contains("matched_tokens=2 total_tokens=3"));
+        assert!(summary.contains("token_progress=0.667"));
+        assert!(summary.contains("confidence_estimate=0.667"));
+        assert!(summary.contains("confidence_kind=derived_token_progress"));
+        assert!(summary.contains("threshold=0.500"));
+        assert!(summary.contains("rms=0.0248"));
+    }
+
+    #[test]
+    fn kws_debug_summary_handles_legacy_empty_response() {
+        let response: WorkerResponse =
+            serde_json::from_str(r#"{"id":1,"ok":true,"keyword":""}"#).unwrap();
+        let summary = format_kws_debug(&response, false, 0.5, 0.0);
+        assert!(summary.contains("candidate=\"\""));
+        assert!(summary.contains("tokens=[]"));
+        assert!(summary.contains("matched_tokens=0 total_tokens=0"));
+        assert!(summary.contains("confidence_estimate=0.000"));
+    }
 
     #[test]
     fn stop_clears_enabled_gate() {

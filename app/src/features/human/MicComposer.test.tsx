@@ -230,8 +230,30 @@ describe('MicComposer', () => {
     expect(transcribeWithFactoryMock).toHaveBeenCalledTimes(4);
   });
 
-  it('reports an error when transcription returns empty text', async () => {
-    transcribeWithFactoryMock.mockResolvedValueOnce('');
+  it('falls back to WAV when native transcription returns empty text', async () => {
+    transcribeWithFactoryMock.mockResolvedValueOnce('').mockResolvedValueOnce('heard from wav');
+    encodeBlobToWavMock.mockResolvedValueOnce(
+      new Blob([new Uint8Array([0])], { type: 'audio/wav' })
+    );
+    const onError = vi.fn();
+    const onSubmit = vi.fn();
+    render(<MicComposer disabled={false} onSubmit={onSubmit} onError={onError} />);
+    fireEvent.click(screen.getByRole('button', { name: /start recording/i }));
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: /stop recording and send/i })).toBeInTheDocument()
+    );
+    fireEvent.click(screen.getByRole('button', { name: /stop recording and send/i }));
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledWith('heard from wav'));
+    expect(encodeBlobToWavMock).toHaveBeenCalledTimes(1);
+    expect(transcribeWithFactoryMock).toHaveBeenCalledTimes(2);
+    expect(onError).not.toHaveBeenCalled();
+  });
+
+  it('reports an error when native and WAV transcription both return empty text', async () => {
+    transcribeWithFactoryMock.mockResolvedValueOnce('').mockResolvedValueOnce('');
+    encodeBlobToWavMock.mockResolvedValueOnce(
+      new Blob([new Uint8Array([0])], { type: 'audio/wav' })
+    );
     const onError = vi.fn();
     const onSubmit = vi.fn();
     render(<MicComposer disabled={false} onSubmit={onSubmit} onError={onError} />);
@@ -241,8 +263,13 @@ describe('MicComposer', () => {
     );
     fireEvent.click(screen.getByRole('button', { name: /stop recording and send/i }));
     await waitFor(() =>
-      expect(onError).toHaveBeenCalledWith(expect.stringMatching(/no speech detected/i))
+      expect(onError).toHaveBeenCalledWith(
+        expect.stringMatching(/no speech detected/i),
+        'no_speech'
+      )
     );
+    expect(encodeBlobToWavMock).toHaveBeenCalledTimes(1);
+    expect(transcribeWithFactoryMock).toHaveBeenCalledTimes(2);
     expect(onSubmit).not.toHaveBeenCalled();
   });
 

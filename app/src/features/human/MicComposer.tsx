@@ -96,7 +96,7 @@ export interface MicComposerProps {
   /** Receives the transcribed text — same callback the textarea send uses. */
   onSubmit: (text: string) => Promise<void> | void;
   /** Surfaced when the mic flow fails so the parent can show a banner. */
-  onError?: (message: string) => void;
+  onError?: (message: string, reason?: 'no_speech') => void;
   /** ISO 639-1 language hint forwarded to Scribe. Defaults to `'en'` —
    *  passing a hint is meaningfully more accurate than auto-detect on
    *  short utterances. Set to empty string to let Scribe auto-detect. */
@@ -488,7 +488,7 @@ export function MicComposer({
       const transcript = await transcribeWithFallback(blob);
       if (disposedRef.current) return;
       if (!transcript) {
-        onError?.(t('mic.noSpeechDetected'));
+        onError?.(t('mic.noSpeechDetected'), 'no_speech');
         setState('idle');
         return;
       }
@@ -612,12 +612,18 @@ export function MicComposer({
     };
     try {
       const text = await transcribeWithRetry(blob, 'native', handleRetry);
+      if (text) {
+        composerLog(
+          '[session:%d] transcribe ok path=native ms=%d',
+          sessionIdRef.current,
+          Math.round(Date.now() - startedAt)
+        );
+        return text;
+      }
       composerLog(
-        '[session:%d] transcribe ok path=native ms=%d',
-        sessionIdRef.current,
-        Math.round(Date.now() - startedAt)
+        '[session:%d] transcribe native path returned empty — falling back to wav',
+        sessionIdRef.current
       );
-      return text;
     } catch (err) {
       if (isTranscriptionCancelledError(err)) throw err;
       const msg = err instanceof Error ? err.message : String(err);
@@ -628,27 +634,27 @@ export function MicComposer({
         sessionIdRef.current,
         msg
       );
-      const reEncodeStart = Date.now();
-      const wav = await encodeBlobToWav(blob);
-      composerLog(
-        '[session:%d] wav fallback bytes=%d encode_ms=%d',
-        sessionIdRef.current,
-        wav.size,
-        Math.round(Date.now() - reEncodeStart)
-      );
-      // Snapshot before the WAV path so the WAV callback doesn't compound
-      // against a value that handleRetry already mutated on native retries.
-      const nativeRetries = cumulativeRetries;
-      const text = await transcribeWithRetry(wav, 'wav', attempt => {
-        handleRetry(nativeRetries + attempt);
-      });
-      composerLog(
-        '[session:%d] transcribe ok path=wav-fallback total_ms=%d',
-        sessionIdRef.current,
-        Math.round(Date.now() - startedAt)
-      );
-      return text;
     }
+    const reEncodeStart = Date.now();
+    const wav = await encodeBlobToWav(blob);
+    composerLog(
+      '[session:%d] wav fallback bytes=%d encode_ms=%d',
+      sessionIdRef.current,
+      wav.size,
+      Math.round(Date.now() - reEncodeStart)
+    );
+    // Snapshot before the WAV path so the WAV callback doesn't compound
+    // against a value that handleRetry already mutated on native retries.
+    const nativeRetries = cumulativeRetries;
+    const text = await transcribeWithRetry(wav, 'wav', attempt => {
+      handleRetry(nativeRetries + attempt);
+    });
+    composerLog(
+      '[session:%d] transcribe ok path=wav-fallback total_ms=%d',
+      sessionIdRef.current,
+      Math.round(Date.now() - startedAt)
+    );
+    return text;
   }
 
   const isRecording = state === 'recording';

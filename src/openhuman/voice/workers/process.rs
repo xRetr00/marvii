@@ -29,6 +29,20 @@ pub(crate) struct WorkerResponse {
     pub ok: bool,
     #[serde(default)]
     pub keyword: String,
+    #[serde(default)]
+    pub tokens: Vec<String>,
+    #[serde(default)]
+    pub timestamps: Vec<f32>,
+    #[serde(default)]
+    pub candidate: String,
+    #[serde(default)]
+    pub matched_tokens: usize,
+    #[serde(default)]
+    pub total_tokens: usize,
+    #[serde(default)]
+    pub token_progress: f32,
+    #[serde(default)]
+    pub confidence_estimate: f32,
     pub error: Option<String>,
     pub load_ms: Option<u64>,
     pub cache_hit: Option<bool>,
@@ -162,6 +176,50 @@ impl JsonLineWorker {
 impl Drop for JsonLineWorker {
     fn drop(&mut self) {
         let _ = self.child.start_kill();
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::WorkerResponse;
+
+    #[test]
+    fn worker_response_defaults_missing_kws_diagnostics() {
+        let response: WorkerResponse =
+            serde_json::from_str(r#"{"id":1,"ok":true,"keyword":""}"#).unwrap();
+        assert!(response.tokens.is_empty());
+        assert!(response.timestamps.is_empty());
+        assert_eq!(response.candidate, "");
+        assert_eq!(response.matched_tokens, 0);
+        assert_eq!(response.total_tokens, 0);
+        assert_eq!(response.token_progress, 0.0);
+        assert_eq!(response.confidence_estimate, 0.0);
+    }
+
+    #[test]
+    fn worker_response_deserializes_kws_diagnostics() {
+        let response: WorkerResponse = serde_json::from_str(
+            r#"{
+                "id":2,
+                "ok":true,
+                "keyword":"HEY MARVII",
+                "tokens":["▁HEY","▁MAR","VII"],
+                "timestamps":[0.1,0.2,0.3],
+                "candidate":"HEY MARVII",
+                "matched_tokens":3,
+                "total_tokens":3,
+                "token_progress":1.0,
+                "confidence_estimate":1.0
+            }"#,
+        )
+        .unwrap();
+        assert_eq!(response.tokens, vec!["▁HEY", "▁MAR", "VII"]);
+        assert_eq!(response.timestamps, vec![0.1, 0.2, 0.3]);
+        assert_eq!(response.candidate, "HEY MARVII");
+        assert_eq!(response.matched_tokens, 3);
+        assert_eq!(response.total_tokens, 3);
+        assert_eq!(response.token_progress, 1.0);
+        assert_eq!(response.confidence_estimate, 1.0);
     }
 }
 
