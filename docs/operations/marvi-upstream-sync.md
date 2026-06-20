@@ -1,103 +1,202 @@
-# Marvi Upstream Sync Runbook
+# Marvii/OpenHuman Upstream Sync Runbook
 
-Marvi is maintained as a branded Windows desktop distribution on top of
-OpenHuman. Keep the internal `openhuman` runtime/module names compatible, but
-preserve Marvi in visible app, installer, update, and release surfaces.
+Marvii is the Marvi Windows desktop distribution built on top of OpenHuman. The
+goal of an upstream sync is to take useful OpenHuman fixes without letting
+hosted OpenHuman/TinyHumans/tiny.place product surfaces leak back into the
+Marvi app, installer, update path, prompts, logs, or user-facing channels.
+
+Internal crate/module names such as `openhuman` can remain when changing them
+would create compatibility risk. User-visible text, release assets, installer
+metadata, app branding, prompts, and update URLs must be Marvi/Marvii.
 
 ## Remotes
 
-- `origin`: upstream OpenHuman, currently `https://github.com/tinyhumansai/openhuman.git`
-- `marvi`: Marvi fork, currently `https://github.com/xRetr00/marvii.git`
-- local `main`: Marvi integration branch
+- `origin`: upstream OpenHuman, `https://github.com/tinyhumansai/openhuman.git`
+- `marvi`: Marvii fork, `https://github.com/xRetr00/marvii.git`
+- `main`: Marvii integration/release branch
 
-## Daily Sync
+Never push to `origin`. Never force-push `marvi/main` for normal sync work.
 
-Dry run:
+## Normal Sync
 
-```bash
-pnpm upstream:sync
-```
+Start from a clean worktree:
 
-Push after verification:
-
-```bash
-pnpm upstream:sync -- --execute
-```
-
-Manual equivalent:
-
-```bash
+```powershell
+cd D:\openhuman
+git status --short --branch
 git checkout main
-git fetch origin --prune --tags
-git checkout -b sync/upstream-$(date +%F)
-git merge --no-ff --no-edit origin/main
-pnpm --dir app compile
-pwsh -NoProfile -File scripts/tests/OpenHumanWindowsInstall.Tests.ps1
-git checkout main
-git merge --ff-only sync/upstream-$(date +%F)
-git push marvi main:main
+git fetch origin main --prune
+git fetch marvi --prune
+git merge --ff-only marvi/main
+git rev-list --left-right --count main...origin/main
 ```
+
+If the right-side count is `0`, upstream has no new commits. If it is non-zero,
+merge upstream with ancestry preserved:
+
+```powershell
+git merge --no-ff origin/main -m "Merge OpenHuman upstream through <origin-sha>"
+```
+
+If conflicts occur, resolve them with the policy below. After conflicts are
+resolved:
+
+```powershell
+git status --short
+git diff --cached --stat
+git commit --no-verify -m "Merge OpenHuman upstream through <origin-sha>"
+```
+
+Use `--no-verify` only for the merge commit when local hooks are blocked by
+known local Windows toolchain/shell issues. Do not use it to hide code or test
+failures.
 
 ## Conflict Policy
 
-Preserve Marvi-owned identity:
+Keep Marvii/Marvi-owned release and brand surfaces:
 
-- `app/src-tauri/tauri.conf.json` product name, updater URL, icons, and window title
+- `.github/workflows/release-windows-updater.yml`
+- `scripts/release/publish-windows-updater-manifest.sh`
+- `scripts/install.ps1`
+- `scripts/install.sh`
+- `app/src-tauri/tauri.conf.json`
+- `app/src-tauri/Cargo.toml`
 - `app/src-tauri/icons/**`
-- `app/public/logo.png` and `app/public/brand/**`
-- installer scripts and release workflow URLs pointing to `xRetr00/marvii`
-- visible app text that says Marvi
+- `app/public/logo.png`
+- `app/public/brand/**`
+- `app/src/SOUL.md`
+- `src/openhuman/agent/prompts/**`
+- channel/provider prompts and visible logs under `src/openhuman/channels/**`
+- updater code and fallback URLs under `src/openhuman/update/**`
 
-Accept upstream fixes in branded files when they improve behavior. Resolve
-conflicts hunk by hunk: keep the upstream logic fix, then reapply Marvi names,
-assets, and URLs.
+Accept upstream fixes hunk by hunk when they improve local desktop behavior,
+chat UX, Rust runtime behavior, tests, or build reliability.
 
-Do not use blanket `ours` or `theirs` on branding files. Do not rebase, reset,
-force-push, push to `origin`, rewrite tags, or auto-resolve conflicts in
-automation.
+Reject or remove upstream changes that reintroduce:
+
+- hosted OpenHuman/TinyHumans backend account defaults
+- tiny.place / Agent World / settlement RPC product surfaces
+- wallet/rewards/billing UI unless explicitly requested
+- "Join Discord", community growth prompts, outbound telemetry, or analytics
+  collection that is not already opt-in/local-safe
+- visible `OpenHuman`, `TinyHumans`, `tiny.place`, `Hermes Agent`, or `Nous`
+  identity text in app UI, installer, prompts, channels, logs, or errors
+- update URLs that do not point to `xRetr00/marvii`
+
+For modify/delete conflicts on banned directories, keep the deletion:
+
+```powershell
+git rm -f <path>
+```
+
+For conflicts where upstream only changed OpenHuman release version or
+tiny.place env/config comments, keep Marvi's side:
+
+```powershell
+git checkout --ours <path>
+git add <path>
+```
+
+Do not blanket `git checkout --theirs .`. That can silently restore hosted
+backend surfaces.
+
+## Guard Searches
+
+Run these searches before final verification:
+
+```powershell
+rg -n "Hermes Agent|Nous|TinyHumans|tinyhumans|api\.tinyhumans\.ai|tiny\.place|Agent World|OpenHuman" app src scripts .github docs
+rg -n "billing|rewards|wallet|Discord|telemetry|analytics" app/src src/openhuman
+rg -n "github\.com/(tinyhumansai/openhuman|xRetr00/marvii)" app src scripts .github
+```
+
+Expected notes:
+
+- Internal `openhuman` crate/module/RPC names may remain.
+- i18n, README, mobile, fastlane, and upstream-only docs may retain upstream
+  branding unless they are used by the Windows desktop app or release path.
+- `data-analytics-id` attributes can remain as local DOM/test identifiers if
+  outbound collection is disabled/gated.
 
 ## Verification
 
-Minimum local checks:
-
-```bash
-pnpm --dir app compile
-pnpm --dir app build
-pwsh -NoProfile -File scripts/tests/OpenHumanWindowsInstall.Tests.ps1
-cargo metadata --manifest-path app/src-tauri/Cargo.toml --no-deps --format-version 1
-```
-
-Full Windows package build requires:
-
-- initialized submodules: `git submodule update --init --recursive`
-- LLVM/libclang installed and available through `LIBCLANG_PATH`
-- enough system page file/RAM for the Rust/Tauri build
-
-Example Windows build environment:
+Minimum checks for a sync:
 
 ```powershell
-$env:CEF_PATH = Join-Path $env:LOCALAPPDATA 'tauri-cef'
-$env:LIBCLANG_PATH = 'C:\Program Files\LLVM\bin'
-$env:PATH = 'C:\Program Files\LLVM\bin;' + $env:PATH
-pnpm --dir app tauri build -- -- --bin Marvi
+pnpm --dir app test -- src/__tests__/marvi-local-only-guard.test.ts src/hooks/useAppUpdate.test.ts src/components/__tests__/AppUpdatePrompt.test.tsx --reporter=dot
+pnpm --dir app compile
+pnpm --dir app build
+node scripts/release/verify-version-sync.js
+pwsh -NoProfile -File scripts/tests/OpenHumanWindowsInstall.Tests.ps1
 ```
 
-## Update Path Checks
+If the full app suite is practical, run:
 
-After each sync, confirm:
-
-```bash
-rg -n "xRetr00/marvii|tinyhumansai/openhuman" \
-  app/src-tauri/tauri.conf.json scripts/install.ps1 scripts/install.sh \
-  scripts/release/publish-updater-manifest.sh .github/workflows/build-desktop.yml \
-  .github/workflows/release-production.yml app/src/utils/config.ts src/openhuman/update
+```powershell
+pnpm --dir app test -- --reporter=dot
 ```
 
-Expected active Marvi endpoints:
+Known local limitation: native Rust/Tauri checks can fail on some Windows
+machines because of MSVC/linker or shell-hook setup. When that happens, record
+the exact failure and rely on the GitHub Windows updater workflow as the final
+package build authority.
 
-- Tauri updater endpoint:
-  `https://github.com/xRetr00/marvii/releases/latest/download/latest.json`
-- Latest download fallback:
-  `https://github.com/xRetr00/marvii/releases/latest`
-- Windows installer repo:
-  `xRetr00/marvii`
+## Release
+
+After sync verification, bump and release with:
+
+```powershell
+scripts\release-marvii.bat patch
+```
+
+The script:
+
+1. Verifies the worktree is clean before bumping.
+2. Runs `scripts/release/bump-version.js`.
+3. Verifies version consistency.
+4. Runs focused validation.
+5. Commits `chore(release): vX.Y.Z`.
+6. Pushes `main` to `marvi/main`.
+7. Dispatches `.github/workflows/release-windows-updater.yml`.
+
+To inspect the release workflow:
+
+```powershell
+gh run list --repo xRetr00/marvii --workflow release-windows-updater.yml --limit 1
+gh run view <run-id> --repo xRetr00/marvii --json status,conclusion,jobs,url
+```
+
+After success, confirm:
+
+```powershell
+gh release view vX.Y.Z --repo xRetr00/marvii --json tagName,url,assets,isDraft,isPrerelease
+gh release download vX.Y.Z --repo xRetr00/marvii --pattern latest.json --dir $env:TEMP\marvii-release-check --clobber
+Get-Content $env:TEMP\marvii-release-check\latest.json
+```
+
+`latest.json` must point at:
+
+```text
+https://github.com/xRetr00/marvii/releases/download/vX.Y.Z/Marvi_X.Y.Z_x64-setup.exe
+```
+
+## Recovery
+
+If a merge is in progress and the conflict policy is unclear, stop and inspect:
+
+```powershell
+git status --short
+git diff --name-only --diff-filter=U
+git diff --cc <path>
+```
+
+If the merge was started from the wrong base and no conflict resolutions should
+be kept:
+
+```powershell
+git merge --abort
+git checkout main
+git merge --ff-only marvi/main
+```
+
+Do not use `git reset --hard` unless the user explicitly approves it.

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Marvii Upstream Sync"
+  short_description: "Sync OpenHuman into Marvii and release safely."
+  default_prompt: "Sync Marvii with OpenHuman upstream, preserve local-only Marvi branding, run validation, push, and release."
