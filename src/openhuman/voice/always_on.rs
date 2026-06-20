@@ -293,11 +293,13 @@ pub async fn start_if_enabled(app_config: &Config) {
         while let Some(chunk) = rx.recv().await {
             let current_revision = CONFIG_REVISION.load(Ordering::SeqCst);
             if current_revision != applied_revision {
-                if let Some(latest) = ACTIVE_CONFIG
-                    .read()
-                    .expect("always-on config lock poisoned")
-                    .clone()
-                {
+                let latest_config = {
+                    ACTIVE_CONFIG
+                        .read()
+                        .expect("always-on config lock poisoned")
+                        .clone()
+                };
+                if let Some(latest) = latest_config {
                     config = latest;
                     let next_vad = VadConfig::from_server_config(&config.voice_server);
                     onset_threshold = next_vad.onset_threshold;

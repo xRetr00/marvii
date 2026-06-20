@@ -26,7 +26,7 @@ pub(crate) fn config_root_dir(config: &Config) -> PathBuf {
 /// shared-root contract no longer applies — those callers want full
 /// isolation, including their own copy of any installed binaries. Honor
 /// the override by returning the workspace dir directly.
-fn shared_root_dir(config: &Config) -> PathBuf {
+pub(crate) fn shared_root_dir(config: &Config) -> PathBuf {
     if std::env::var_os("OPENHUMAN_WORKSPACE").is_some() {
         return config_root_dir(config);
     }
