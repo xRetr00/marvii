@@ -233,13 +233,13 @@ export default function NotchApp() {
             if (!message) return;
             console.debug(`[notch] overlay:attention chars=${message.length}`);
             clearDismiss();
-            // The voice listener uses two reserved status words to drive the
-            // pill: "Listening" (capturing speech) and "Processing" (running a
-            // command). Map them to the matching icon; everything else is a
-            // generic attention message.
+            // The voice listener uses reserved status words to drive the pill:
+            // "Wake detected" / "Listening" while capturing speech and
+            // "Processing" while running a command. Map legacy "Waked" too so
+            // older sidecars still show the right state.
             const lower = message.toLowerCase();
             const mode: NotchMode =
-              lower === 'listening'
+              lower === 'listening' || lower === 'waked' || lower === 'wake detected'
                 ? 'listening'
                 : lower === 'processing'
                   ? 'thinking'

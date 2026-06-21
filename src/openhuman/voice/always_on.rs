@@ -239,10 +239,29 @@ const FRAME_SAMPLES: usize = (TARGET_SAMPLE_RATE as usize / 1000) * FRAME_MS as 
 const KWS_BATCH_SAMPLES: usize = TARGET_SAMPLE_RATE as usize / 10;
 const KWS_PREROLL_SAMPLES: usize = TARGET_SAMPLE_RATE as usize;
 const WAKE_COMMAND_TIMEOUT: Duration = Duration::from_secs(8);
+const POST_WAKE_MIN_SPEECH_MS: u32 = 120;
 
 /// Hard cap on a buffered utterance (defensive — the segmenter's
 /// `max_utterance_ms` should flush first; this bounds memory if it doesn't).
 const MAX_UTTERANCE_SAMPLES: usize = TARGET_SAMPLE_RATE as usize * 60;
+
+fn should_deliver_utterance(
+    vad_emit: bool,
+    wake_already_matched: bool,
+    voiced_ms: u32,
+    captured_samples: usize,
+) -> bool {
+    vad_emit
+        || (wake_already_matched
+            && voiced_ms >= POST_WAKE_MIN_SPEECH_MS
+            && captured_samples > KWS_PREROLL_SAMPLES)
+}
+
+fn should_use_in_process_whisper(config: &Config, provider_name: &str) -> bool {
+    provider_name.eq_ignore_ascii_case("whisper")
+        && config.local_ai.whisper_in_process
+        && config.local_ai.runtime_enabled
+}
 
 /// Apply the always-on config: set the runtime ENABLED gate and, when enabled,
 /// open the continuous microphone stream (once per process). Safe to call at
@@ -454,7 +473,7 @@ pub async fn start_if_enabled(app_config: &Config) {
                                         config.voice_server.wake_word_threshold
                                     );
                                 }
-                                notch_status("Waked", 3000);
+                                notch_status("Wake detected", 3000);
                             }
                             Ok(response) => {
                                 if config.voice_server.wake_word_debug
@@ -499,13 +518,19 @@ pub async fn start_if_enabled(app_config: &Config) {
                         emit, voiced_ms, ..
                     }) => {
                         let captured = std::mem::take(&mut utterance);
+                        let wake_already_matched = kws.is_some() && wake_armed;
+                        let deliver = should_deliver_utterance(
+                            emit,
+                            wake_already_matched,
+                            voiced_ms,
+                            captured.len(),
+                        );
                         log::info!(
-                            "{LOG_PREFIX} utterance end voiced_ms={voiced_ms} emit={emit} samples={}",
+                            "{LOG_PREFIX} utterance end voiced_ms={voiced_ms} emit={emit} deliver={deliver} wake_armed={wake_already_matched} samples={}",
                             captured.len()
                         );
-                        if emit {
+                        if deliver {
                             let cfg = config.clone();
-                            let wake_already_matched = kws.is_some() && wake_armed;
                             if wake_already_matched {
                                 wake_armed = false;
                                 wake_armed_at = None;
@@ -698,7 +723,7 @@ async fn transcribe_always_on_wav(
     model: &str,
     wav: &[u8],
 ) -> Result<String, String> {
-    if provider_name.eq_ignore_ascii_case("whisper") && config.local_ai.whisper_in_process {
+    if should_use_in_process_whisper(config, provider_name) {
         let input_dir = std::env::temp_dir().join("openhuman_voice_input");
         tokio::fs::create_dir_all(&input_dir)
             .await
@@ -745,6 +770,13 @@ async fn transcribe_always_on_wav(
             );
         }
         return result;
+    } else if provider_name.eq_ignore_ascii_case("whisper")
+        && config.local_ai.whisper_in_process
+        && !config.local_ai.runtime_enabled
+    {
+        log::info!(
+            "{LOG_PREFIX} STT backend=in_process_whisper skipped: local_ai.runtime_enabled=false; falling back to provider_factory"
+        );
     }
 
     let provider = crate::openhuman::voice::create_stt_provider(provider_name, model, config)
@@ -1414,6 +1446,40 @@ mod tests {
         assert_eq!(v.max_utterance_ms, 2500);
         assert_eq!(v.hangover_ms, 750);
         assert_eq!(v.onset_threshold, c.vad_onset_threshold);
+    }
+
+    #[test]
+    fn post_wake_preroll_can_deliver_short_tail_after_late_kws_detection() {
+        assert!(should_deliver_utterance(
+            false,
+            true,
+            POST_WAKE_MIN_SPEECH_MS,
+            KWS_PREROLL_SAMPLES + FRAME_SAMPLES
+        ));
+        assert!(!should_deliver_utterance(
+            false,
+            true,
+            POST_WAKE_MIN_SPEECH_MS - FRAME_MS,
+            KWS_PREROLL_SAMPLES + FRAME_SAMPLES
+        ));
+        assert!(!should_deliver_utterance(
+            false,
+            false,
+            POST_WAKE_MIN_SPEECH_MS,
+            KWS_PREROLL_SAMPLES + FRAME_SAMPLES
+        ));
+    }
+
+    #[test]
+    fn always_on_whisper_skips_in_process_when_local_ai_runtime_is_disabled() {
+        let mut config = Config::default();
+        config.local_ai.whisper_in_process = true;
+        config.local_ai.runtime_enabled = false;
+        assert!(!should_use_in_process_whisper(&config, "whisper"));
+
+        config.local_ai.runtime_enabled = true;
+        assert!(should_use_in_process_whisper(&config, "whisper"));
+        assert!(!should_use_in_process_whisper(&config, "cloud"));
     }
 
     #[test]

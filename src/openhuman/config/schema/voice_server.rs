@@ -149,12 +149,20 @@ fn default_wake_word_variants() -> Vec<String> {
         "marve",
         "hey marvee",
         "marvee",
+        "hey marvey",
+        "marvey",
+        "hey marvie",
+        "marvie",
+        "hey marvii",
+        "marvii",
         "hey marfi",
         "marfi",
         "hey marfe",
         "marfe",
         "hey marvel",
         "marvel",
+        "hey morvi",
+        "morvi",
         "hey morvey",
         "morvey",
     ]
@@ -283,5 +291,16 @@ mod tests {
 
         assert!(c.normalize_marvi_defaults());
         assert_eq!(c.wake_word_variants, vec!["hey marvi", "marvy"]);
+    }
+
+    #[test]
+    fn default_wake_variants_include_common_marvi_misrecognitions() {
+        let c = VoiceServerConfig::default();
+        for expected in ["hey marvey", "marvie", "hey marvii", "morvi", "hey morvey"] {
+            assert!(
+                c.wake_word_variants.iter().any(|value| value == expected),
+                "missing wake variant {expected:?}"
+            );
+        }
     }
 }
