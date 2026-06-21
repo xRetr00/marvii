@@ -75,6 +75,7 @@ import {
   notifyOverlaySttState,
   openhumanAutocompleteAccept,
   openhumanAutocompleteCurrent,
+  openhumanGetVoiceServerSettings,
   openhumanVoiceStatus,
   openhumanVoiceTranscribeBytes,
   openhumanVoiceTts,
@@ -117,6 +118,10 @@ const CHAT_MODEL_HINT = 'hint:chat';
 const STREAMING_PREVIEW_CHARS = 120;
 type InputMode = 'text' | 'voice';
 type ReplyMode = 'text' | 'voice';
+interface WakeComposerStatus {
+  enabled: boolean;
+  wakeWord: string;
+}
 const AUTOCOMPLETE_POLL_DEBOUNCE_MS = 320;
 const AUTOCOMPLETE_MIN_CONTEXT_CHARS = 3;
 const debug = debugFactory('conversations');
@@ -203,6 +208,7 @@ const Conversations = ({
   projectThreadList = false,
 }: ConversationsProps = {}) => {
   const [composerOverride, setComposerOverride] = useState<'mic-cloud' | 'text' | null>(null);
+  const [wakeComposerStatus, setWakeComposerStatus] = useState<WakeComposerStatus | null>(null);
   const composer = composerOverride ?? composerProp;
   const { t } = useT();
   const dispatch = useAppDispatch();
@@ -223,6 +229,35 @@ const Conversations = ({
     ? Boolean(activeThreadIds[selectedThreadId])
     : false;
   const firstActiveThreadId = Object.keys(activeThreadIds)[0] ?? null;
+
+  useEffect(() => {
+    let cancelled = false;
+    async function refreshWakeComposerStatus() {
+      try {
+        const res = await openhumanGetVoiceServerSettings();
+        if (cancelled) return;
+        setWakeComposerStatus({
+          enabled: Boolean(res.result.always_on_enabled),
+          wakeWord: res.result.wake_word?.trim() || 'Hey Marvi',
+        });
+      } catch (err) {
+        debug('wake composer status load failed: %o', err);
+        if (!cancelled) setWakeComposerStatus(null);
+      }
+    }
+    void refreshWakeComposerStatus();
+    const onFocus = () => void refreshWakeComposerStatus();
+    const onVisibilityChange = () => {
+      if (document.visibilityState === 'visible') void refreshWakeComposerStatus();
+    };
+    window.addEventListener('focus', onFocus);
+    document.addEventListener('visibilitychange', onVisibilityChange);
+    return () => {
+      cancelled = true;
+      window.removeEventListener('focus', onFocus);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+    };
+  }, []);
 
   const [inputValue, setInputValue] = useState('');
   const [attachments, setAttachments] = useState<Attachment[]>([]);
@@ -2439,6 +2474,17 @@ const Conversations = ({
 
         {composer === 'mic-cloud' ? (
           <div className="flex flex-col items-center gap-3 py-1">
+            {wakeComposerStatus?.enabled && (
+              <div
+                data-testid="composer-wake-status"
+                className="flex items-center gap-2 rounded-full border border-primary-200 dark:border-primary-500/30 bg-primary-50 dark:bg-primary-500/10 px-3 py-1 text-xs text-primary-700 dark:text-primary-200">
+                <span
+                  className="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_0_3px_rgba(16,185,129,0.16)]"
+                  aria-hidden="true"
+                />
+                <span>Listening for {wakeComposerStatus.wakeWord}</span>
+              </div>
+            )}
             <MicComposer
               // Without `!selectedThreadId`, a mic submit before a thread is
               // ready hits `handleSendMessage`'s early return and the
@@ -2458,30 +2504,43 @@ const Conversations = ({
             />
           </div>
         ) : inputMode === 'text' ? (
-          <ChatComposer
-            inputValue={inputValue}
-            setInputValue={setInputValue}
-            onSend={handleSendMessage}
-            textInputRef={textInputRef}
-            fileInputRef={fileInputRef}
-            composerInteractionBlocked={composerInteractionBlocked}
-            isSending={isSending}
-            allowParallelSend={selectedThreadActive}
-            attachments={attachments}
-            onAttachFiles={handleAttachFiles}
-            onRemoveAttachment={id => setAttachments(prev => prev.filter(a => a.id !== id))}
-            attachError={attachError}
-            onSwitchToMicCloud={() => setComposerOverride('mic-cloud')}
-            handleInputKeyDown={handleInputKeyDown}
-            inlineCompletionSuffix={inlineCompletionSuffix}
-            isComposingTextRef={isComposingTextRef}
-            maxAttachments={ATTACHMENT_MAX_IMAGES + ATTACHMENT_MAX_FILES}
-            // Empty → no native `accept` filter (it greys valid files on
-            // macOS/CEF). Type enforcement happens in handleAttachFiles via
-            // validateAndReadFile, which honors modelSupportsVision.
-            allowedMimeTypes={[]}
-            attachmentsEnabled={CHAT_ATTACHMENTS_ENABLED}
-          />
+          <div className="flex flex-col gap-2">
+            {wakeComposerStatus?.enabled && (
+              <div
+                data-testid="composer-wake-status"
+                className="flex w-fit items-center gap-2 rounded-full border border-primary-200 dark:border-primary-500/30 bg-primary-50 dark:bg-primary-500/10 px-3 py-1 text-xs text-primary-700 dark:text-primary-200">
+                <span
+                  className="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_0_3px_rgba(16,185,129,0.16)]"
+                  aria-hidden="true"
+                />
+                <span>Listening for {wakeComposerStatus.wakeWord}</span>
+              </div>
+            )}
+            <ChatComposer
+              inputValue={inputValue}
+              setInputValue={setInputValue}
+              onSend={handleSendMessage}
+              textInputRef={textInputRef}
+              fileInputRef={fileInputRef}
+              composerInteractionBlocked={composerInteractionBlocked}
+              isSending={isSending}
+              allowParallelSend={selectedThreadActive}
+              attachments={attachments}
+              onAttachFiles={handleAttachFiles}
+              onRemoveAttachment={id => setAttachments(prev => prev.filter(a => a.id !== id))}
+              attachError={attachError}
+              onSwitchToMicCloud={() => setComposerOverride('mic-cloud')}
+              handleInputKeyDown={handleInputKeyDown}
+              inlineCompletionSuffix={inlineCompletionSuffix}
+              isComposingTextRef={isComposingTextRef}
+              maxAttachments={ATTACHMENT_MAX_IMAGES + ATTACHMENT_MAX_FILES}
+              // Empty → no native `accept` filter (it greys valid files on
+              // macOS/CEF). Type enforcement happens in handleAttachFiles via
+              // validateAndReadFile, which honors modelSupportsVision.
+              allowedMimeTypes={[]}
+              attachmentsEnabled={CHAT_ATTACHMENTS_ENABLED}
+            />
+          </div>
         ) : (
           <div className="flex items-center gap-2">
             <button

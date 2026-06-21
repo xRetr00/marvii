@@ -98,6 +98,14 @@ describe('NotchApp', () => {
     expect(await screen.findByText('Opening Music')).toBeInTheDocument();
   });
 
+  it('maps wake detected attention into the listening state', async () => {
+    const socket = await renderAndConnect();
+    socket.fire('overlay:attention', { message: 'Wake detected', ttl_ms: 3000 });
+    expect(await screen.findByText('Wake detected')).toBeInTheDocument();
+    socket.fire('overlay:attention', { message: 'Waked', ttl_ms: 3000 });
+    expect(await screen.findByText('Waked')).toBeInTheDocument();
+  });
+
   it('handles speaking, released and idle transitions without throwing', async () => {
     const socket = await renderAndConnect();
     socket.fire('companion:state_changed', { state: 'speaking' });
