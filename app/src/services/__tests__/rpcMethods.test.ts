@@ -165,6 +165,10 @@ describe('rpcMethods catalog', () => {
         path.resolve(__dirname, '../../../../src/openhuman/health/schemas.rs'),
         'utf8'
       ),
+      fs.readFileSync(
+        path.resolve(__dirname, '../../../../src/openhuman/channels/controllers/schemas.rs'),
+        'utf8'
+      ),
     ].join('\n');
 
     for (const method of Object.values(CORE_RPC_METHODS)) {
@@ -187,7 +191,9 @@ describe('rpcMethods catalog', () => {
                     ? 'tool_registry'
                     : methodRoot.startsWith('health_')
                       ? 'health'
-                      : 'config';
+                      : methodRoot.startsWith('channels_')
+                        ? 'channels'
+                        : 'config';
       const fnName = methodRoot.slice(`${namespace}_`.length);
       expect(schemaSources).toContain(`namespace: "${namespace}"`);
       expect(schemaSources).toContain(`function: "${fnName}"`);

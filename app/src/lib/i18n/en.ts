@@ -3309,7 +3309,7 @@ const en: TranslationMap = {
   'composio.connect.dynamicsOrgNameHint':
     'For example, "myorg" for myorg.crm.dynamics.com. Enter the short org name only, not the full URL.',
   'composio.connect.dynamicsOrgNameLabel': 'Dynamics 365 Organization Name',
-  'composio.connect.connectionFailed': 'Connection failed (status: ${hit.status}).',
+  'composio.connect.connectionFailed': 'Connection failed (status: {status}).',
   'composio.connect.disconnectFailed': 'Disconnect failed: {msg}',
   'composio.connect.disconnecting': 'Disconnecting…',
   'composio.connect.idleDescription': 'Connect your',
