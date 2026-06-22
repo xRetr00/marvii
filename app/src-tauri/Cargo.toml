@@ -1,6 +1,6 @@
 [package]
 name = "Marvi"
-version = "0.57.53"
+version = "0.57.54"
 description = "Marvi - AI-powered Super Assistant"
 authors = ["NeuRetro Labs"]
 edition = "2021"
